@@ -1,0 +1,137 @@
+<!--contenido de la pagina  -->
+<div class="container-fluid page-header py-2">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pageRecurso" value="1">
+      <select id="sizePageRecurso" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h3 class="text-center all-tittles col-8" id="titleManagerRecurso">Lista de recursos</h3>
+
+    <div class="col-2 text-right">
+      <button class="btn btn-primary" id="btnAbrirRecurso">
+        <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid ">
+  <div class="table-responsive">
+    <table class="table table-hover text-center">
+      <thead class="">
+        <tr>
+          <th class="text-center">#</th>
+          <th class="text-center">CÓDIGO DEL SUBTITULO</th>
+          <th class="text-center">NOMBRE DEL SUBTITULO</th>
+          <th class="text-center">NOMBRE DEL RECURSO</th>
+          <th class="text-center">IMAGEN</th>
+          <th class="text-center">ARCHIVOS</th>
+          <th class="text-center">EDITAR</th>
+          <th class="text-center">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyRecurso"></tbody>
+    </table>
+  </div>
+  <nav class="border-top py-2 text-center" aria-label="Page navigation example">
+    <ul id="paginationRecurso" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination BLOG -->
+</div>
+
+<div id="ventanaModalManRecurso" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <form id="formularioRecurso" autocomplete="off">
+        <div class="modal-header">
+
+          <h4 class="modal-title text-center w-100" id="tituloModalManRecurso"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            style="margin-top: -1em;margin-right: -1.5em;">
+            <span aria-hidden="true" class="m-0"
+              style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+            <div class="col-12">
+              <div class="group-material">
+                <input id="txtNombreRecurso" type="text" class="material-control tooltips-general"
+                  placeholder="Nombre completo" required="" maxlength="200" data-toggle="tooltip" data-placement="top"
+                  title="" data-original-title="Escribe el nombre del Recurso">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Nombre para el Recurso</label>
+              </div>
+            </div>
+            <div class="col-12">
+
+              <label for="txtSubtitulo" class="all-tittles">Subtitulo</label>
+              <div class="group-material mb-2">
+                <select class="material-control" id="txtSubtitulo"></select>
+              </div>
+
+            </div>
+            <div class="col-12">
+              <div class="group-material">
+                <span class="all-tittles">Disponibilidad de Archivo</span>
+                <select id="txtDisponibidadRecurso" class="tooltips-general material-control" data-toggle="tooltip"
+                  data-placement="top" title="" data-original-title="Selecciona una opcion del recurso">
+                  <option value="0">Solo en este Subtitulo</option>
+                  <option value="1">Desde este SubTitulo para Adelante</option>
+                </select>
+              </div>
+
+            </div>
+            <div class="col-12">
+              <div class="group-material  mb-2">
+                <div id="imagePreview" class="text-center pt-2"></div>
+                <input id="txtImagenRecurso" type="file" accept="image/png, image/jpeg, image/jpg"
+                  class="material-control tooltips-general input-check-user" placeholder="Selecciona Imagen"
+                  data-toggle="tooltip" data-placement="top" title="" data-original-title="Selecciona la Imagen">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Selecciona Imagen</label>
+                <small>Tamaño Máximo Permitido: 900 KB</small>
+                <br>
+                <small>Formatos Permitido:JPG, PNG, JPEG</small>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            CERRAR
+          </button>
+          <button type="submit" class="btn btn-primary ">
+            GUARDAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoRecurso" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-recurso progress-bar-animated" role="progressbar"
+            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Recurso. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

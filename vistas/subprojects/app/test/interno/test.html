@@ -1,0 +1,184 @@
+<!--contenido de la pagina  -->
+<div id="seccion-cuestionario">
+  <div class="container-fluid page-header ">
+    <div class="form-row">
+      <div class="dropdown col-sm-2 col-3">
+        <input type="hidden" id="pageTest" value="1">
+        <select id="sizePageTest" class="form-control">
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+        </select>
+      </div>
+
+
+      <div class="col-sm-10 col-9 text-right">
+        <button class="btn btn-primary" id="btnAbrirTest">
+          <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+        </button>
+      </div>
+      <h3 class="text-center all-tittles col-12 f-weight-600" id="titleManagerTest">CUESTIONARIOS INTERNOS</h3>
+    </div>
+  </div>
+
+  <div class="container-fluid ">
+    <div class="table-responsive">
+      <table class="table table-hover text-center">
+        <thead class="">
+          <tr>
+            <th class="text-center">#</th>
+            <th class="text-center">Nombre Cuestionario</th>
+            <th class="text-center">Instrucciones</th>
+            <th class="text-center">Despues del (Subtítulo)</th>
+            <th class="text-center">N° de Preguntas</th>
+            <th class="text-center">Imagen</th>
+            <th class="text-center">EDITAR</th>
+            <th class="text-center">ELIMINAR</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyTest"></tbody>
+      </table>
+    </div>
+    <nav class="border-top  text-center" aria-label="Page navigation example">
+      <ul id="paginationTest" class="pagination pagination-sm justify-content-center">
+      </ul>
+    </nav>
+    <!-- /pagination BLOG -->
+  </div>
+</div>
+<div id="ventanaModalManTest" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <form id="formularioTest" autocomplete="off">
+        <div class="modal-header">
+
+          <h3 class="modal-title text-center w-100 f-weight-600" id="tituloModalManTest"></h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            style="margin-top: -1em;margin-right: -1.5em;">
+            <span aria-hidden="true" class="m-0"
+              style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+            <div class="col-12">
+              <div class="group-material">
+                <input id="txtNombreTest" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="Nombre" required="" maxlength="100" pattern="[0-9a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,100}"
+                  data-toggle="tooltip" data-placement="top" title="Escribe Nombre">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Nombre del Cuestionario</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <!-- Capitulo-->
+              <label for="txtSubtitulo">Despues de (Seleccionar Subtítulo)</label>
+              <div class="group-material">
+                <select id="txtSubtitulo" class="material-control">
+                  <option value="0" selected="selected">SIN DEFINIR</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-12">
+              <label for="txtDescripcionTest">Instrucciones</label>
+              <div class="group-material">
+                <textarea class="material-control w-100" required="" id="txtDescripcionTest" rows="3"></textarea>
+
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="group-material  mb-2">
+                <div id="imagePreviewTest" style="padding-top:5px;">
+                </div>
+                <input id="txtImagenTest" type="file" accept="image/png, image/jpeg, image/jpg"
+                  class="material-control tooltips-general input-check-user" placeholder="Nombre de usuario"
+                  data-toggle="tooltip" data-placement="top" title=""
+                  data-original-title="seleccionar imagen de tu ordenador">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Imagen</label>
+                <small>Tamaño Máximo Permitido: 5700 KB</small>
+                <br>
+                <small>Formatos Permitido:JPG, PNG, JPEG</small>
+              </div>
+            </div>
+            <legend class="all-tittles col-6 col-sm-4 my-2" id="titlePregunta">PREGUNTAS</legend>
+            <div class="col-4 my-2 ml-auto">
+              <button id="btnAgregarSubtitulo" type="button" class="btn btn-success">
+                AGREGAR PREGUNTA
+              </button>
+            </div>
+            <div class="col-12">
+              <div id="listaDetalle" class="form-row">
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+
+          <button type="submit" class="btn btn-primary ">
+            GUARDAR
+          </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            CERRAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoTest" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+  style="padding-top: 18%; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Cuestionario. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalFrameTest" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body p-0" id="modalFrameContenidoTest" style="height: 85vh;">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger " data-dismiss="modal">
+          CERRAR
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoDetalle" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Preguntas. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,135 @@
+.notificacion-chat {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	width: 400px;
+	margin: 0;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.svg-imagen {
+	width: 100px;
+}
+.cuadrado-2 {
+	transform: translateY(100px);
+	width: 75%;
+	float: right;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0 123 255 / 35%);
+	background-color: white;
+}
+.cuadrado-2 > p {
+	font-family: cursive;
+}
+.cuadrado-2 > .close {
+	margin-top: -0.8em;
+	margin-right: -0.5em;
+}
+.cuadrado-2 > .close > span {
+	-webkit-text-stroke: 1px white;
+	background: #007bff;
+	border-radius: 100%;
+	padding: 0px 11px;
+	font-size: 23px;
+}
+.cuadrado-2::after {
+	position: absolute;
+	content: '';
+	width: 0px;
+	height: 0px;
+	border-right: 0.4rem solid transparent;
+	transform: rotate(315deg);
+	border-top: 0.4rem solid transparent;
+	border-left: 0.4rem solid rgba(0 123 255 / 35%);
+	border-bottom: 0.4rem solid rgba(0 123 255 / 35%);
+}
+
+.wufoo-letter-1 {
+	animation: kaboom 3s ease alternate 2;
+	&:nth-child(2) {
+		animation-delay: 0.1s;
+	}
+	&:nth-child(3) {
+		animation-delay: 0.2s;
+	}
+	&:nth-child(4) {
+		animation-delay: 0.3s;
+	}
+	&:nth-child(5) {
+		animation-delay: 0.4s;
+	}
+}
+.wufoo-letter-2 {
+	animation: kaboom 3s 3s ease alternate 2;
+}
+@keyframes kaboom {
+	0% {
+		transform: translateY(100px) scale(0.7);
+	}
+	90% {
+		transform: translateY(100px) scale(0.9);
+	}
+	100% {
+		transform: translateY(100px) scale(1.1);
+	}
+}
+
+.text-1,
+.text-2,
+.text-3 {
+	font-family: Sans-Serif;
+}
+
+.text-2 {
+	opacity: 1;
+	animation: hideshow 5s 3s ease infinite;
+}
+.text-3 {
+	opacity: 1;
+	animation: hideshow 5s 5s ease infinite;
+}
+@keyframes hideshow {
+	0% {
+		opacity: 0;
+	}
+	10% {
+		opacity: 0;
+	}
+	15% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+.trex {
+	transform: translate(0px, 27px);
+
+	animation: slideright 20s infinite, sliderightpause 24s infinite;
+}
+@keyframes slideright {
+	0% {
+		transform: translate(0px, 27px);
+	}
+	50% {
+		transform: translate(0px, -27px);
+	}
+	100% {
+		transform: translate(0px, 27px);
+	}
+}
+
+@keyframes sliderightpause {
+	50% {
+		left: 0;
+	}
+	75% {
+		left: 50px;
+	}
+	100% {
+		left: 0;
+	}
+}

@@ -1,0 +1,114 @@
+<!--contenido de la pagina  -->
+
+<section class="content-section form contact light pt-10">
+    <div class="container pt-5">
+        <form id="formularioPerfil" autocomplete="off" class="form-row">
+            <div class="col-sm-6 anim fadeInLeft">
+                <legend class="text-primary">Datos Personales</legend>
+                <span class="input-group">
+                    <label for="txtNombre" class="d-none">Nombres</label>
+                    <i class="zmdi zmdi-face" style="line-height: 49px;"></i>
+                    <input type="text" id="txtNombre" class="lg" placeholder="Nombres"
+                        style="font-size: 17px; height: 49px;" maxlength="50" />
+                </span><!-- .input-group -->
+
+                <span class="input-group">
+                    <label for="txtApellido" class="d-none">Apellidos</label>
+                    <i class="zmdi zmdi-male-female" style="line-height: 49px;"></i>
+                    <input type="text" id="txtApellido" class="lg" placeholder="Apellidos"
+                        style="font-size: 17px; height: 49px;" maxlength="50" />
+                </span><!-- .input-group -->
+                <span class="input-group">
+                    <label for="txtTelefono" class="d-none">Teléfono Celular</label>
+                    <i class="zmdi zmdi-phone" style="line-height: 49px;"></i>
+                    <input type="text" id="txtTelefono" class="lg" placeholder="[código país] Teléfono Celular"
+                        maxlength="11" style="font-size: 17px; height: 49px;" />
+                </span><!-- .input-group -->
+                <span class="input-group">
+                    <label for="txtEspecialidad" class="d-none">Especialidad / Oficio</label>
+                    <i class="zmdi zmdi-graduation-cap" style="line-height: 49px;"></i>
+                    <input type="text" id="txtEspecialidad" class="lg" placeholder="Especialidad / Oficio"
+                        style="font-size: 17px; height: 49px;" maxlength="90" />
+                </span><!-- .input-group -->
+
+            </div><!-- .col-5 -->
+
+            <div class="col-sm-6 anim fadeInRight">
+                <legend class="text-primary">Datos de la Cuenta</legend>
+                <span class="input-group">
+                    <label for="txtUsuario" class="d-none">Usuario</label>
+                    <i class="zmdi  zmdi-account-o" style="line-height: 49px;"></i>
+                    <input type="text" id="txtUsuario" class="lg" placeholder="Nombre de usuario"
+                        style="font-size: 17px; height: 49px;" maxlength="44" />
+                </span><!-- .input-group -->
+
+                <span class="input-group">
+                    <label for="txtEmail" class="d-none">Dirección de correo electrónico</label>
+                    <i class="zmdi zmdi-account-box-mail" style="line-height: 49px;"></i>
+                    <input type="text" id="txtEmail" class="lg" placeholder="Dirección de correo electrónico"
+                        style="font-size: 17px; height: 49px;" maxlength="50" />
+                </span><!-- .input-group -->
+                <span class="input-group">
+                    <label for="txtPassword1" class="d-none">Contraseña</label>
+                    <i class="zmdi zmdi-key" style="line-height: 49px;"></i>
+                    <i id="ButtonPassword1" class="zmdi zmdi-eye aula-cursor-mano"
+                        style="line-height: 49px; left:auto;right: 10px;"></i>
+                    <input type="password" id="txtPassword1" class="lg" placeholder="Contraseña"
+                        style="font-size: 17px; height: 49px;padding-right: 40px;" required="" minlength="8"
+                        maxlength="50" />
+
+
+
+                </span><!-- .input-group -->
+
+                <span class="input-group">
+                    <label for="txtPassword2" class="d-none">Contraseña</label>
+                    <i class="zmdi zmdi-key" style="line-height: 49px;"></i>
+                    <i id="ButtonPassword2" class="zmdi zmdi-eye aula-cursor-mano"
+                        style="line-height: 49px; left:auto;right: 10px;"></i>
+                    <input type="password" id="txtPassword2" class="lg" placeholder="Contraseña de Confirmación"
+                        style="font-size: 17px; height: 49px;" required="" minlength="8" maxlength="50" />
+                </span><!-- .input-group -->
+
+
+
+            </div>
+            <div class="col-sm-offset-3 col-sm-6 anim fadeInRight mx-auto">
+                <div id="imagePreview" class="text-center">
+                </div>
+                <span class="input-group">
+                    <i class="zmdi zmdi-cloud-upload" style="line-height: 49px;"></i>
+                    <input type="file" id="txtFoto" class="lg" placeholder="Selecciona la foto" accept="image/*"
+                        style="font-size: 17px; height: 49px;line-height: 38px;" />
+
+                </span><!-- .input-group -->
+                <span class="input-group">
+
+                    <button class="submit" data-loading-text="Enviando..." style=" height: 49px;">ACTUALIZAR</button>
+                </span><!-- .input-group -->
+
+            </div>
+        </form>
+    </div><!-- .container -->
+
+
+
+</section><!-- .content-section .form -->
+
+
+<div class="modal fade" id="modalCargandoAdministrador" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress progress-striped active" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-perfil-aula"
+                        role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Cargando Perfil. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--final del contenido de la pagina  -->

@@ -1,0 +1,190 @@
+<!--contenido de la pagina  -->
+<div id="seccion-cliente-inactivo">
+  <div class="container-fluid page-header pt-3">
+    <div class="form-row">
+      <div class="dropdown col-2">
+        <input type="hidden" id="pageCliente" value="1">
+        <select id="sizePageCliente" class="form-control w-auto">
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+        </select>
+      </div>
+      <div class="col-10 text-right">
+        <button type="button" id="btnCertificadosEntregados" data-opcion="0" class="btn btn-primary">CERTIFICADOS
+          ENTREGADOS</button>
+      </div>
+      <h3 class="text-center all-tittles col-12 f-weight-600" id="titleManagerCliente"></h3>
+    </div>
+  </div>
+
+  <form class="form-inline" id="formularioClienteSearch" autocomplete="off">
+    <div class="form-group col-9 mb-2">
+      <label for="txtSearchCliente" class="sr-only">Buscar</label>
+      <div class="input-group w-100  box-shadow border border-radius">
+        <div class="input-group-prepend">
+          <button type="submit" class="input-group-text border border-radius"><i class="zmdi zmdi-search"
+              style="font-size: 28px;"></i></button>
+        </div>
+        <input id="txtSearchCliente" type="search" class="form-control col-auto border border-radius"
+          placeholder="Buscar Alumno">
+      </div>
+
+    </div>
+    <div class="form-group col-3 mb-2 ">
+      <label for="txtCountCliente" class="">Contador</label>
+      <input id="txtCountCliente" type="text" class="ml-auto form-control border border-radius text-center box-shadow"
+        placeholder="0">
+    </div>
+  </form>
+
+  <div class="container-fluid col-xs-12">
+
+    <div class="table-responsive">
+      <table class="table table-hover text-center">
+
+        <thead>
+          <tr>
+            <th class="text-center">#</th>
+            <th class="text-center">NOMBRES</th>
+            <th class="text-center">APELLIDOS</th>
+            <th class="text-center">TELEFONO</th>
+            <th class="text-center">EMAIL</th>
+            <th class="text-center">CERTIFICADO</th>
+            <th class="text-center">TERMINO N01</th>
+            <th class="text-center">VER</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyCliente"></tbody>
+      </table>
+    </div>
+    <nav class="border-top  text-center py-2" aria-label="Page navigation example">
+      <ul id="paginationCliente" class="pagination pagination-sm justify-content-center">
+      </ul>
+    </nav>
+    <!-- /pagination BLOG -->
+  </div>
+
+</div>
+<!-- modal -->
+<div id="ventanaModalManCliente" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form autocomplete="off">
+        <div class="modal-header mb-3">
+
+          <h4 class="modal-title all-tittles text-center w-100" id="tituloModalManCliente">DATOS DEL ALUMNO</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            style="margin-top: -1em;margin-right: -1.5em;">
+            <span aria-hidden="true" class="m-0"
+              style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtNombreCliente" type="text" class="material-control tooltips-general "
+                  placeholder="Nombre completo" data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Nombre completo</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtApellidoCliente" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="Nombre de usuario" data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Apellidos</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtTelefonoCliente" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="Nombre de usuario" data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtTelefonoCliente">Telefono</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtEspecialidadCliente" type="text"
+                  class="material-control tooltips-general input-check-user" placeholder="Nombre de usuario"
+                  data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Especialidad</label>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="group-material">
+                <input id="txtEmailUsuario" type="email" class="material-control tooltips-general" placeholder="E-mail"
+                  data-toggle="tooltip" data-placement="top" title="Escribe el Email del Cliente">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtEmailUsuario">Email</label>
+              </div>
+
+            </div>
+            <div class="col-sm-12">
+              <label class="all-tittles">Foto del ALumno</label>
+              <div class="group-material text-center">
+                <div id="imagePreview">
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger all-tittles" data-dismiss="modal">
+            CERRAR
+          </button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--final del contenido de la pagina  -->
+<div class="modal fade" id="modalCargandoCliente" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Certificados. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalFrameCertificado" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body p-0" id="modalFrameContenidoCertificado" style="height: 80vh;">
+
+      </div>
+      <div class="modal-footer">
+        <a href="" download>
+          <button type="button" id="descargarPdfCertificado" class="btn btn-warning-outline py-2">
+            <i class="zmdi zmdi-download zmdi-hc mr-1"></i><span>DESCARGAR
+          </button>
+        </a>
+
+        <button type="button" class="btn btn-danger py-2" data-dismiss="modal">
+          CERRAR
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

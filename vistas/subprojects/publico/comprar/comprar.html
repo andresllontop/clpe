@@ -1,0 +1,287 @@
+<div class="container-fluid">
+
+    <div class="container-fluid py-3 my-3" style="background-color: #e8e5e5;">
+        <div class="form-row mx-auto w-55  w-xs-100">
+            <div class="col-sm-6 col-xs-6 text-left pl-0">
+                <p class="details-name mb-0" style="font-size: 2rem;;">TALLER DE LECTURA</p>
+                <p class="details-title mb-0">PIENSE Y HAGASE RICO</p>
+            </div>
+            <div class="col-sm-6 col-xs-6 text-right pr-0">
+                <h2 class="f-weight-400 m-0" id="precioCompra" style="color:#b21aff">
+
+                </h2>
+                <h5 class="f-weight-400 m-0" id="precioCompraUSD" style="color:#b21aff"></h5>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="container-fluid py-3 px-0">
+        <div class=" form-row mx-auto w-55 w-xs-100 border" style=" background-color: #e8e5e599;">
+
+            <div class="form-check border-bottom py-2">
+                <input class="form-check-input mx-2" type="radio" name="compraRadios" id="compraRadios1" checked
+                    style="width: 2em;vertical-align: bottom;">
+                <label class="form-check-label" for="compraRadios1">
+                    PAGAR CON TARJETA
+                </label>
+                <div class="form-group float-right">
+                    <img class="visa p-1">
+                    <img class="mastercard p-1">
+                    <img class="amex p-1">
+                </div>
+                <div class="description-1 px-4">
+                    <!-- progressbar -->
+                    <ul id="progressbar" class="text-center mx-auto my-8 px-0">
+                        <!--li class="active">Selecciona alguna opción</li-->
+                        <li>Ingresa tus datos</li>
+                        <li>Crea tu Cuenta</li>
+                        <li>Confirmar tu pago</li>
+
+                    </ul>
+                    <!-- multistep form -->
+                    <form id="msform" class="my-4 w-xs-100">
+                        <!-- fieldsets -->
+                        <fieldset class="mx-0 w-100">
+                            <h2 class="fs-title">Datos Personales</h2>
+                            <ul class="form-list">
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtnombreCuenta">Nombre Completo</label>
+                                    <input type="text" id="txtnombreCuenta" required="" autocomplete="off" />
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtapellidoCuenta">Apellidos</label>
+                                    <input type="text" id="txtapellidoCuenta" required="" autocomplete="off" />
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtprofesionCuenta">Profesión u Oficio</label>
+                                    <input type="text" id="txtprofesionCuenta" required="" autocomplete="off" />
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtcountryCuenta">País</label>
+                                    <select class="form-control" id="txtcountryCuenta" style="border-radius: 19px;">
+
+                                    </select>
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtTelefonoCuenta">Teléfono</label>
+                                    <div class="d-inline-flex w-100">
+                                        <a class="btn dropdown-toggle paises-cuenta form-control border w-auto d-inline-flex"
+                                            disabled data-toggle="dropdown"
+                                            style="font-size:13px;border-radius:19px 0px 0px 19px;" href="#"><i
+                                                class="flag-icon flag-icon-pe mr-2"></i>Perú (+51)<span
+                                                class="caret pull-right mt-1 ml-2"></span></a>
+                                        <input type="number" class="form-control py-1"
+                                            style="font-size:13px;border-radius: 0px 19px 19px 0px;"
+                                            id="txtTelefonoCuenta" placeholder="000000000" maxlength="20">
+                                        <ul id="txtTelefonoCodigoCuenta" class="dropdown-menu w-90"
+                                            style="position: absolute; z-index: 2;list-style: none;text-align: left;padding: 0; margin: -17em 0 0 -1px;box-shadow: 1px 1px 4px rgba(0,0,0,.2); background-color: #fff;border: 1px solid #ccc;white-space: nowrap; max-height: 200px;overflow-y: scroll;">
+                                            <li><i class="flag-icon flag-icon-pe"></i> </li>
+                                        </ul>
+                                    </div>
+
+
+                                </li>
+                            </ul>
+                            <button type="button" name="next" class="next button w-50"> <span>Continuar</span><i
+                                    class="zmdi zmdi-caret-right ml-3"></i>
+                            </button>
+
+                        </fieldset>
+                        <fieldset class="mx-0 w-100">
+                            <h2 class="fs-title">CREA TU CUENTA</h2>
+
+                            <ul class="form-list">
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtemailCuenta">Email</label>
+                                    <input type="email" autocomplete="off" id="txtemailCuenta" />
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtpassCuenta">Password</label>
+                                    <input type="password" autocomplete="off" id="txtpassCuenta" style="width:90%;" />
+                                    <span id="span-ocultar-passCuenta1" style="left: auto; right: 10px;"
+                                        class="aula-cursor-mano "><i class="zmdi zmdi-eye"></i></span>
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtpassconfirmCuenta">Confirm Password</label>
+                                    <input type="password" autocomplete="off" id="txtpassconfirmCuenta"
+                                        style="width:90%;" />
+                                    <span id="span-ocultar-passCuenta2" style="left: auto; right: 10px;"
+                                        class="aula-cursor-mano "><i class="zmdi zmdi-eye"></i></span>
+                                </li>
+
+                            </ul>
+                            <button type="button" name="next" class="next button w-50"> <span>Continuar</span><i
+                                    class="zmdi zmdi-caret-right ml-3"></i>
+                            </button>
+                        </fieldset>
+                        <fieldset class="mx-0 w-100">
+                            <h2 class="fs-title">Datos de Pago</h2>
+                            <small class="details-title">Si tienes dudas sobre como completar este paso, contacta a
+                                <a href="" id="emailComprar"></a>.</small><br>
+                            <small class="details-title">Club de Lectura para Emprendedores está procesando este pedido,
+                                al continuar
+                                estas de acuerdo con
+                                los términos de
+                                compra.</small>
+                            <ul class="form-list mt-3">
+                                <li>
+                                    <div class="form-group" id="credit_cards">
+                                        <img class="visa">
+                                        <img class="mastercard">
+                                        <img class="amex">
+                                    </div>
+                                    <button type="submit" class="button" id="buyButtonPagarCompra">PAGAR AHORA</button>
+                                </li>
+                            </ul>
+                            <input style="display: none;" type="button" name="previous" class="previous action-button"
+                                value="Previous" />
+
+                        </fieldset>
+
+
+                    </form>
+                </div>
+            </div>
+            <div class="form-check py-2">
+                <input class="form-check-input mx-2" type="radio" name="compraRadios" id="compraRadios2"
+                    style="width: 2em;vertical-align: bottom;">
+                <label class="form-check-label mx-2" for="compraRadios2">
+                    OTROS MEDIOS DE PAGO
+                </label>
+                <div class="description-2 px-4 d-none">
+
+                    <ul class="accordion">
+                        <li class="mb-1 active pulse-2 m-2 border" style="border-color: #b21aff;"><span><a
+                                    href="javascript:void(0);" style="font-size: 1rem;">CUENTAS
+                                    BANCARIAS DE PERÚ</a></span>
+                            <article>
+                                <p class="py-1"><img class="bcp p-1"> <span
+                                        style="color:red; font-weight: bold;">=></span> <span
+                                        class="ml-2 details-name">415-32897176-0-67.</span>
+                                </p>
+                                <p class="py-1"><img class="banco-nacion-peru p-1"> <span
+                                        style="color:red; font-weight: bold;">=></span> <span
+                                        class="ml-2 details-name">04-301-132099.</span></p>
+                                <p class="py-1"><img class="caja-piura p-1"> <span
+                                        style="color:red; font-weight: bold;">=></span> <span
+                                        class="ml-2 details-name">210-01-6339797.</span></p>
+                                <p class="py-1 details-name">A nombre de:<span class="ml-2">Víctor Hugo Mejía
+                                        Acuña.</span></p>
+                            </article>
+                        </li>
+                        <li class="mb-1 border" style="border-color: #b21aff;"><span><a href="javascript:void(0);"
+                                    style="font-size: 1rem;">CUENTAS BANCARIAS
+                                    INTERNACIONAL</a></span>
+                            <article>
+                                <p>En proceso.</p>
+                            </article>
+                        </li>
+                    </ul>
+                    <!-- multistep form -->
+                    <form id="registerOtroMedio" class="my-4 w-xs-100">
+                        <!-- fieldsets -->
+                        <fieldset class="mx-0 w-100">
+                            <h2 class="fs-title">REGISTRAR DATOS </h2>
+                            <ul class="form-list">
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtnombreCuentaOtro">Nombre Completo</label>
+                                    <input type="text" id="txtnombreCuentaOtro" required="" autocomplete="off" />
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtapellidoCuentaOtro">Apellidos</label>
+                                    <input type="text" id="txtapellidoCuentaOtro" required="" autocomplete="off" />
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtprofesionCuentaOtro">Profesión u Oficio</label>
+                                    <input type="text" id="txtprofesionCuentaOtro" required="" autocomplete="off" />
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtcountryCuentaOtro">País</label>
+                                    <select class="form-control" id="txtcountryCuentaOtro" style="border-radius: 19px;">
+
+                                    </select>
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtTelefonoCuentaOtro">Teléfono</label>
+                                    <div class="d-inline-flex w-100">
+                                        <a class="btn dropdown-toggle paises-cuentaOtro form-control border w-auto d-inline-flex"
+                                            disabled data-toggle="dropdown"
+                                            style="font-size:13px;border-radius:19px 0px 0px 19px;" href="#"><i
+                                                class="flag-icon flag-icon-pe mr-2"></i>Perú (+51)<span
+                                                class="caret pull-right mt-1 ml-2"></span></a>
+                                        <input type="number" class="form-control py-1"
+                                            style="font-size:13px;border-radius: 0px 19px 19px 0px;"
+                                            id="txtTelefonoCuentaOtro" placeholder="000000000" maxlength="20">
+                                        <ul id="txtTelefonoCodigoCuentaOtro" class="dropdown-menu w-90"
+                                            style="position: absolute; z-index: 2;list-style: none;text-align: left;padding: 0; margin: -17em 0 0 -1px;box-shadow: 1px 1px 4px rgba(0,0,0,.2); background-color: #fff;border: 1px solid #ccc;white-space: nowrap; max-height: 200px;overflow-y: scroll;">
+                                            <li><i class="flag-icon flag-icon-pe"></i> </li>
+                                        </ul>
+                                    </div>
+
+
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtemailCuentaOtro">Email</label>
+                                    <input type="email" autocomplete="off" id="txtemailCuentaOtro" />
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtpassCuentaOtro">Password</label>
+                                    <input type="password" autocomplete=" off" id="txtpassCuentaOtro" class="w-90" />
+                                    <span id="span-ocultar-passCuentaOtro1" style="left: auto; right: 10px;"
+                                        class="aula-cursor-mano "><i class="zmdi zmdi-eye"></i></span>
+                                </li>
+                                <li class="form-list__row">
+                                    <label class="text-left" for="txtpassconfirmCuentaOtro">Confirm Password</label>
+                                    <input type="password" autocomplete="off" id="txtpassconfirmCuentaOtro"
+                                        class="w-90" />
+                                    <span id="span-ocultar-passCuentaOtro2" style="left: auto; right: 10px;"
+                                        class="aula-cursor-mano "><i class="zmdi zmdi-eye"></i></span>
+                                </li>
+                                <li class="form-list__row">
+
+                                    <label for="txtvoucherCuentaOtro" class="text-left">Subir Voucher de pago</label>
+                                    <input class="form-control" type="file" accept="image/jpg, image/jpeg, image/png"
+                                        id="txtvoucherCuentaOtro">
+
+                                </li>
+                            </ul>
+                            <button type="submit" class=" button w-50"> PAGAR AHORA
+                            </button>
+
+                        </fieldset>
+
+
+
+
+                    </form>
+                </div>
+
+            </div>
+            <div class="success-compra">
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoCompra" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress progress-striped active" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-compra progress-bar-animated"
+                        role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Cargando Pago. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

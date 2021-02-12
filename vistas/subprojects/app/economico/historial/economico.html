@@ -1,0 +1,66 @@
+<!--contenido de la pagina  -->
+<div class="container-fluid page-header ">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pageEconomico" value="1">
+      <select id="sizePageEconomico" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h2 class="text-center all-tittles col-8" id="titleManagerEconomico">Lista de Economico</h2>
+
+
+  </div>
+</div>
+<div class="container-fluid py-2">
+  <div class="table-responsive">
+    <table class="table table-hover text-center">
+      <thead>
+        <tr>
+          <th class="text-center">Nombres</th>
+          <th class="text-center">Apellidos</th>
+          <th class="text-center">Teléfono</th>
+          <th class="text-center">País</th>
+          <th class="text-center">Nombre de Banco</th>
+          <th class="text-center">Moneda</th>
+          <th class="text-center">Comisión</th>
+          <th class="text-center">Precio</th>
+
+          <th class="text-center">Monto Depositado</th>
+          <th class="text-center">Comprobante Pago</th>
+          <th class="text-center">Medio de Pago</th>
+          <th class="text-center">Fecha</th>
+          <th class="text-center">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyEconomico"></tbody>
+    </table>
+  </div>
+  <nav class="border-top  text-center" aria-label="Page navigation example">
+    <ul id="paginationEconomico" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination BLOG -->
+</div>
+
+
+
+
+
+<div class="modal fade" id="modalCargandoEconomico" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Economico. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

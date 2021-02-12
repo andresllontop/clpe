@@ -1,0 +1,272 @@
+<!--contenido de la pagina  -->
+<div class="container-fluid page-header ">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pagePersonal" value="1">
+      <select id="sizePagePersonal" class="form-control">
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+      </select>
+    </div>
+    <h3 class="text-center all-tittles col-8" id="titlePersonal">LISTA DE PERSONAL ADMINISTRATIVO</h3>
+    <div class="col-2 text-right">
+      <button class="btn btn-primary" id="btnAbrirPersonal">
+        <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid py-2">
+
+  <!-- Example single danger button -->
+
+  <div class="table-responsive">
+    <table class="table table-hover text-center">
+      <thead class="">
+        <tr>
+          <th class="text-center">CODIGO</th>
+          <th class="text-center">NOMBRE COMPLETO</th>
+          <th class="text-center">TELEFONO</th>
+          <th class="text-center">EMAIL</th>
+          <th class="text-center">USUARIO</th>
+          <th class="text-center">FOTO</th>
+          <th class="text-center" style="width:2%;">ESTADO</th>
+          <th class="text-center" style="width:2%;">ACTUALIZAR</th>
+          <th class="text-center" style="width:2%;">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyPersonal"></tbody>
+    </table>
+  </div>
+  <!-- pagination CAJA -->
+  <nav class="border-top  text-center" aria-label="Page navigation example">
+    <ul id="paginationPersonal" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination CAJA -->
+</div>
+
+<!-- modal -->
+<div id="ventanaModalManPersonal" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="formularioPersonal" autocomplete="off">
+        <div class="modal-header mb-3">
+
+          <h4 class="modal-title all-tittles w-100 text-center" id="tituloModalManPersonal"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            style="margin-top: -1em;margin-right: -1.5em;">
+            <span aria-hidden="true" class="m-0"
+              style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="group-material">
+                <input id="txtNombrePersonal" type="text" class="material-control tooltips-general "
+                  placeholder="Nombre completo" required="" maxlength="70" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,70}"
+                  data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Nombre completo</label>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="group-material">
+                <input id="txtApellidoPersonal" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="Nombre de usuario" required="" maxlength="50" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ ]{1,50}"
+                  data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Apellidos</label>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="group-material mb-3">
+                <input id="txtTelefonoPersonal" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="Nombre de usuario" required="" data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtTelefonoPersonal">Telefono</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="all-tittles check-true">Privilegios de Acceso</label>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="txtPrivilegio1">
+                <label class="custom-control-label" for="txtPrivilegio1">TODOS</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="txtPrivilegio2">
+                <label class="custom-control-label" for="txtPrivilegio2">INGRESO BÁSICO</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="txtPrivilegio3">
+                <label class="custom-control-label" for="txtPrivilegio3">TAREAS N01</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="txtPrivilegio4">
+                <label class="custom-control-label" for="txtPrivilegio4">MENSAJERIA N01</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="txtPrivilegio5">
+                <label class="custom-control-label" for="txtPrivilegio5">CONTROL ADMINISTRATIVO</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="txtPrivilegio6">
+                <label class="custom-control-label" for="txtPrivilegio6">CONTROL ECONÓMICO</label>
+              </div>
+            </div>
+
+
+            <legend class="all-tittles col-sm-12 text-center mb-6 pb-2">Datos de Usuario</legend>
+            <br>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtUsuarioName" type="text" class="material-control tooltips-general"
+                  placeholder="Nombre completo" required="" maxlength="40" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}"
+                  data-toggle="tooltip" data-placement="top" title="Escribe nombre de Usuario">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtUsuarioName">Usuario</label>
+              </div>
+              <div class="group-material">
+                <input id="txtEmailUsuario" type="email" class="material-control tooltips-general" placeholder="E-mail"
+                  maxlength="50" data-toggle="tooltip" data-placement="top" title="Escribe el Email del Personal">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Email</label>
+              </div>
+              <div class="group-material form-row">
+                <div class="col-10">
+                  <input id="txtPasswordUsuario" type="password" class="material-control tooltips-general"
+                    placeholder="contraseña" data-toggle="tooltip" data-placement="top" title="Repite la contraseña">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles">Contraseña</label>
+                </div>
+                <button id="ButtonPassword1" type="button" class="btn px-2 col-2" style=" height: 49px;"> <i
+                    class="zmdi zmdi-eye" style="line-height: 0;position: inherit;"></i>
+                </button>
+              </div>
+              <div class="group-material">
+                <input id="txtPasswordUsuario2" type="password" class="material-control tooltips-general"
+                  placeholder="Repite la contraseña" data-toggle="tooltip" data-placement="top"
+                  title="Repite la contraseña">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Contraseña</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <div id="imagePreview" class="text-center">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+
+          <button type="submit" class="btn btn-success all-tittles">
+            REGISTRAR
+          </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            CERRAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--final del contenido de la pagina  -->
+
+<div id="ventanaModalManRecomendado" class="modal" tabindex="-1" role="dialog" data-backdrop="static"
+  data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="formularioRecomendado" class="FormularioAjaxRecomendado" method="POST" data-form="" autocomplete="off"
+        enctype="multipart/form-data">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
+          <h4 class="modal-title all-tittles text-center" id="tituloModalManRecomendado"></h4>
+
+        </div>
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+              <div class="group-material">
+                <input id="CodigoPadre" name="CodigoPadre" type="text" class="material-control tooltips-general "
+                  placeholder="Codigo" required="" maxlength="20" pattern="[a-z0-9A-ZáéíóúÁÉÍÓÚñÑ ]{1,70}"
+                  data-toggle="tooltip" data-placement="top" title="Escribe el codigo del Personal">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">CODIGO DEL RECOMENDADO</label>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+              <div class="group-material">
+                <input id="NameRecomendado" name="NameRecomendado" type="text"
+                  class="material-control tooltips-general " placeholder="Nombre y apellido" required="" maxlength="20"
+                  pattern="[a-z0-9A-ZáéíóúÁÉÍÓÚñÑ ]{1,70}" data-toggle="tooltip" data-placement="top"
+                  title="Escribe el codigo del Personal">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>RECOMENDADO POR : </label>
+              </div>
+            </div>
+            <div class="col-xs-12 col-lg-12">
+
+              <div class="table-responsive" style="overflow-y:scroll; height:156px;">
+                <table class="table table-hover text-center">
+                  <thead>
+                    <tr>
+                      <th class="text-center">#</th>
+                      <th class="text-center">CODIGO</th>
+                      <th class="text-center">NOMBRES</th>
+                      <th class="text-center">APELLIDOS</th>
+                    </tr>
+                  </thead>
+                  <tbody class="tbodyPersonalBusqueda"></tbody>
+                </table>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="CodigoHijo" id="CodigoHijo">
+          <button type="submit" class="btn btn-primary ">
+            Registrar Dato
+          </button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoPersonal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Usuario Activos. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,242 @@
+.card {
+  position: relative;
+  margin-top: 200px;
+  margin-bottom: -10%;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 400px;
+  background: #fff;
+  transform-style: preserve-3d;
+  transform: translate(-50%, -50%) perspective(2000px);
+  box-shadow: inset 300px 0 50px rgba(0, 0, 0, 0.5),
+    0 20px 100px rgba(0, 0, 0, 0.5);
+  transition: 1s;
+}
+.card:hover {
+  transform: translate(-50%, -50%) perspective(2000px) rotate(-2deg);
+  box-shadow: inset 20px 0 50px rgba(0, 0, 0, 0.5),
+    0 10px 100px rgba(0, 0, 0, 0.5);
+}
+.card::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: rgb(43, 61, 81);
+  transform-origin: bottom;
+  transform: skewX(-45deg);
+}
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -5px;
+  width: 5px;
+  height: 100%;
+  background: rgb(43, 61, 81);
+  transform-origin: left;
+  transform: skewY(-45deg);
+}
+.card .imgBox {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-origin: left;
+  transition: 1s cubic-bezier(0.15, 1.7, 0.84, 0.58);
+  z-index: 1;
+}
+.card:hover .imgBox {
+  transform: rotateY(-135deg);
+}
+.preloader {
+  width: 100%;
+  height: 100%;
+
+  left: 0;
+  top: 0;
+  right: 0;
+  text-align: center;
+  z-index: 2;
+}
+
+.preloader > .cargando > h2 {
+  color: #fff;
+  margin: 0;
+  font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic,
+    "AppleGothic", sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  animation: blur 2s ease-out infinite;
+  text-shadow: 0px 0px 5px rgb(0, 0, 0), 0px 0px 7px #360029;
+}
+@keyframes blur {
+  from {
+    text-shadow: 0px 0px 10px #a802a0, 0px 0px 10px #a802a0,
+      0px 0px 25px #a802a0, 0px 0px 25px #a802a0, 0px 0px 25px #a802a0,
+      0px 0px 25px #a802a0, 0px 0px 25px #a802a0, 0px 0px 25px #a802a0,
+      0px 0px 50px #a802a0, 0px 0px 50px #a802a0, 0px 0px 50px #8b0085,
+      0px 0px 150px #ffffff, 0px 10px 100px #8b0085, 0px 10px 100px #8b0085,
+      0px 10px 100px #8b0085, 0px 10px 100px #8b0085, 0px -10px 100px #8b0085,
+      0px -10px 100px #8b0085;
+  }
+}
+.preloader > .cargando {
+  top: 38%;
+  left: 40%;
+  height: 100px;
+  width: 200px;
+  position: absolute;
+}
+.card .details {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  padding: 20px;
+  z-index: -1;
+}
+/* contactar boton */
+.sidebar {
+  position: fixed;
+  top: 50%;
+  left: -350px;
+  transform: translateY(-50%);
+  width: 350px;
+  height: auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 20px 50px rgba(61, 0, 0, 0.664);
+  z-index: 2;
+  transition: 0.5s;
+}
+.sidebar.active {
+  left: 20px;
+}
+.toggle {
+  position: absolute;
+  top: 0;
+  right: -48px;
+  border-radius: 22px;
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  cursor: pointer;
+  background: rgb(255, 0, 0);
+}
+.toggle::before {
+  content: "\f003";
+  font-family: fontAwesome;
+  color: #fff;
+  font-size: 18px;
+}
+.toggle.active::before {
+  content: "\f00d";
+  right: -60px;
+}
+/* /contactar boton */
+/* slider */
+
+.container-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.container-slide > ul {
+  margin: 0 0 40px;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.container-slide > ul li {
+  list-style: none;
+}
+.container-slide > ul li .slid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s;
+  transform: rotateY(90deg);
+  transform-origin: left;
+}
+.container-slide > ul li input[type="radio"] {
+  position: relative;
+  z-index: 1;
+  height: 20px;
+  width: 20px;
+  margin-top: 600px;
+}
+.container-slide > ul li input[type="radio"]:checked ~ .slid {
+  transition: transform 0.5s;
+  transform: rotateY(0deg);
+  transform-origin: right;
+}
+.container-slide > ul li .slid .content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 15px;
+  border-radius: 5px;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.5);
+}
+.container-slide > ul li .slid .content h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 42px;
+}
+.container-slide > ul li .slid .content p {
+  font-size: 18px;
+  color: black;
+}
+.container-slide > ul li .slid img {
+  object-fit: cover;
+  position: absolute;
+  max-width: 100%;
+  top: 0;
+  left: 0;
+}
+.container-slide > ul li input[type="radio"]:checked ~ .slid img {
+  animation: animate 40s linear infinite;
+}
+@keyframes animate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.container-slide > ul .right,
+.container-slide > ul .left {
+  position: absolute;
+  width: 60px;
+
+  font-size: 40px;
+  height: 60px;
+  color: #fff;
+  border-radius: 40px;
+  background: rgba(3, 44, 41, 0.466);
+  top: 40%;
+  padding: 2px 16px;
+}
+.container-slide > ul .left {
+  left: 5%;
+}
+.container-slide > ul .right {
+  right: 5%;
+}

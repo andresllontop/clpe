@@ -1,0 +1,141 @@
+<!--contenido de la pagina  -->
+<div class="container-fluid page-header py-2">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pagePublico" value="1">
+      <select id="sizePagePublico" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h3 class="text-center all-tittles col-8" id="titleManagerPublico">Lista de MENSAJES DE PÚBLICO</h3>
+
+  </div>
+</div>
+
+<div class="container-fluid ">
+
+
+  <div class="table-responsive">
+    <table class="table table-hover text-center">
+      <thead class="">
+        <tr>
+          <th class="text-center">NOMBRE</th>
+          <th class="text-center">EMAIL</th>
+          <th class="text-center">FECHA</th>
+          <th class="text-center d-none">¿ LEIDO ?</th>
+          <th class="text-center">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyPublico"></tbody>
+    </table>
+  </div>
+  <nav class="border-top  text-center" aria-label="Page navigation example">
+    <ul id="paginationPublico" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination BLOG -->
+</div>
+
+<div id="ventanaModalManPublico" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <form id="formularioPublico" autocomplete="off">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title text-center" id="tituloModalManPublico"></h4>
+        </div>
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+              <div class="group-material">
+                <input id="txtNombrePublico" type="text" class="material-control tooltips-general"
+                  placeholder="Nombre completo" required="" maxlength="200" data-toggle="tooltip" data-placement="top"
+                  title="" data-original-title="Escribe el nombre del Recurso">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Nombre para el Recurso</label>
+              </div>
+              <!-- Capitulo-->
+              <label for="txtCapituloPublico" class="all-tittles">Capítulo</label>
+
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            CERRAR
+          </button>
+          <button type="submit" class="btn btn-primary ">
+            GUARDAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="ventanaModalVerPreguntas" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title text-center" id="tituloModalVerPreguntas"></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12" id="tbodyVerPreguntas">
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          CERRAR
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoPublico" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Publico. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalFramePublico" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body p-0" id="modalFrameContenidoPublico" style="height: 85vh;">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger " data-dismiss="modal">
+          CERRAR
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

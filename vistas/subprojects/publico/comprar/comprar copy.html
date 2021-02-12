@@ -1,0 +1,121 @@
+<div class="container-fluid">
+    <!-- progressbar -->
+    <ul id="progressbar" class="text-center mx-auto my-8 w-66 w-xs-100 px-0">
+        <li class="active">Selecciona alguna opción</li>
+        <li>Ingresa tus datos</li>
+        <li>Crea tu Cuenta</li>
+        <li>Confirmar tu pago</li>
+
+    </ul>
+
+    <div class="container-fluid py-3" style="background-color: #e8e5e5;">
+        <div class="form-row mx-auto w-55  w-xs-100">
+            <div class="col-sm-6 col-xs-7 text-left">
+                <p class="details-title mb-0">Plan seleccionado</p>
+                <p class="details-name mb-0"> Standar</p>
+                <p class="details-title mb-0">Pago único automático</p>
+            </div>
+            <div class="col-sm-6 col-xs-5 text-right ">
+                <h2 class="f-weight-400 m-0"><small class="mr-1">USD</small>50</h2>
+            </div>
+        </div>
+
+    </div>
+    <!-- multistep form -->
+    <form id="msform" class="my-4 w-xs-100">
+        <!-- fieldsets -->
+        <fieldset class="w-xs-100 mx-xs-0">
+            <h2 class="fs-title">Datos Personales</h2>
+            <ul class="form-list">
+                <li class="form-list__row">
+                    <label class="text-left">Nombre Completo</label>
+                    <input type="text" name="NombreCuenta" required="" />
+                </li>
+                <li class="form-list__row">
+                    <label class="text-left">Apellidos</label>
+                    <input type="text" name="ApellidoCuenta" required="" />
+                </li>
+                <li class="form-list__row">
+                    <label class="text-left">Profesión u Oficio</label>
+                    <input type="text" name="ProfesionCuenta" required="" />
+                </li>
+                <li class="form-list__row">
+                    <label class="text-left">Teléfono</label>
+                    <input type="text" name="TelefonoCuenta" required="" />
+                </li>
+            </ul>
+            <button type="button" name="next" class="next button w-50"> <span>Continuar</span><i
+                    class="zmdi zmdi-caret-right ml-3"></i>
+            </button>
+
+        </fieldset>
+        <fieldset class="w-xs-100 mx-xs-0">
+            <h2 class="fs-title">Crea tu Cuenta</h2>
+
+            <ul class="form-list">
+                <li class="form-list__row">
+                    <label class="text-left">Email</label>
+                    <input type="text" name="EmailCuenta" />
+                </li>
+                <li class="form-list__row">
+                    <label class="text-left">Password</label>
+                    <input type="password" name="Pass1Cuenta" />
+                </li>
+                <li class="form-list__row">
+                    <label class="text-left">Confirm Password</label>
+                    <input type="password" name="Pass2Cuenta" />
+                </li>
+
+            </ul>
+            <button type="button" name="next" class="next button w-50"> <span>Continuar</span><i
+                    class="zmdi zmdi-caret-right ml-3"></i>
+            </button>
+        </fieldset>
+        <fieldset class="w-xs-100 mx-xs-0">
+            <h2 class="fs-title">Datos de Pago</h2>
+
+            <ul class="form-list">
+                <li class="form-list__row">
+                    <label class="text-left" for="owner">Email</label>
+                    <input type="text" name="cc_email" required="" maxlength="50" id="owner" />
+                </li>
+                <li class="form-list__row">
+                    <label class="text-left" for="cardNumber">Número de tarjeta</label>
+
+                    <input type="text" name="cc_number" required="" maxlength="20" id="cardNumber" />
+
+                </li>
+                <li class="form-list__row form-list__row--inline">
+                    <div>
+                        <label class="text-left">Expiration Date</label>
+                        <div class="form-list__input-inline">
+                            <input type="text" name="cc_month" placeholder="MM" minlength="2" maxlength="2" required=""
+                                id="card[exp_month]" />
+                            <input type="text" name="cc_year" placeholder="YY" minlength="2" maxlength="2" required=""
+                                id="card[exp_year]" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-left" for="cvv">CVC</label>
+                        <input type="text" name="cvv" placeholder="123" pattern="\\d*" minlength="3" maxlength="4"
+                            id="cvv" required="" />
+                    </div>
+                </li>
+
+                <li>
+                    <div class="form-group" id="credit_cards">
+                        <img id="visa">
+                        <img id="mastercard">
+                        <img id="amex">
+                    </div>
+                    <button type="submit" class="button" id="buyButton">Pay Now</button>
+                </li>
+            </ul>
+            <input style="display: none;" type="button" name="previous" class="previous action-button"
+                value="Previous" />
+
+        </fieldset>
+
+
+    </form>
+</div>

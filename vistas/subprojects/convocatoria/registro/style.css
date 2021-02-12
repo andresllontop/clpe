@@ -1,0 +1,26 @@
+.border-group {
+	border: solid 1px transparent;
+	border-radius: 0.7em;
+	padding: 2rem;
+	background-color: white;
+}
+
+input {
+	border-top: transparent !important;
+	border-right: transparent !important;
+	border-left: transparent !important;
+	text-indent: 0px !important;
+}
+body {
+	background-color: rgba(160, 204, 204, 0.397);
+}
+
+/* col-xs */
+@media (max-width: 767px) {
+	.w-50 {
+		width: 100% !important;
+	}
+	.navigation > h2 {
+		font-size: 1.4em;
+	}
+}

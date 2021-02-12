@@ -1,0 +1,130 @@
+<!--contenido de la pagina  -->
+
+
+<div class="container-fluid page-header ">
+  <div class="form-row">
+    <div class="dropdown col-xs-2">
+      <input type="hidden" id="pageTest" value="1">
+      <select id="sizePageTest" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h3 class="text-center all-tittles col-xs-8 f-weight-600" id="titleManagerTest">LISTA DE CUESTIONARIOS INTERNOS</h3>
+
+    <div class="col-xs-2 text-right">
+      <button class="btn btn-primary" id="btnAbrirTest">
+        <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid ">
+
+
+  <div class="table-responsive">
+    <table class="table table-hover text-center ">
+      <thead class="">
+        <tr>
+          <th class="text-center">CAPITULO</th>
+          <th class="text-center">DESCRIPCION</th>
+          <th class="text-center">PREGUNTAS</th>
+          <th class="text-center">EDITAR</th>
+          <th class="text-center">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyTest"></tbody>
+    </table>
+  </div>
+  <nav class="border-top  text-center" aria-label="Page navigation example">
+    <ul id="paginationTest" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination BLOG -->
+</div>
+
+<div id="ventanaModalManTest" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <form id="formularioTest" autocomplete="off">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title text-center" id="tituloModalManTest"></h4>
+        </div>
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+
+              <!-- Capitulo-->
+              <label for="txtCapituloTest">Capítulo</label>
+              <div class="group-material">
+                <div class="d-flex">
+                  <input id="txtCapituloTest" type="text" class="material-control tooltips-general" disabled
+                    placeholder="seleccionar Capítulo -->">
+                  <button id="btnSeleccionarCapitulo" class="btn btn-sm btn-primary" type="button"><i
+                      class="zmdi zmdi-zoom-in f-25">
+                    </i>
+                  </button>
+                </div>
+
+              </div>
+              <label for="txtNombreTest">Descripción para el Cuestionario</label>
+              <div class="group-material">
+                <textarea class="material-control w-100" data-toggle="tooltip" required="" data-placement="top" title=""
+                  data-original-title="Escribe la url de youtube" id="txtNombreTest" rows="3"></textarea>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            CERRAR
+          </button>
+          <button type="submit" class="btn btn-primary ">
+            GUARDAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoTest" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+  style="padding-top: 18%; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Test. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalFrameTest" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body p-0" id="modalFrameContenidoTest" style="height: 85vh;">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger " data-dismiss="modal">
+          CERRAR
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

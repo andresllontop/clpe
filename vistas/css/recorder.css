@@ -1,0 +1,53 @@
+#container2 {
+	display: none;
+}
+.videoRecorder button {
+	margin: 0 3px 10px 0;
+	padding-left: 2px;
+	padding-right: 2px;
+	width: 99px;
+}
+.videoRecorder #record {
+	margin: 0 3px 10px 0;
+	padding-left: 2px;
+	padding-right: 2px;
+	width: auto;
+}
+
+.videoRecorder p.borderBelow {
+	margin: 0 0 20px 0;
+	padding: 0 0 20px 0;
+}
+
+.videoRecorder video {
+	margin: 0 12px 20px 0;
+	vertical-align: top;
+	width: 100%;
+}
+
+.videoRecorder video:last-of-type {
+	margin: 0 0 20px 0;
+}
+
+.videoRecorder video#gumVideo {
+	margin: 0 20px 20px 0;
+}
+
+@media (max-width: 500px) {
+	.videoRecorder button {
+		font-size: 0.8em;
+		width: calc(33% - 5px);
+	}
+}
+
+@media (max-width: 720px) {
+	.videoRecorder video {
+		/* height: calc((50vw - 48px) * 3 / 4); */
+		margin: 0 10px 10px 0;
+		width: 100%;
+	}
+
+	.videoRecorder video#gumVideo {
+		margin: 0 10px 10px 0;
+	}
+}

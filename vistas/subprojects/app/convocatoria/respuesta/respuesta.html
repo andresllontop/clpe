@@ -1,0 +1,103 @@
+<!--contenido de la pagina  -->
+<div class="container-fluid page-header ">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pageRespuesta" value="1">
+      <select id="sizePageRespuesta" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h2 class="text-center all-tittles col-8" id="titleManagerRespuesta">Lista de Respuesta</h2>
+
+  </div>
+</div>
+<div class="container-fluid py-2">
+  <form class="form-inline" id="formularioCuestionarioSearch" autocomplete="off">
+    <div class="form-group col-9 mb-2">
+      <label for="txtSearchCuestionario" class="sr-only">Buscar</label>
+      <div class="input-group w-100  box-shadow border border-radius">
+        <div class="input-group-prepend">
+          <button type="submit" class="input-group-text border border-radius"><i class="zmdi zmdi-search"
+              style="font-size: 28px;"></i></button>
+        </div>
+        <input id="txtSearchCuestionario" type="search" class="form-control col-auto border border-radius"
+          placeholder="Buscar Código o Nombre del Cuestionario">
+      </div>
+
+    </div>
+    <div class="form-group col-3 mb-2 ">
+      <label for="txtCountCuestionario" class="">Contador</label>
+      <input id="txtCountCuestionario" type="text"
+        class="ml-auto form-control border border-radius text-center box-shadow" placeholder="0">
+    </div>
+  </form>
+  <div class="table-responsive">
+    <table class="table table-hover text-center">
+      <thead>
+        <tr>
+          <th class="text-center">Código o Nombre del Cuestionario</th>
+          <th class="text-center">DIRECCIÓN IP</th>
+          <th class="text-center">FECHA</th>
+          <th class="text-center">RESPUESTAS</th>
+          <th class="text-center">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyRespuesta"></tbody>
+    </table>
+  </div>
+  <nav class="border-top py-2 text-center" aria-label="Page navigation example">
+    <ul id="paginationRespuesta" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination BLOG -->
+</div>
+
+
+<div id="ventanaModalManRespuesta" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h4 class="modal-title text-center w-100" id="tituloModalManRespuesta"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          style="margin-top: -1em;margin-right: -1.5em;">
+          <span aria-hidden="true" class="m-0"
+            style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-top:20px;">
+        <div class="row" id="detalleRespuesta">
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger " data-dismiss="modal">
+          CERRAR
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--final del contenido de la pagina  -->
+
+
+<div class="modal fade" id="modalCargandoRespuesta" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Respuesta. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

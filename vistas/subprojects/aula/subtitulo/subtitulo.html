@@ -1,0 +1,297 @@
+<!--contenido de la pagina  -->
+<section class="content-section anim fadeInDown d-none pb-0" id="sectionLeccion">
+    <div class="form-row p-2 w-100 m-0">
+        <div class="col-md-8 col-sm-12 p-1 mx-auto">
+            <div class="form-row">
+
+                <div class="col-lg-12 p-0 my-auto">
+                    <h5 class="all-tittles text-center dt-titulo" style="font-size: 25px;">
+
+                    </h5>
+                    <h5 class="all-tittles text-center dt-subtitulo" style="font-size: 20px;
+                    font-weight: bold;">
+
+                    </h5>
+                </div>
+
+                <div class="col-sm-12 col-12">
+                    <pre class="p-0 m-0" style="border: 0;background-color: transparent;">
+                        <div class="video-responsive" style="position: initial;">
+                        <div id="ytplayer"></div>
+                    </pre>
+                </div>
+
+
+            </div>
+        </div>
+        <div id="htmlCuestionarioFin" class="col-md-4 col-sm-12 col-12 p-1">
+            <div class="container-flat-form py-0 px-1 h-100 m-0 w-100">
+                <div class="form-row h-100">
+                    <div class="col-md-12 my-auto">
+                        <div class=" m-0 p-2 h-auto border" style="line-height: 31px;">
+                            <h5 class="f-weight-700 text-primary text-center">Enviar Resumen y Video de la Lección</h5>
+
+                        </div>
+                        <div class="mx-auto col-8 dt-subtitulo-pdf descargar-archivo aula-cursor-mano p-1 text-center">
+                        </div>
+                        <small class="form-text text-muted px-3 py-2"
+                            style="font-family: 'arial' !important;display: table;"><i
+                                class="zmdi zmdi-check zmdi-hc-1x mr-1 text-success"></i> <span
+                                style="display: table-cell;"> Le recomendamos tener
+                                un cuaderno para realizar anotaciones al momento de escuchar los videos.</span></small>
+                        <form id="formularioLeccion" autocomplete="off" style="
+                                font-family: 'arial' !important;">
+                            <div class="was-validated form-row  m-0 w-100 h-100">
+                                <div class="form-group col-12 h-100">
+                                    <label for="txtComentarioLeccion">Escribe las ideas más importantes que hayas
+                                        comprendido de esta lección:</label>
+                                    <textarea class="form-control" id="txtComentarioLeccion" rows="5"
+                                        placeholder="Escribe " required></textarea>
+
+                                    <small class="form-text text-muted w-100 px-3 pt-2"><i
+                                            class="zmdi zmdi-check zmdi-hc-1x mr-1 text-success"></i>Graba tu video como
+                                        máximo de 2
+                                        minutos.</small>
+                                </div>
+                                <div class="form-group mb-3 text-center col-12 d-inline-flex">
+                                    <button type="button" class="btn btn-danger mx-auto" id="AbrirVideo"><i
+                                            class="zmdi zmdi-camera-mic zmdi-hc-2x mr-2"></i> <span> Grabar
+                                            desde el
+                                            Dispositivo</span> </button>
+                                    <button type="button" class="btn btn-default d-none" id="DownloadVideo" disabled><i
+                                            class="fa fa-fw fa-download"
+                                            style="position: relative;right: 0;top: 0;"></i> <span>Descargar
+                                            Video</span> </button>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>Video</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-danger"><i
+                                                    class="zmdi zmdi-camera-add text-white"></i></span>
+
+                                        </div>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input"
+                                                accept="video/mp4,video/webm,video/ogg,video/quicktime"
+                                                id="txtVideoLeccion" aria-describedby="txtVideoLeccion">
+                                            <label class="custom-file-label" for="txtVideoLeccion">Elegir Video</label>
+                                        </div>
+
+                                        <small class="form-text text-muted w-100">Formatos Permitido:MP4</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 text-center">
+                                    <button type="reset" class="btn btn-info mr-2">
+                                        <i class="zmdi zmdi-roller"></i> &nbsp;&nbsp; Limpiar
+                                    </button>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="zmdi zmdi-floppy"></i> &nbsp;&nbsp; Enviar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-12 py-2">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#contenido-curso">
+                        <h5 class=" text-udemy">Contenido del Curso</h5>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#certificado-finalizacion" id="nav-certificado">
+                        <h5 class=" text-udemy ">Certificado</h5>
+                    </a>
+                </li>
+
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active p-2 border-bottom border-right border-left" id="contenido-curso">
+                    <ul class="accordion" id="bodySubtitulo-titulo">
+
+                    </ul>
+                </div>
+                <div class="tab-pane p-2 text-center border-bottom border-right border-left"
+                    id="certificado-finalizacion">
+                    <h5 class="card-title">Certificado de Finalización</h5>
+                    <div id="htmlMensaje" class="form contact light p-0">
+
+                        <p class="mb-2 f-16" style="line-height: 16px;">Consigue el certificado del Club de Lectura para
+                            Emprendedores al completar todo el curso.</p>
+                        <button href="" class="btn btn-primary" disabled><i class="fa fa-fw fa-file-pdf-o"
+                                style="position: relative;right: 0;top: 0;"></i> <span>Certificado
+                                CLPE</span> </button>
+                    </div><!-- .content-section .form -->
+
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="ModalFormularioVideo" tabindex="-1" role="dialog" aria-hidden="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header  pb-0" style="border: none;">
+                <h2 class="fluid-list text-center title-m w-100">GRABA TU COMENTARIO</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    style="margin-top: -1em;margin-right: -1.5em;">
+                    <span aria-hidden="true" class="m-0"
+                        style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+                </button>
+
+
+            </div>
+            <div class="modal-body">
+                <div id="container" class="videoRecorder text-center">
+                    <div class="row">
+                        <div class="col-sm-12 col-12">
+                            <video id="gum" autoplay muted></video>
+                        </div>
+                        <div class="col-sm-6 col-12 d-none">
+                            <video id="recorded" autoplay></video>
+
+                        </div>
+
+                        <div class="col-sm-12 col-12 pb-2">
+                            <h4 id="number" class="text-center"></h4>
+                            <button id="record" class="btn m-0 p-0 tooltips-general px-2 mr-4" data-camara="comenzar"
+                                data-toggle="tooltip" data-placement="left" title="INICIAR GRABACIÓN">
+                                <i class="zmdi zmdi-play-circle zmdi-hc-4x text-danger"></i>
+                            </button>
+                            <button id="play" disabled class="btn m-0 p-0 tooltips-general px-3 w-auto d-none"
+                                data-camara="play" data-toggle="tooltip" data-placement="right"
+                                title="REPRODUCIR GRABACIÓN"><i
+                                    class="zmdi  zmdi-play zmdi-hc-4x text-danger"></i></button>
+
+                        </div>
+                        <div class="col-sm-6 mx-auto col-11 alert alert-primary p-0">
+                            <button id="download-video" class="btn btn-default w-100 m-0 p-2" disabled> Descarga
+                                tu
+                                video grabado si lo necesitas. <i class="fa fa-2x fa-download mx-2"
+                                    style="position: relative;right: 0;top: 0;"></i>
+
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">CERRAR</button>
+                <button id="enviarVideo" class="btn btn-primary"> <i class="zmdi zmdi-folder-star zmdi-hc-fw"></i>
+                    &nbsp;&nbsp;Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--final del contenido de la pagina  -->
+<div class="modal fade" id="modalCargandoSubtitulo" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Cargando Lección. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalCargandoLeccion" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress progress-striped active" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-video"
+                        role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Enviando Lección Realizada. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalFrameSubtitulo" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body p-0" id="modalFrameContenidoSubtitulo" style="height: 85vh;">
+
+            </div>
+            <div class="modal-footer">
+                <a href="" id="descargarPdf" download>
+                    <button type="button" class="btn btn-warning-outline py-2">
+                        <i class="zmdi zmdi-download zmdi-hc mr-1"></i><span>DESCARGAR
+                    </button>
+                </a>
+                <button type="button" class="btn btn-danger p-2" data-dismiss="modal">
+                    CERRAR
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="modalSwallMensaje" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+    style="padding-top: 20vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="<?php echo SERVERURL; ?>vistas/assets/img/enviada-carta.png" alt="enviada-carta">
+                <h2 id="modalSwallTitulo"></h2>
+                <p style="display: block;" id="modalSwallContenido"></p>
+                <fieldset>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"
+                        id="modalSwallCancelar">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="modalSwallAceptar">Aceptar</button>
+                </fieldset>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalFrameCertificado" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body p-0" id="modalFrameContenidoCertificado" style="height: 80vh;">
+
+            </div>
+            <div class="modal-footer">
+                <a href="" download>
+                    <button type="button" id="descargarPdfCertificado" class="btn btn-warning-outline py-2">
+                        <i class="zmdi zmdi-download zmdi-hc mr-1"></i><span>DESCARGAR
+                    </button>
+                </a>
+
+                <button type="button" class="btn btn-danger py-2" data-dismiss="modal">
+                    CERRAR
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,141 @@
+<!--contenido de la pagina  -->
+
+
+<div class="container-fluid page-header ">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pageTestimonio" value="1">
+      <select id="sizePageTestimonio" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h3 class="text-center all-tittles col-8" id="titleManagerTestimonio">Lista de testimonios</h3>
+
+    <div class="col-2 text-right">
+      <button class="btn btn-primary" id="btnAbrirbook">
+        <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid py-2">
+  <div class="table-responsive">
+    <table class="table table-hover text-center">
+      <thead>
+        <tr>
+          <th class="text-center">TÍTULO</th>
+          <th class="text-center">DESCRIPCIÓN</th>
+          <th class="text-center">IMAGEN</th>
+          <th class="text-center">ENLACE YOUTUBE</th>
+
+          <th class="text-center">EDITAR</th>
+          <th class="text-center">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyTestimonio"></tbody>
+    </table>
+  </div>
+  <nav class="border-top  text-center" aria-label="Page navigation example">
+    <ul id="paginationTestimonio" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination BLOG -->
+</div>
+
+<div id="ventanaModalManTestimonio" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <form id="formularioTestimonio" autocomplete="off">
+        <div class="modal-header">
+
+          <h4 class="modal-title text-center w-100" id="tituloModalManTestimonio"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            style="margin-top: -1em;margin-right: -1.5em;">
+            <span aria-hidden="true" class="m-0"
+              style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-top:20px;">
+          <div class="row">
+            <div class="col-12">
+              <div class="group-material">
+
+                <input id="txttituloTestimonio" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="titulo" required="" maxlength="240" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,20}"
+                  data-toggle="tooltip" data-placement="top" title="Escribe titulo">
+
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Título</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label>Descripcion</label>
+              <div class="group-material">
+                <textarea id="txtDescripcionTestimonio"></textarea>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="txtYoutubeTestimonio">Enlace de Youtube</label>
+              <div class="group-material">
+                <div id="youtubePreview">
+                </div>
+                <textarea class="material-control w-100" data-toggle="tooltip" required="" data-placement="top" title=""
+                  data-original-title="Escribe la url de youtube" id="txtYoutubeTestimonio" rows="3"></textarea>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="group-material">
+                <div id="imagePreview" class="text-center">
+                </div>
+                <input id="txtImagenTestimonio" type="file" class="material-control tooltips-general input-check-user"
+                  placeholder="Nombre de usuario" data-toggle="tooltip" data-placement="top" title=""
+                  data-original-title="Selecciona una Imagen" accept="image/png, image/jpeg, image/png">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Imagen:</label>
+                <small>Tamaño Máximo Permitido:1700 KB</small>
+                <br>
+                <small>Formatos Permitido: JPG, PNG, JPEG</small>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger " data-dismiss="modal">
+            CERRAR
+          </button>
+          <button type="submit" class="btn btn-primary ">
+            GUARDAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoTestimonio" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Testimonio. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

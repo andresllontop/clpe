@@ -1,0 +1,106 @@
+<div class="container">
+    <div class="page-header">
+        <h3 class="all-tittles">
+            <?php echo (COMPANY); ?> <small>Reportes</small>
+        </h3>
+    </div>
+</div>
+<div class="container-fluid " style="padding-bottom:5%;">
+    <div class="tab-content">
+        <div role="tabpanel" class="in active" id="reports">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="page-header w-100">
+                        <h2 class="all-tittles">Reportes <small>Generales</small></h2>
+                    </div><br>
+                    <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class="full-reset report-content">
+                            <p class="text-center">
+                                <a href="javascript:void(0)" id="alumno-activo-reporte"> <i
+                                        class="zmdi zmdi-trending-down zmdi-hc-5x"></i></a>
+                            </p>
+                            <h3 class="text-center">Reporte Usuarios Matriculados</h3>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class="full-reset report-content">
+                            <p class="text-center">
+                                <a href="javascript:void(0)" id="alumno-inactivo-reporte"> <i
+                                        class="zmdi zmdi-trending-down zmdi-hc-5x"></i></a>
+                            </p>
+                            <h3 class="text-center">Reporte Usuarios No Matriculados</h3>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class="full-reset report-content">
+                            <p class="text-center">
+                                <a href="javascript:void(0)" id="visita-reporte"> <i
+                                        class="zmdi zmdi-trending-down zmdi-hc-5x"></i></a>
+                            </p>
+                            <h3 class="text-center">Reporte Indicadores</h3>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="page-header  w-100">
+                        <h2 class="all-tittles">Reportes <small>Usuarios</small></h2>
+                    </div><br>
+
+                    <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class="full-reset report-content">
+                            <p class="text-center">
+                                <a href="javascript:void(0)" id="personal-reporte"> <i
+                                        class="zmdi zmdi-folder-person zmdi-hc-5x"></i></a>
+                            </p>
+                            <h3 class="text-center">Personal Administrativo</h3>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class="full-reset report-content">
+                            <p class="text-center">
+                                <a href="javascript:void(0)" id="alumno-reporte"><i
+                                        class="zmdi zmdi-folder-person zmdi-hc-5x"></i></a>
+                            </p>
+                            <h3 class="text-center">Estudiantes</h3>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class="full-reset report-content">
+                            <p class="text-center">
+                                <a href="javascript:void(0)" id="publico-reporte"><i
+                                        class="zmdi zmdi-folder-person zmdi-hc-5x"></i></a>
+                            </p>
+                            <h3 class="text-center">Publicos</h3>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class="full-reset report-content">
+                            <p class="text-center">
+                                <a href="javascript:void(0)" id="tarea-reporte"><i
+                                        class="zmdi zmdi-folder-person zmdi-hc-5x"></i></a>
+                            </p>
+                            <h3 class="text-center">Tareas Alumnos</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCargandoReporte" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Cargando Reportes. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

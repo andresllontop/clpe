@@ -1,0 +1,54 @@
+<section class="content-section anim fadeInDown pb-3">
+    <div class="container">
+        <h3 class="text-center w-100 mb-2">
+            <a style="width: 5em;" href="/">
+                <img src="<?php echo SERVERURL; ?>adjuntos/logoHeader.jpg" style="width: 2em;" />
+            </a>RECUPERAR <span>CONTRASEÑA</span>
+        </h3>
+        <p>
+            ¡Bienvenido a la sección para recuperar tu contraseña!, ingresa tu correo electrónico registrado en la
+            plataforma para recibir un enlace de verificación y restauración de contraseña.
+        </p>
+    </div>
+</section><!-- .content-section -->
+
+<section class="content-section form contact light">
+    <div class="container">
+        <form id="formularioRecovery" autocomplete="off">
+            <div class="col-sm-offset-3 col-sm-6 anim fadeInLeft">
+
+                <span class="input-group">
+                    <label for="contactAddressRecovery" class="d-none">Dirección de correo electrónico</label>
+                    <i class="zmdi zmdi-account-box-mail" style="line-height: 49px;"></i>
+                    <input type="text" id="contactAddressRecovery" name="contactAddressRecovery" class="lg"
+                        placeholder="Dirección de correo electrónico" style="font-size: 17px; height: 49px;" />
+                </span><!-- .input-group -->
+                <span class="input-group">
+                    <button class="submit" id="submitRecovery" style=" height: 49px;">ENVIAR</button>
+                </span><!-- .input-group -->
+
+            </div><!-- .col-5 -->
+            <div class="input-group mb-0 mt-5 d-none">
+                <div class="col-sm-12 text-center">
+                    ¿No tienes una cuenta? <a href="/auth/signup" class="ml-5"
+                        style="color: #b21bff!important;"><b>Regístrate</b></a>
+                </div>
+            </div>
+
+            <div class="col-sm-offset-4 col-sm-4 anim fadeInLeft">
+                <div class="login">
+                    <div class="feedback feedback-recovery">
+
+                    </div>
+                </div>
+
+            </div><!-- .col-5 -->
+
+
+        </form>
+
+    </div><!-- .container -->
+
+
+
+</section><!-- .content-section .form -->

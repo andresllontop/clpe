@@ -1,0 +1,296 @@
+<div class="container-fluid">
+    <div class="row">
+        <form id="formularioAdmin" class="FormularioAjax" method="POST" data-form="update" autocomplete="off"
+            enctype="multipart/form-data">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="container-flat-form" style="background-color: white;width:90%;margin-top:0;">
+                    <div class="title-flat-form title-flat-blue" style="margin-bottom: 10px;">
+                        INFORMACIÓN DE PAGO
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
+                            <div class="group-material">
+                                <input type="text" class="material-control tooltips-general"
+                                    placeholder="INGRESA NOMBRES" name="Nombre" required=""
+                                    pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,100}" maxlength="100" data-toggle="tooltip"
+                                    data-placement="top" title="Ingresa solo letras, sìn otros simbolos "
+                                    data-original-title="Ingresa Nombres" style="color:black;">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <!-- <label></label> -->
+                            </div>
+                            <div class="group-material">
+                                <input type="text" class="material-control tooltips-general"
+                                    placeholder="INGRESA APELLIDOS" name="Apellido" required=""
+                                    pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,100}" maxlength="100" data-toggle="tooltip"
+                                    data-placement="top" title="Ingresa solo letras, sìn otros simbolos "
+                                    data-original-title="Ingresa Apellidos" style="color:black;">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <!-- <label></label> -->
+                            </div>
+                            <div class="group-material">
+                                <input type="text" class="material-control tooltips-general" placeholder="INGRESA EMAIL"
+                                    name="Email" required="" pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                    maxlength="100" data-toggle="tooltip" data-placement="top"
+                                    title="Ingresa el formato de email adecuado" data-original-title="Ingresa Email"
+                                    style="color:black;">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <!-- <label></label> -->
+                            </div>
+                            <div class="group-material">
+
+                                <!-- Example single danger button -->
+                                <div class="btn-group" style="width: 100%;">
+                                    <button id="idpais" type="button" class="btn dropdown-toggle"
+                                        style="width: 100%; color: #333333;" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                        País
+                                    </button>
+
+                                    <div class="dropdown-menu dropdown1" style="height: 136px;overflow-y: scroll;">
+
+
+                                        <li><a class="dropdown-item" href="#"><i class="flag-icon"></span></a>
+                                        </li>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4" style="padding-right:0;">
+                                    <div class="group-material">
+                                        <!-- Example single danger button -->
+                                        <div class="btn-group" style="width: 100%;">
+                                            <button id="idcodigo" type="button" class="btn dropdown-toggle"
+                                                style="height: 43px;width: 100%; color: #333333;" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                CODIGO DEL PAÍS
+                                            </button>
+                                            <div class="dropdown-menu dropdown2"
+                                                style="height: 136px;overflow-y: scroll;">
+
+                                                <li><a class="dropdown-item" href="#"><i
+                                                            class="flag-icon <?php echo ($fila2['icono']); ?>"></i><span>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ("+".$fila2['codigo']); ?></span></a>
+                                                </li>
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-8" style="padding-left:0;">
+                                    <div class="group-material">
+                                        <input type="text" class="material-control tooltips-general" maxlength="11"
+                                            pattern="[0-9+]{1,11}" placeholder="INGRESA TELEFONO" name="Telefono"
+                                            required="" maxlength="100" data-toggle="tooltip" data-placement="top"
+                                            title="Ingresa solo numeros" data-original-title="Ingresa Telefono"
+                                            style="color:black;">
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <!-- <label></label> -->
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <!-- <div id="cargarpagina"></div>
+                            <input type="hidden" name="precio" value="<?php echo ($dataempresa[0]['precio']); ?>">
+                            <div class="text-center"><button type="submit" class="btn btn-purple-o all-tittles">
+                                    PAGAR AHORA
+                                </button></div> -->
+
+                            <!-- <div id="paypal-button"></div> -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="container-flat-form" style="background-color: white;width:90%;margin-top:0;">
+                    <div class="title-flat-form title-flat-blue">
+                        METODO DE PAGO
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
+                            <div class="group-material">
+                                <input type="text" class="material-control tooltips-general"
+                                    placeholder="******************" name="tarjeta" maxlength="100"
+                                    data-toggle="tooltip" data-placement="top" title="Ingresa numero de tarjeta"
+                                    data-original-title="Ingresa digitos" style="color:black;">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>NÚMERO DE TARJETA</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="group-material">
+                                        <input type="date" class="material-control tooltips-general"
+                                            placeholder="INGRESA APELLIDOS" name="fecha" data-toggle="tooltip"
+                                            data-placement="top" title="Ingresa solo letras, sìn otros simbolos "
+                                            data-original-title="Ingresa Apellidos" style="color:black;">
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label>F. VENCIMIENTO</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="group-material" style="padding-top: 14px;">
+                                        <input type="text" class="material-control tooltips-general" placeholder="CVC"
+                                            name="cvc" maxlength="30" data-toggle="tooltip" data-placement="top"
+                                            title="Ingresa el formato de email adecuado"
+                                            data-original-title="Ingresa Email" style="color:black;">
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <!-- <label></label> -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div id="cargarpagina"></div>
+                            <input type="hidden" name="precio" value="<?php echo ($dataempresa[0]['precio']); ?>">
+                            <input type="hidden" name="pais" id="pais">
+                            <input type="hidden" name="codigonumero" id="codigonumero">
+                            <div class="text-center"><button type="submit" class="btn btn-purple-o all-tittles">
+                                    PAGAR AHORA
+                                </button></div>
+
+                            <!-- <div id="paypal-button"></div> -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- modal -->
+    <div id="ventanaModalManCliente" class="modal" tabindex="-1" role="dialog" data-backdrop="static"
+        data-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="margin-top: 80px;">
+                <!-- <form
+                  id="formularioCliente"
+                  class="FormularioAjax"
+                  method="POST"
+                  data-form=""
+                  autocomplete="off"
+                  enctype="multipart/form-data"
+                > -->
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-xs-10 col-sm-10">
+                            <h4 class="modal-title all-tittles text-center" id="tituloModalManCliente"
+                                style=" font-weight:bold;padding-left: 10%;"></h4>
+                        </div>
+                        <div class="col-xs-2 col-sm-2">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <h6 class="text-center" style="font-size:22px; font-weight:bold;">ESTAS A PUNTO DE PAGAR CON
+                                PAYPAL LA CANTIDAD DE 50 DÒLARES</h6>
+                        </div>
+                        <div class="col-xs-12 col-sm-12">
+                            <div class="text-center" id="paypal-button"></div>
+                            <div id="cargarpagina2"></div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12">
+                            <h6 class="text-center" style="font-size:22px; font-weight:bold;">PODRÀS ACCEDER AL CURSO
+                                UNA VEZ QUE REALICES EL PAGO</h6>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- </form> -->
+        </div>
+    </div>
+</div>
+
+<section class="content-section anim fadeInDown pb-3">
+    <div class="container">
+        <h3 class="text-center w-100 mb-2"><i class="zmdi zmdi-book"></i>Lectura y Aplicación del libro
+            Piense y
+            Hágase Rico <span>$50</span>
+        </h3>
+        <p></p>
+    </div>
+</section><!-- .content-section -->
+
+<section class="content-section form contact light">
+    <div class="container">
+        <form id="formularioSignup" autocomplete="off">
+            <div class="col-sm-offset-3 col-sm-6 anim fadeInLeft">
+                <span class="input-group">
+                    <label for="contactName" class="d-none">Nombres</label>
+                    <i class="zmdi  zmdi-account-o" style="line-height: 49px;"></i>
+                    <input type="text" id="contactName" class="lg" placeholder="Nombres"
+                        style="font-size: 17px; height: 49px;" />
+                </span><!-- .input-group -->
+                <span class="input-group">
+                    <label for="contactApellido" class="d-none">Apellidos</label>
+                    <i class="zmdi  zmdi-account-o" style="line-height: 49px;"></i>
+                    <input type="text" id="contactApellido" class="lg" placeholder="Apellidos"
+                        style="font-size: 17px; height: 49px;" />
+                </span><!-- .input-group -->
+                <span class="input-group">
+                    <label for="contactAddress" class="d-none">Dirección de correo electrónico</label>
+                    <i class="zmdi zmdi-account-box-mail" style="line-height: 49px;"></i>
+                    <input type="text" id="contactAddress" class="lg" placeholder="Dirección de correo electrónico"
+                        style="font-size: 17px; height: 49px;" />
+                </span><!-- .input-group -->
+                <span class="input-group">
+                    <label for="contactTelefono" class="d-none">Teléfono Celular</label>
+                    <i class="zmdi  zmdi-account-o" style="line-height: 49px;"></i>
+                    <input type="text" id="contactTelefono" class="lg" placeholder="Teléfono Celular"
+                        style="font-size: 17px; height: 49px;" />
+                </span><!-- .input-group -->
+                <span class="input-group">
+                    <button class="submit" data-loading-text="Enviando..." style=" height: 49px;">PAGAR AHORA</button>
+                </span><!-- .input-group -->
+
+            </div><!-- .col-5 -->
+
+        </form>
+
+    </div><!-- .container -->
+
+
+
+</section><!-- .content-section .form -->
+
+<div class="modal fade" id="modalCargandoSignup" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress progress-striped active" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Enviando Signup. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

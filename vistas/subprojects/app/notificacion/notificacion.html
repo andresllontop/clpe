@@ -1,0 +1,118 @@
+<!--contenido de la pagina  -->
+<div class="container-fluid page-header ">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pageNotificacion" value="1">
+      <select id="sizePageNotificacion" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h2 class="text-center all-tittles col-8" id="titleManagerNotificacion">Lista de Notificaciones</h2>
+
+    <div class="col-2 text-right">
+      <button class="btn btn-primary" id="btnAbrirbook">
+        <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+      </button>
+    </div>
+  </div>
+</div>
+<div class="container-fluid py-2">
+  <div class="table-responsive">
+    <table class="table table-hover text-center m-0">
+      <thead>
+        <tr>
+          <th class="text-center">MENSAJE</th>
+          <th class="text-center">RANGO INICIAL DE CANTIDAD DE DÍAS</th>
+          <th class="text-center">RANGO FINAL DE CANTIDAD DE DÍAS</th>
+          <th class="text-center">EDITAR</th>
+          <th class="text-center">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyNotificacion"></tbody>
+    </table>
+  </div>
+  <nav class="border-top  text-center py-1" aria-label="Page navigation example">
+    <ul id="paginationNotificacion" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination BLOG -->
+</div>
+
+
+<div id="ventanaModalManNotificacion" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <form id="formularioNotificacion" autocomplete="off">
+        <div class="modal-header">
+
+          <h4 class="modal-title text-center w-100" id="tituloModalManNotificacion"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            style="margin-top: -1em;margin-right: -1.5em;">
+            <span aria-hidden="true" class="m-0"
+              style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-top:20px;">
+          <div class="row">
+            <div class="col-12  mx-auto">
+              <div class="group-material" style="padding-top:7px; display: flex;">
+                <input id="textRangoInicialNotificacion" type="number" class="material-control tooltips-general"
+                  data-toggle="tooltip" data-placement="top" title="" data-original-title="Escribe Rango Inicial" />
+                <span class="text-center f-weight-700 f-25" style="width: 20%;align-self: flex-end;">
+                  &#60; &#61;</span>
+                <span class="text-center" style="width: 60%;align-self: flex-end;">Día Buscado</span>
+                <span class="text-center  f-weight-700 f-25" style="width: 20%;align-self: flex-end;">
+                  &#61; &#62;</span>
+                <input id="textRangoFinalNotificacion" type="number" class="material-control tooltips-general"
+                  data-toggle="tooltip" data-placement="top" title="" data-original-title="Escribe Rango Final" />
+
+
+                <label>Rango de Dias</label>
+              </div>
+              <label>Mensaje</label>
+              <div class="group-material">
+                <textarea id="txtDescripcionNotificacion"></textarea>
+              </div>
+              <!-- <div id="texto"></div> -->
+
+
+
+
+
+            </div>
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger " data-dismiss="modal">
+            CERRAR
+          </button>
+          <button type="submit" class="btn btn-primary ">
+            GUARDAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--final del contenido de la pagina  -->
+
+
+<div class="modal fade" id="modalCargandoNotificacion" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Notificacion. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

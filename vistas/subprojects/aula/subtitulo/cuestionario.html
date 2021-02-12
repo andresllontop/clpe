@@ -1,0 +1,129 @@
+<section class="content-section anim fadeInDown pt-10 d-none" id="sectionMensaje">
+    <div class="container text-center">
+        <h3><i class="fa fa-pencil-square-o"></i>REALIZA TU <span>CUESTIONARIO</span></h3>
+        <p>
+            Ingresa tu cuestionario para que puedas continuar con las lecciones.
+
+        </p>
+        <a class="btn btn-bordered anim fadeInRight animated" role="button" href="javascript:void(0);"
+            id="btnAbrirrespuesta" style="visibility: visible;">Cuestionario</a>
+    </div>
+</section><!-- .content-section -->
+
+<section class="content-section pt-10 d-none" id="sectionPreguntas">
+    <div class="container-fluid pt-3">
+        <div class="form-row">
+
+            <div class="col-md-8 single px-3">
+
+                <div class="blog">
+                    <span class="title-desc anim fadeIn m-0" id="titleManRespuesta">
+                    </span><!-- .title-desc -->
+                    <blockquote class="anim fadeIn py-2 text-justify" id="descripcionTest" style="z-index: 0;">
+                    </blockquote>
+                </div><!-- .blog -->
+
+                <div class="clearfix"></div>
+
+                <div class="form contact style-2">
+                    <form id="formularioRespuesta" autocomplete="off">
+                        <div id="listaPreguntas">
+
+                        </div>
+                        <p class="text-center  anim fadeIn" data-wow-delay=".45s">
+                            <button type="reset" class="btn btn-info" style="margin-right: 20px;">
+                                <i class="zmdi zmdi-roller"></i> &nbsp;&nbsp; Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="zmdi zmdi-floppy"></i> &nbsp;&nbsp; Enviar
+                            </button>
+                        </p>
+                    </form>
+                </div>
+
+            </div><!-- .col-lg-9 -->
+            <div id="htmlCuestionarioVideo" class="col-md-8 mx-auto d-none">
+                <div class="form-row">
+
+                    <div class="col-lg-12 p-0 my-auto">
+                        <h5 class="all-tittles text-center dt-titulo-cuest" style="font-size: 25px;">
+
+                        </h5>
+                        <h5 class="all-tittles text-center dt-subtitulo-cuest" style="font-size: 20px;
+                        font-weight: bold;">
+
+                        </h5>
+                    </div>
+
+                    <div class="col-sm-12 col-12">
+                        <pre class="p-0 m-0" style="border: 0;background-color: transparent;">
+                            <div class="video-responsive" style="position: initial;">
+                            <div id="ytplayerCuestionario"></div>
+                        </pre>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-md-4 col-12 py-2">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#contenido-curso-cuestionario">
+                            <h5 class=" text-udemy">Contenido del Curso</h5>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#certificado-finalizacion-cuestionario">
+                            <h5 class=" text-udemy ">Certificado</h5>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane active p-2 border-bottom border-right border-left"
+                        id="contenido-curso-cuestionario">
+                        <ul class="accordion" id="bodySubtitulo-titulo-cuestionario">
+
+                        </ul>
+                    </div>
+                    <div class="tab-pane p-2 text-center border-bottom border-right border-left"
+                        id="certificado-finalizacion-cuestionario">
+                        <h5 class="card-title">Certificado de Finalización</h5>
+                        <div id="htmlMensajeCuestionario" class="form contact light p-0">
+                            <p class="mb-2 f-16" style="line-height: 16px;">Consigue el certificado del Club de Lectura
+                                para
+                                Emprendedores al completar todo el curso.</p>
+                            <button href="" class="btn btn-primary" disabled><i class="fa fa-fw fa-file-pdf-o"
+                                    style="position: relative;right: 0;top: 0;"></i> <span>Certificado
+                                    CLPE</span> </button>
+                        </div><!-- .content-section .form -->
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div><!-- .row -->
+    </div><!-- .container -->
+</section><!-- .content-section -->
+
+<div class="modal fade" id="modalCargandoRespuesta" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Enviando Respuestas del Cuestionario. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

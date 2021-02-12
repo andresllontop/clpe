@@ -1,0 +1,109 @@
+<!--/ modal inciar seccion -->
+<div id="ventanaModalRegister" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <div class="modal-content mr-9">
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                style="margin-top: -0.7em;right: -0.6em;position: absolute;z-index: 1;">
+                <span aria-hidden="true" class="m-0"
+                    style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 100%;padding: 4px 10px; font-size: 24px;">&times;</span>
+            </button>
+            <form id="FrmRegister" class="login" autocomplete="off">
+
+                <fieldset>
+
+                    <legend class="legend text-center">Regístrate</legend>
+
+                    <div class="group-material input input-register mb-7">
+                        <input type="text" class="material-control" style="font-size:13px;border-radius: 19px;"
+                            id="txtombreRegister" maxlength="50" required name="nombreRegister"
+                            pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,40}">
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label for="txtombreRegister" style="font-size:13px;">Nombres</label>
+                    </div>
+                    <div class="group-material input input-register mb-7">
+                        <input type="text" class="material-control" style="font-size:13px;border-radius: 19px;"
+                            id="txtapellidoRegister" maxlength="50" required name="apellidoRegister"
+                            pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,40}">
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label for="txtapellidoRegister" style="font-size:13px;">Apellidos</label>
+                    </div>
+                    <div class="group-material input input-register mb-7">
+                        <input type="text" class="material-control" style="font-size:13px;border-radius: 19px;"
+                            id="txtoficioRegister" maxlength="50" required name="oficioRegister"
+                            pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,40}">
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label for="txtoficioRegister" style="font-size:13px;">Profesión u Oficio</label>
+                    </div>
+                    <div class="group-material input input-register mb-7">
+                        <input type="text" class="material-control" style="font-size:13px;border-radius: 19px;"
+                            id="txtemailRegister" maxlength="50" required name="emailRegister">
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label for="emailRegister" style="font-size:13px;">Correo electrónico</label>
+                    </div>
+                    <div class="group-material input input-register mb-7">
+                        <input type="text" class="material-control" style="font-size:13px;border-radius: 19px;"
+                            id="txtpassRegister" maxlength="50" required name="passRegister">
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label for="txtpassRegister" style="font-size:13px;">Contraseña</label>
+                    </div>
+                    <div class="group-material input input-register mb-7">
+                        <select class="form-control" name="countryRegister" id="txtcountryRegister"
+                            style="border-radius: 19px;">
+
+                        </select>
+                    </div>
+                    <div class="group-material input input-register mb-7 ">
+                        <div class="d-inline-flex w-100">
+                            <a class="btn dropdown-toggle paises form-control border w-auto d-inline-flex" disabled
+                                data-toggle="dropdown" style="font-size:13px;border-radius:19px 0px 0px 19px;"
+                                href="#"><i class="flag-icon flag-icon-pe mr-2"></i>Perú (+51)<span
+                                    class="caret pull-right mt-1 ml-2"></span></a>
+                            <input type="number" class="form-control py-1"
+                                style="font-size:13px;border-radius: 0px 19px 19px 0px;" id="txtTelefonoRegister"
+                                placeholder="924421734" maxlength="20" name="telefonoRegister">
+                            <ul id="txtTelefonoCodigoRegister" class="dropdown-menu w-90"
+                                style="position: absolute; z-index: 2;list-style: none;text-align: left;padding: 0; margin: -17em 0 0 -1px;box-shadow: 1px 1px 4px rgba(0,0,0,.2); background-color: #fff;border: 1px solid #ccc;white-space: nowrap; max-height: 200px;overflow-y: scroll;">
+                                <li><i class="flag-icon flag-icon-pe"></i> Category B</li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+
+                    <button type="submit" class="submit w-90" style="font-size: 14px; border-radius: 20px;">REGISTRAR
+                    </button>
+
+                </fieldset>
+
+                <div class="feedback feedback-register">
+
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="modalCargandoRegister" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress progress-striped active" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Registrando. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

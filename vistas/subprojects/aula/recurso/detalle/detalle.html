@@ -1,0 +1,72 @@
+<!--contenido de la pagina  -->
+
+<section class="content-section pt-10 team" id="sectionDetalles">
+  <div class="container py-2">
+    <button class="btn btn-dark float-left btn-regresar-recurso"><i
+        class="zmdi zmdi-long-arrow-left zmdi-hc-2x"></i></button>
+    <h4 class="text-center all-tittles mx-8 py-2" id="titleManagerDetalle"></h4>
+  </div>
+  <div class="container">
+    <div class="form-row" id="tbodyDetalle">
+      <div class="col-4">
+
+      </div>
+
+    </div>
+  </div><!-- .container -->
+
+</section><!-- .team -->
+
+<div class="modal fade" id="modalCargandoDetalle" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Datos. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalFrameDetalle" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body p-0" id="modalFrameContenidoDetalle" style="height: 80vh;">
+
+      </div>
+      <div class="modal-footer">
+        <a href="" download>
+          <button type="button" id="descargarPdf" class="btn btn-info">
+            <i class="zmdi zmdi-download zmdi-hc mr-1"></i><span>DESCARGAR
+          </button>
+        </a>
+
+        <button type="button" class="btn btn-danger " data-dismiss="modal">
+          CERRAR
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="modalImagenDetalle" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-lg pt-5 px-xs-7">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          style="margin-top: -1em;margin-right: -1em;">
+          <span aria-hidden="true" class="m-0"
+            style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+        </button>
+        <div id="modalImagenContenidoDetalle" style="width: auto;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

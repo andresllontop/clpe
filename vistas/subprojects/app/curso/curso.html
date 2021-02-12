@@ -1,0 +1,192 @@
+<!--contenido de la pagina  -->
+<div class="container-fluid page-header">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pageCurso" value="1">
+      <select id="sizePageCurso" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h2 class="text-center all-tittles col-8" id="titleManagerCurso">Lista de Curso</h2>
+
+    <div class="col-2 text-right">
+      <button class="btn btn-primary" id="btnAbrirbook">
+        <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+      </button>
+    </div>
+  </div>
+</div>
+<div class="container-fluid py-2">
+  <div class="table-responsive">
+    <table class="table table-hover text-center">
+      <thead>
+        <tr>
+          <th class="text-center">TITULO</th>
+          <th class="text-center">DESCRIPCION</th>
+          <th class="text-center">TIPO</th>
+          <th class="text-center">PRECIO ACTUAL</th>
+          <th class="text-center">PRECIO ANTERIOR</th>
+          <th class="text-center">IMAGEN</th>
+          <th class="text-center">PORTADA</th>
+          <th class="text-center">PRESENTACIÓN</th>
+          <th class="text-center">EDITAR</th>
+          <th class="text-center">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyCurso"></tbody>
+    </table>
+  </div>
+  <nav class="border-top  text-center" aria-label="Page navigation example">
+    <ul id="paginationCurso" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+
+</div>
+
+
+<div id="ventanaModalManCurso" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <form id="formularioCurso" autocomplete="off">
+        <div class="modal-header">
+
+          <h4 class="modal-title text-center w-100" id="tituloModalManCurso"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            style="margin-top: -1em;margin-right: -1.5em;">
+            <span aria-hidden="true" class="m-0"
+              style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-top:20px;">
+          <div class="row">
+            <div class="col-12 col-sm-6 mx-auto">
+              <div class="group-material" style="padding-top:7px;">
+                <input id="txtTituloCurso" type="text" class="material-control tooltips-general"
+                  placeholder="titulo completo" required="" data-toggle="tooltip" data-placement="top" title=""
+                  data-original-title="Escribe el titulo del Curso" />
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Titulo</label>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 mx-auto">
+              <div class="group-material">
+                <select id="txtTipoCurso" class="tooltips-general material-control" data-toggle="tooltip"
+                  data-placement="top" title="Selecciona una opcion de archivo">
+                  <option value="0" disabled="" selected="">Selecciona Una Opcion</option>
+                  <option value="1">ONLINE</option>
+                  <option value="2">ZOOM</option>
+                  <!-- <option value="3">PDF</option> -->
+                </select>
+                <label class="all-tittles" style="top: -20px;">Tipo</label>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 mx-auto">
+              <div class="group-material">
+                <input id="txtPrecioCurso" type="number" class="material-control tooltips-general"
+                  placeholder="titulo completo" required="" data-toggle="tooltip" data-placement="top" title=""
+                  data-original-title="Escribe el titulo del Curso" />
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label for="txtPrecioCurso">Precio Actual</label>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 mx-auto">
+              <div class="group-material">
+                <input id="txtDescuentoCurso" type="number" class="material-control tooltips-general"
+                  placeholder="titulo completo" required="" data-toggle="tooltip" data-placement="top" title=""
+                  data-original-title="Escribe el titulo del Curso" />
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label for="txtDescuentoCurso">Precio Anterior</label>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 mx-auto">
+              <label for="txtDescripcionCurso">Descripción</label>
+              <div class="group-material">
+                <textarea id="txtDescripcionCurso" required="" class="material-control tooltips-general"
+                  style="width:100%; max-width:100%;max-height:150px;"></textarea>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 mx-auto">
+              <div class="group-material">
+                <div id="imagenPreview" class="py-2 text-center"> </div>
+                <input id="txtImagenCurso" type="file" accept="image/png, image/jpeg, image/png"
+                  class="material-control tooltips-general input-check-user" placeholder="Selecciona Imagen"
+                  data-toggle="tooltip" data-placement="top" title=""
+                  data-original-title="Selecciona la Imagen de tu escritorio">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label> Imagen del Libro</label>
+                <small>Tamaño Máximo Permitido: 1700 KB</small>
+                <br>
+                <small>Formatos Permitido:JPG, PNG, JPEG</small>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 mx-auto">
+              <div class="group-material">
+                <div id="imagenPortadaPreview" class="py-2 text-center"> </div>
+                <input id="txtImagenPortadaCurso" type="file" accept="image/png, image/jpeg, image/png"
+                  class="material-control tooltips-general input-check-user" placeholder="Selecciona Imagen"
+                  data-toggle="tooltip" data-placement="top" title=""
+                  data-original-title="Selecciona la Imagen de tu escritorio">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Imagen Portada</label>
+                <small>Tamaño Máximo Permitido: 1700 KB</small>
+                <br>
+                <small>Formatos Permitido:JPG, PNG, JPEG</small>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 mx-auto">
+              <div class="group-material">
+                <div id="imagenPresentacionPreview" class="py-2 text-center"> </div>
+                <input id="txtImagenPresentacionCurso" type="file" accept="image/png, image/jpeg, image/png"
+                  class="material-control tooltips-general input-check-user" placeholder="Selecciona Imagen"
+                  data-toggle="tooltip" data-placement="top" title=""
+                  data-original-title="Selecciona la Imagen de tu escritorio">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Imagen Presentación</label>
+                <small>Tamaño Máximo Permitido: 1700 KB</small>
+                <br>
+                <small>Formatos Permitido:JPG, PNG, JPEG</small>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger " data-dismiss="modal">
+            CERRAR
+          </button>
+          <button type="submit" class="btn btn-primary ">
+            GUARDAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--final del contenido de la pagina  -->
+
+
+<div class="modal fade" id="modalCargandoCurso" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+  style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Curso. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

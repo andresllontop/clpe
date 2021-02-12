@@ -1,0 +1,73 @@
+<section class="content-section anim fadeInDown pb-3 pt-10">
+    <div class="container">
+        <h3 class="text-center w-100 mb-2"><i class="zmdi zmdi-email-open"></i>CONTACTATE <span>CON NOSOTROS</span>
+        </h3>
+        <p>
+            Nuestra principal preocupación es tratar con nuestros clientes y asegurarnos de que estén satisfechos.
+            Cualquier pregunta, comentario o inquietud que pueda tener es muy importante para nosotros.
+        </p>
+    </div>
+</section><!-- .content-section -->
+
+<section class="content-section form contact light">
+    <div class="container">
+        <form id="formularioMensaje" autocomplete="off" class="form-row">
+            <div class="col-sm-5 anim fadeInLeft">
+
+                <span class="input-group">
+                    <label for="contactName" class="d-none">Nombre</label>
+                    <i class="zmdi  zmdi-account-o" style="line-height: 49px;"></i>
+                    <input type="text" id="contactName" class="lg" placeholder="Nombre"
+                        style="font-size: 17px; height: 49px;" />
+                </span><!-- .input-group -->
+
+                <span class="input-group">
+                    <label for="contactAddress" class="d-none">Dirección de correo electrónico</label>
+                    <i class="zmdi zmdi-account-box-mail" style="line-height: 49px;"></i>
+                    <input type="text" id="contactAddress" class="lg" placeholder="Dirección de correo electrónico"
+                        style="font-size: 17px; height: 49px;" />
+                </span><!-- .input-group -->
+
+                <span class="input-group">
+                    <label for="contactSubject" class="d-none">Asunto</label>
+                    <i class="zmdi zmdi-book" style="line-height: 49px;"></i>
+                    <input type="text" id="contactSubject" class="lg" placeholder="Asunto"
+                        style="font-size: 17px; height: 49px;" />
+                </span><!-- .input-group -->
+
+            </div><!-- .col-5 -->
+
+            <div class="col-sm-7 anim fadeInRight">
+                <span class="input-group">
+                    <label for="contactMessage" class="d-none">Mensaje</label>
+                    <textarea id="contactMessage" class="lg" placeholder="Cúal es su Mensaje?"
+                        style="font-size: 17px;height: 122px;"></textarea>
+                </span><!-- .input-group -->
+
+                <span class="input-group">
+                    <button class="submit" data-loading-text="Enviando..." style=" height: 49px;">ENVIAR</button>
+                </span><!-- .input-group -->
+
+            </div>
+        </form>
+    </div><!-- .container -->
+
+
+
+</section><!-- .content-section .form -->
+
+<div class="modal fade" id="modalCargandoMensaje" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress progress-striped active" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Enviando Mensaje. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

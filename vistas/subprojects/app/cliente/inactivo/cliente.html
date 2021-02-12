@@ -1,0 +1,288 @@
+<!--contenido de la pagina  -->
+<div class="container page-header ">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pageCliente" value="1">
+      <select id="sizePageCliente" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h3 class="text-center all-tittles col-8" id="titleCliente">Alumnos No Matriculados</h3>
+    <div class="col-2 text-right">
+      <button class="btn btn-primary" id="btnAbrirCliente">
+        <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container py-2 px-0">
+
+  <form class="form-inline" id="formularioClienteSearch" autocomplete="off">
+    <div class="form-group col-9 mb-2">
+      <label for="inputPassword2" class="sr-only">Password</label>
+      <div class="input-group w-100  box-shadow border border-radius">
+        <div class="input-group-prepend">
+          <button type="submit" class="input-group-text border border-radius"><i class="zmdi zmdi-search"
+              style="font-size: 28px;"></i></button>
+        </div>
+        <input id="txtSearchCliente" type="search" class="form-control col-auto border border-radius"
+          placeholder="Buscar Alumno">
+      </div>
+
+    </div>
+    <div class="form-group col-3 mb-2 ">
+      <label for="txtCountCliente" class="">Contador</label>
+      <input id="txtCountCliente" type="text" class="ml-auto form-control border border-radius text-center box-shadow"
+        placeholder="0">
+    </div>
+  </form>
+
+  <div class="table-responsive  col-sm-12">
+    <table class="table table-hover text-center ">
+      <thead class="">
+        <tr>
+          <th class="text-center">NOMBRES</th>
+          <th class="text-center">APELLIDOS</th>
+          <th class="text-center" style="width:10%;">TELEFONO</th>
+          <th class="text-center">EMAIL</th>
+          <th class="text-center d-none">USUARIO</th>
+          <th class="text-center d-none">FOTO</th>
+          <th class="text-center d-none">MONTO</th>
+          <th class="text-center d-none">COMBROPANTE </th>
+          <th class="text-center" style="width:2%;">INSCRIBIR</th>
+          <th class="text-center" style="width:2%;">VER</th>
+          <th class="text-center" style="width:2%;">ELIMINAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyCliente"></tbody>
+    </table>
+  </div>
+  <!-- pagination CAJA -->
+  <nav class="border-top col-sm-12 text-center" aria-label="Page navigation example">
+    <ul id="paginationCliente" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination CAJA -->
+</div>
+
+<!-- modal -->
+<div id="ventanaModalManCliente" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog pr-2" role="document">
+    <div class="modal-content">
+      <form id="formularioCliente" autocomplete="off">
+        <div class="modal-header mb-3">
+          <h4 class="modal-title all-tittles text-center w-100" id="tituloModalManCliente"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            style="margin-top: -1em;margin-right: -1.5em;">
+            <span aria-hidden="true" class="m-0"
+              style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtNombreCliente" type="text" class="material-control tooltips-general "
+                  placeholder="Nombre completo" required="" maxlength="70" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,70}"
+                  data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtNombreCliente">Nombre completo</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtApellidoCliente" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="Nombre de usuario" required="" maxlength="50" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ ]{1,50}"
+                  data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtApellidoCliente">Apellidos</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtTelefonoCliente" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="Telefono" maxlength="20" required="" data-toggle="tooltip" pattern="[0-9]{1,20}"
+                  data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtTelefonoCliente">Teléfono</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtPaisCliente" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="PAIS" maxlength="50" data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtPaisCliente">País</label>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="group-material">
+                <input id="txtEspecialidadCliente" type="text"
+                  class="material-control tooltips-general input-check-user" placeholder="Nombre de usuario" required=""
+                  maxlength="50" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,50}" data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles">Especialidad</label>
+              </div>
+            </div>
+
+            <div id="viewCliente" class="form-row px-3">
+              <div class="col-sm-12">
+                <label class="all-tittles">Foto del ALumno</label>
+                <div class="group-material">
+                  <div id="imagePreview" class="text-center">
+                  </div>
+                </div>
+              </div>
+              <legend class="all-tittles col-sm-12 text-center mb-6 pb-2">Datos de Usuario</legend>
+              <br>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtUsuarioName" type="text" class="material-control tooltips-general"
+                    placeholder="Nombre de Usuario" required="" maxlength="40" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}"
+                    data-toggle="tooltip" data-placement="top" title="Escribe nombre de Usuario">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles" for="txtUsuarioName">Nombre de Usuario</label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtEmailUsuario" type="email" class="material-control tooltips-general"
+                    placeholder="E-mail" maxlength="50" data-toggle="tooltip" data-placement="top"
+                    title="Escribe el Email del Cliente">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles" for="txtEmailUsuario">Email</label>
+                </div>
+
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material" style="display: inline-flex;">
+
+                  <div class="col-10">
+                    <input id="txtPasswordUsuario" type="password" class="material-control tooltips-general"
+                      placeholder="contraseña" data-toggle="tooltip" data-placement="top" title="Repite la contraseña">
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label class="all-tittles">Contraseña</label>
+                  </div>
+                  <button id="ButtonPassword1" type="button" class="btn px-2" style=" height: 49px;"> <i
+                      class="zmdi zmdi-eye" style="line-height: 0;position: inherit;"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtPasswordUsuario2" type="password" class="material-control tooltips-general"
+                    placeholder="Repite la contraseña" data-toggle="tooltip" data-placement="top"
+                    title="Repite la contraseña">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles">Repetir Contraseña</label>
+                </div>
+
+              </div>
+            </div>
+            <div id="viewDatoMonetario" class="form-row px-2">
+              <legend class="px-3 pb-3">Datos Monetarios</legend>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtNombreBancoCliente" type="text"
+                    class="material-control tooltips-general input-check-user" placeholder=""
+                    pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,70}" data-toggle="tooltip" data-placement="top">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles" for="txtNombreBancoCliente">Nombre del Banco</label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <label class="all-tittles" for="txtTipoMonedaCliente" style="top: -20px;
+                  font-size: 17px;
+                  color: #333;
+                  font-weight: normal;">Tipo de Moneda</label>
+                  <select id="txtTipoMonedaCliente" class="material-control tooltips-general">
+                    <option value="PEN" selected>PEN</option>
+                    <option value="USD">USD</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtComisionCliente" type="number" class="material-control tooltips-general"
+                    placeholder="Nombre del Banco" pattern="[0-9.]{1,9}" data-toggle="tooltip" data-placement="top">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles" for="txtComisionCliente">Comisión del Banco</label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtMontoCliente" type="number" class="material-control tooltips-general input-check-user"
+                    placeholder="Monto Cancelado" pattern="[0-9.]{1,9}" data-toggle="tooltip" data-placement="top">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles" for="txtMontoCliente">Monto</label>
+                </div>
+              </div>
+              <div class="col-sm-7 mx-auto">
+                <div class="group-material">
+                  <div id="imagenVaucherPreview" style="padding-top:5px;">
+                  </div>
+                  <input id="txtImagenVoucher" type="file" accept="image/png, image/jpeg, image/jpg"
+                    class="material-control tooltips-general input-check-user" placeholder="Nombre de usuario"
+                    data-toggle="tooltip" data-placement="top" title=""
+                    data-original-title="seleccionar imagen de tu ordenador">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label>Comprobante de Pago</label>
+                  <small>Tamaño Máximo Permitido: 1700 KB</small>
+                  <br>
+                  <small>Formatos Permitido:JPG, PNG, JPEG</small>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btnSubmit" type="submit" class="btn btn-success all-tittles">
+            INSCRIBIR
+          </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            CERRAR
+          </button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="modalCargandoCliente" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-cliente progress-bar-animated" role="progressbar"
+            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Alumnos . . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--final del contenido de la pagina  -->

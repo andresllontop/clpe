@@ -1,0 +1,161 @@
+<!--contenido de la pagina  -->
+
+<div class="container-fluid page-header ">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pageBitacora" value="1">
+      <select id="sizePageBitacora" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h3 class="text-center all-tittles col-8" id="titleManagerBitacora"></h3>
+
+  </div>
+</div>
+
+<div class="container-fluid py-2">
+
+  <form class="form-inline" id="formularioClienteSearch" autocomplete="off">
+    <div class="form-group col-9 mb-2">
+      <label for="inputPassword2" class="sr-only">Password</label>
+      <div class="input-group w-100  box-shadow border border-radius">
+        <div class="input-group-prepend">
+          <button type="submit" class="input-group-text border border-radius"><i class="zmdi zmdi-search"
+              style="font-size: 28px;"></i></button>
+        </div>
+        <input id="txtSearchCliente" type="search" class="form-control col-auto border border-radius"
+          placeholder="Buscar Alumno">
+      </div>
+
+    </div>
+    <div class="form-group col-3 mb-2 ">
+      <label for="txtCountCliente" class="">Contador</label>
+      <input id="txtCountCliente" type="text" class="ml-auto form-control border border-radius text-center box-shadow"
+        placeholder="0">
+    </div>
+  </form>
+
+  <div class="table-responsive col-xs-12">
+    <table class="table table-hover text-center">
+      <thead class="">
+        <tr>
+          <th class="text-center">#</th>
+          <th class="text-center">NOMBRES</th>
+          <th class="text-center">APELLIDOS</th>
+          <th class="text-center">TELÉFONO</th>
+          <th class="text-center">EMAIL</th>
+          <th class="text-center">FECHA Y HORA DE ÚLTIMO ENVÍO</th>
+          <th class="text-center">ESTADO</th>
+          <th class="text-center">VER</th>
+          <th class="text-center">ELIMNAR</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyBitacora"></tbody>
+    </table>
+  </div>
+  <nav class="border-top col-xs-12 text-center" aria-label="Page navigation example">
+    <ul id="paginationBitacora" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination BLOG -->
+</div>
+
+<div id="ventanaModalManBitacora" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <h4 class="modal-title text-center w-100" id="tituloModalManBitacora"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          style="margin-top: -1em;margin-right: -1.5em;">
+          <span aria-hidden="true" class="m-0"
+            style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding-top:5%;">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="group-material">
+              <input id="txtNombreBitacora" type="text" class="material-control tooltips-general "
+                placeholder="Nombre completo">
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="all-tittles">Nombre completo</label>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="group-material">
+              <input id="txtApellidoBitacora" type="text" class="material-control tooltips-general input-check-user"
+                placeholder="Nombre de usuario">
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="all-tittles">Apellidos</label>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="group-material">
+              <input id="txtTelefonoBitacora" type="text" class="material-control tooltips-general input-check-user"
+                placeholder="Nombre de usuario" r>
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="all-tittles" for="txtTelefonoBitacora">Telefono</label>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="group-material">
+              <input id="txtEspecialidadBitacora" type="text" class="material-control tooltips-general input-check-user"
+                placeholder="Nombre de usuario">
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="all-tittles">Especialidad</label>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="group-material">
+              <input id="txtEmailUsuario" type="email" class="material-control tooltips-general" placeholder="E-mail">
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="all-tittles" for="txtEmailUsuario">Email</label>
+            </div>
+
+          </div>
+          <div class="col-sm-6">
+            <div class="group-material">
+              <input id="txtFechaBitacora" type="text" class="material-control tooltips-general" placeholder="FECHA">
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="all-tittles" for="txtFechaBitacora">Fecha y Hora de último Envío </label>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          CERRAR
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoBitacora" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Bitacora. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

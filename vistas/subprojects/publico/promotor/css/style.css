@@ -1,0 +1,120 @@
+@import url('demo.css');
+.dg-container {
+	width: 100%;
+	height: 450px;
+	position: relative;
+}
+.dg-wrapper {
+	width: 481px;
+	height: 100%;
+	margin: 0 auto;
+	position: relative;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-o-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	-webkit-perspective: 1000px;
+	-moz-perspective: 1000px;
+	-o-perspective: 1000px;
+	-ms-perspective: 1000px;
+	perspective: 1000px;
+}
+.dg-wrapper a {
+	width: 482px;
+	height: 316px;
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: transparent url(../images/browser.png) no-repeat top left;
+	box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+}
+.dg-wrapper a:hover span {
+	display: block !important;
+	background-color: rgba(90, 1, 1, 0.568);
+	box-shadow: 0 10px 20px rgba(255, 255, 255, 0.863);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	text-align: center;
+	bottom: 0%;
+	left: 0%;
+	line-height: 305px;
+	font-size: 66px;
+}
+.dg-wrapper a.dg-transition {
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	-ms-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+.dg-wrapper a img {
+	display: block;
+	/*padding: 41px 0px 0px 1px;*/
+	width: 100%;
+	height: 100%;
+}
+.dg-wrapper a div {
+	text-align: center;
+	line-height: 50px;
+	text-shadow: 1px 1px 1px rgba(2, 2, 2, 0.5);
+	color: white;
+	font-size: 16px;
+	letter-spacing: 2px;
+	width: 100%;
+	bottom: -55px;
+	display: none;
+	position: absolute;
+}
+.dg-wrapper a.dg-center div {
+	display: block;
+}
+.dg-container nav {
+	position: absolute;
+	z-index: 1000;
+	bottom: 50%;
+}
+.dg-container .f-left {
+	left: 5px;
+}
+.dg-container .f-right {
+	right: 5px;
+}
+.dg-container nav span {
+	/*text-indent: -9000px;*/
+	box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+	border-radius: 50%;
+	float: left;
+	cursor: pointer;
+	width: 60px;
+	font-weight: bold;
+	font-size: 50px;
+	height: 60px;
+
+	opacity: 1;
+	background-color: rgba(0, 0, 0, 0.3);
+	color: rgb(255, 255, 255);
+	/*background: transparent url(../images/arrows.png) no-repeat top left;*/
+}
+.dg-container nav span:hover {
+	opacity: 1;
+}
+.dg-container nav span.dg-next {
+	background-position: top right;
+	float: right;
+}
+/* col-xs */
+@media (max-width: 767px) {
+	#tbodyVideoNosotros > .dg-none {
+		display: none;
+	}
+	.dg-wrapper a {
+		width: 90%;
+		margin: 0 18px;
+	}
+	.dg-wrapper {
+		width: 100%;
+	}
+}

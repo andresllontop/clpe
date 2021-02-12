@@ -1,0 +1,192 @@
+<!--contenido de la pagina  -->
+
+
+<div class="container-flat-form mt-7">
+    <div class="title-flat-form title-flat-blue">
+        <h1 class="all-tittles">
+            Bienvenido a tu perfil&nbsp;
+
+        </h1>
+    </div>
+    <form id="formularioPerfil" autocomplete="off">
+        <div class="row m-0 p-2">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 ">
+                <legend class="text-center text-primary ">Datos Personales</legend>
+                <div class="form-row px-4">
+                    <div class="col-12">
+                        <div class="group-material d-flex">
+                            <i class="zmdi zmdi-face zmdi-style mr-3"> </i>
+                            <div class="col-12">
+                                <input type="text" class="material-control tooltips-general input-check-user"
+                                    id="txtNombre" maxlength="50" placeholder="Nombres" data-toggle="tooltip"
+                                    data-placement="top" title="Escribe Nombres">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label for="txtNombre" style="color: transparent;">Nombres</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="group-material d-flex ">
+                            <i class="zmdi zmdi-male-female zmdi-style mr-3"> </i>
+                            <div class="col-12">
+                                <input type="text" class="material-control tooltips-general input-check-user"
+                                    id="txtApellido" maxlength="50" placeholder="Apellidos" data-toggle="tooltip"
+                                    data-placement="top" title="Escribe Apllidos">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label for="txtApellido" style="color: transparent;">Apllidos</label>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="group-material d-flex ">
+                            <i class="zmdi zmdi-phone zmdi-style mr-3"> </i>
+                            <div class="col-12">
+
+                                <input type="text" class="material-control tooltips-general input-check-user"
+                                    id="txtTelefono" placeholder="[código país] Teléfono Celular" data-toggle="tooltip"
+                                    data-placement="top" maxlength="11"
+                                    title="Escribe Telefono, imgrese codigo de pais luego el numero de celular. ejemplo:51985726371">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label for="txtTelefono" style="color: transparent;">Telefono</label>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="group-material d-flex">
+                            <i class="zmdi zmdi-graduation-cap zmdi-style mr-3"> </i>
+                            <div class="col-12">
+                                <input type="text" class="material-control tooltips-general input-check-user"
+                                    id="txtEspecialidad" placeholder="Especialidad" data-toggle="tooltip"
+                                    data-placement="top" maxlength="90"
+                                    title="Escribe la Especialidad a que te dedicas laboralmente ">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label for="txtEspecialidad" style="color: transparent;">Oficio</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 text-center">
+                <legend class="text-primary">Datos de la Cuenta</legend>
+                <div class="form-row px-4">
+                    <div class="col-12">
+                        <div class="group-material  d-flex">
+                            <i class="zmdi zmdi-account zmdi-style"> </i>
+                            <div class="col-12">
+                                <input type="text" class="material-control tooltips-general input-check-user"
+                                    placeholder="Nombre de usuario" id="txtUsuario" data-toggle="tooltip"
+                                    data-placement="top" maxlength="44" title="Escribe tu nombre de usuario ">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label for="txtUsuario" style="color: transparent;">usuario</label>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="group-material d-flex">
+                            <i class="zmdi zmdi-email zmdi-style"> </i>
+                            <div class="col-12">
+                                <input type="email" class="material-control tooltips-general " placeholder="E-mail"
+                                    maxlength="30" id="txtEmail" data-toggle="tooltip" data-placement="top"
+                                    maxlength="50" title="Escribe Tu email">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label for="txtEmail" style="color: transparent;">Nombre</label>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="group-material form-row">
+
+                            <div class="col-10">
+                                <input type="password" class="material-control tooltips-general" placeholder="Password"
+                                    id="txtPassword1" data-toggle="tooltip" data-placement="top" maxlength="45"
+                                    title="Letras y números. Tamaño mínimo: 8. Tamaño máximo: 12">
+
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label for="txtPassword1">Contraseña :</label>
+                            </div>
+                            <div class="col-2">
+                                <button id="ButtonPassword1" type="button" class="btn px-2" style=" height: 49px;"> <i
+                                        class="zmdi zmdi-eye" style="line-height: 0;position: inherit;"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="group-material">
+                            <input type="password" class="material-control tooltips-general " placeholder="Password"
+                                id="txtPassword2" data-toggle="tooltip" data-placement="top" maxlength="45"
+                                title="Escribe Tu Contraseña de confirmación">
+                            <span class="highlight"></span>
+                            <span class="bar"></span>
+                            <label for="txtPassword2">Comprobar Contraseña :</label>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+            <div class="col-12">
+                <div id="imagePreview" class="text-center">
+                </div>
+                <div class="group-material d-flex">
+                    <i class="zmdi zmdi-image zmdi-style"> </i>
+                    <div class="col-12">
+                        <input type="file" id="txtFoto" class="material-control tooltips-general input-check-user"
+                            data-toggle="tooltip" data-placement="top" title="Selecciona la foto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center col-12">
+                <button type="reset" class="btn btn-info" style="margin-right: 20px;">
+                    <i class="zmdi zmdi-roller"></i>
+                    &nbsp;&nbsp; Limpiar
+                </button>
+                <button type="submit" class="btn btn-success"><i class="zmdi zmdi-floppy"></i> &nbsp;&nbsp;
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="modal fade" id="modalCargandoAdministrador" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Cargando Perfil. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--final del contenido de la pagina  -->
