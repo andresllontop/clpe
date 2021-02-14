@@ -19,8 +19,7 @@
     <table class="table table-hover text-center">
       <thead>
         <tr>
-          <th class="text-center">Nombres</th>
-          <th class="text-center">Apellidos</th>
+          <th class="text-center">Nombre Completo</th>
           <th class="text-center">Teléfono</th>
           <th class="text-center">País</th>
           <th class="text-center">Nombre de Banco</th>
@@ -32,6 +31,7 @@
           <th class="text-center">Comprobante Pago</th>
           <th class="text-center">Medio de Pago</th>
           <th class="text-center">Fecha</th>
+          <th class="text-center">EDITAR</th>
           <th class="text-center">ELIMINAR</th>
         </tr>
       </thead>
@@ -44,8 +44,161 @@
   </nav>
   <!-- /pagination BLOG -->
 </div>
+<!-- modal -->
+<div id="ventanaModalManEconomico" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog pr-2" role="document">
+    <div class="modal-content">
+      <form id="formularioEconomico" autocomplete="off">
+        <div class="modal-header mb-3">
+          <h4 class="modal-title all-tittles text-center w-100" id="tituloModalManEconomico"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            style="margin-top: -1em;margin-right: -1.5em;">
+            <span aria-hidden="true" class="m-0"
+              style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtNombreEconomico" type="text" class="material-control tooltips-general "
+                  placeholder="Nombre completo" required="" maxlength="70" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,70}"
+                  data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtNombreEconomico">Nombre completo</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtApellidoEconomico" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="Nombre de usuario" required="" maxlength="50" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ ]{1,50}"
+                  data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtApellidoEconomico">Apellidos</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtTelefonoEconomico" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="Telefono" maxlength="20" required="" data-toggle="tooltip" pattern="[0-9]{1,20}"
+                  data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtTelefonoEconomico">Teléfono</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="group-material">
+                <input id="txtPaisEconomico" type="text" class="material-control tooltips-general input-check-user"
+                  placeholder="PAIS" maxlength="50" data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtPaisEconomico">País</label>
+              </div>
+            </div>
 
 
+
+            <div class="form-row px-2">
+              <legend class="px-3 pb-3">Datos Monetarios</legend>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtFechaEconomico" type="datetime-local" class="material-control tooltips-general"
+                    placeholder="Fecha de pago" required="" data-toggle="tooltip" data-placement="top">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles" for="txtFechaEconomico">Fecha de Pago</label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <label class="all-tittles" for="txtTipoEconomico" style="top: -20px;
+                  font-size: 17px;
+                  color: #333;
+                  font-weight: normal;">Medio de Pago</label>
+                  <select id="txtTipoEconomico" class="material-control tooltips-general">
+                    <option value="1" selected>CULQI</option>
+                    <option value="2">EFECTIVO</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtNombreBancoEconomico" type="text"
+                    class="material-control tooltips-general input-check-user" placeholder=""
+                    pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,70}" data-toggle="tooltip" data-placement="top">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles" for="txtNombreBancoEconomico">Nombre del Banco</label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <label class="all-tittles" for="txtTipoMonedaEconomico" style="top: -20px;
+                  font-size: 17px;
+                  color: #333;
+                  font-weight: normal;">Tipo de Moneda</label>
+                  <select id="txtTipoMonedaEconomico" class="material-control tooltips-general">
+                    <option value="PEN" selected>PEN</option>
+                    <option value="USD">USD</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtComisionEconomico" type="text" class="material-control tooltips-general"
+                    placeholder="Nombre del Banco" pattern="[0-9.]{1,9}" data-toggle="tooltip" data-placement="top">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles" for="txtComisionEconomico">Comisión del Banco</label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="group-material">
+                  <input id="txtMontoEconomico" type="text" class="material-control tooltips-general input-check-user"
+                    placeholder="Monto Cancelado" pattern="[0-9.]{1,9}" data-toggle="tooltip" data-placement="top">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="all-tittles" for="txtMontoEconomico">Monto</label>
+                </div>
+              </div>
+              <div class="col-sm-7 mx-auto">
+                <div class="group-material">
+                  <div id="imagenVaucherPreview" style="padding-top:5px;">
+                  </div>
+                  <input id="txtImagenVoucher" type="file" accept="image/png, image/jpeg, image/jpg"
+                    class="material-control tooltips-general input-check-user" placeholder="Nombre de usuario"
+                    data-toggle="tooltip" data-placement="top" title=""
+                    data-original-title="seleccionar imagen de tu ordenador">
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label>Comprobante de Pago</label>
+                  <small>Tamaño Máximo Permitido: 1700 KB</small>
+                  <br>
+                  <small>Formatos Permitido:JPG, PNG, JPEG</small>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success all-tittles">
+            Aceptar
+          </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            CERRAR
+          </button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 
 

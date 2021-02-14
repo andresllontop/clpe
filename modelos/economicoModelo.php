@@ -52,6 +52,7 @@ class economicoModelo extends mainModel
                                 $insEconomico->setPrecio($row['precio']);
                                 $insEconomico->setTipo($row['tipo']);
                                 $insEconomico->setFecha($row['fecha']);
+                                $insEconomico->setVoucher($row['voucher']);
                                 $insBeanPagination->setList($insEconomico->__toString());
                             }
                         }
@@ -82,6 +83,7 @@ class economicoModelo extends mainModel
                                 $insEconomico->setPrecio($row['precio']);
                                 $insEconomico->setTipo($row['tipo']);
                                 $insEconomico->setFecha($row['fecha']);
+                                $insEconomico->setVoucher($row['voucher']);
                                 $insBeanPagination->setList($insEconomico->__toString());
                             }
                         }
@@ -224,15 +226,23 @@ class economicoModelo extends mainModel
     }
     protected function actualizar_economico_modelo($conexion, $economico)
     {
-        $sql = $conexion->prepare("UPDATE `economico`
-            SET titulo=:Titulo,descripcion=:Descripcion,
-            archivo=:Imagen,tipoArchivo=:Tipo,resumen=:Resumen
-            WHERE ideconomico=:ID");
-        $sql->bindValue(":Titulo", $economico->getTitulo(), PDO::PARAM_STR);
-        $sql->bindValue(":Descripcion", $economico->getDescripcion(), PDO::PARAM_STR);
-        $sql->bindValue(":Imagen", $economico->getArchivo(), PDO::PARAM_STR);
-        $sql->bindValue(":Tipo", $economico->getTipoArchivo(), PDO::PARAM_INT);
-        $sql->bindValue(":Resumen", $economico->getResumen(), PDO::PARAM_STR);
+        $sql = $conexion->prepare("UPDATE `historial_economico`
+            SET nombres=:Nombre,apellidos=:Apellido,
+            telefono=:Telefono,tipo=:Tipo,comision=:Comision
+            ,precio=:Precio,pais=:Pais,moneda=:Moneda
+            ,fecha=:Fecha,voucher=:Voucher,nombre_banco=:Banco
+            WHERE idhistorial_economico=:ID");
+        $sql->bindValue(":Nombre", $economico->getNombre(), PDO::PARAM_STR);
+        $sql->bindValue(":Apellido", $economico->getApellido(), PDO::PARAM_STR);
+        $sql->bindValue(":Telefono", $economico->getTelefono(), PDO::PARAM_STR);
+        $sql->bindValue(":Tipo", $economico->getTipo(), PDO::PARAM_INT);
+        $sql->bindValue(":Comision", $economico->getComision(), PDO::PARAM_INT);
+        $sql->bindValue(":Precio", $economico->getPrecio(), PDO::PARAM_INT);
+        $sql->bindValue(":Pais", $economico->getPais(), PDO::PARAM_STR);
+        $sql->bindValue(":Banco", $economico->getBanco(), PDO::PARAM_STR);
+        $sql->bindValue(":Moneda", $economico->getMoneda(), PDO::PARAM_STR);
+        $sql->bindValue(":Fecha", $economico->getFecha());
+        $sql->bindValue(":Voucher", $economico->getVoucher(), PDO::PARAM_STR);
         $sql->bindValue(":ID", $economico->getIdeconomico(), PDO::PARAM_INT);
 
         return $sql;

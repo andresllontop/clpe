@@ -182,61 +182,52 @@ class economicoControlador extends economicoModelo
         $insBeanCrud = new BeanCrud();
         try {
             $this->conexion_db->beginTransaction();
-            $Economico->setDescripcion(mainModel::limpiar_cadena($Economico->getDescripcion()));
-            $Economico->setResumen(mainModel::limpiar_cadena($Economico->getResumen()));
-            $Economico->setComentario(mainModel::limpiar_cadena($Economico->getComentario()));
+            $Economico->setIdeconomico(mainModel::limpiar_cadena($Economico->getIdeconomico()));
+            $Economico->setNombre(mainModel::limpiar_cadena($Economico->getNombre()));
+            $Economico->setApellido(mainModel::limpiar_cadena($Economico->getApellido()));
+            $Economico->setTelefono(mainModel::limpiar_cadena($Economico->getTelefono()));
+            $Economico->setPais(mainModel::limpiar_cadena($Economico->getPais()));
+            $Economico->setBanco(mainModel::limpiar_cadena($Economico->getBanco()));
+            $Economico->setMoneda(mainModel::limpiar_cadena($Economico->getMoneda()));
+            $Economico->setComision(mainModel::limpiar_cadena($Economico->getComision()));
+            $Economico->setPrecio(mainModel::limpiar_cadena($Economico->getPrecio()));
+            $Economico->setTipo(mainModel::limpiar_cadena($Economico->getTipo()));
+            $Economico->setFecha(mainModel::limpiar_cadena($Economico->getFecha()));
 
-            switch ((int) $Economico->getTipoArchivo()) {
-                case 1:
-                    if (isset($_FILES['txtImagenEconomico'])) {
-                        $original = $_FILES['txtImagenEconomico'];
-                        $nombre = $original['name'];
-                        $permitido = array("image/png", "image/jpg", "image/jpeg");
-                        $destino = "IMAGENES";
-                        $limit_kb = 1700;
-                    } else {
-                        $nombre = "";
-                    }
-
-                    break;
-                case 2:
-                    if (isset($_FILES['txtVideoEconomico'])) {
-                        $original = $_FILES['txtVideoEconomico'];
-                        $nombre = $original['name'];
-                        $permitido = array("video/mp4");
-                        $destino = "VIDEOS";
-                        $limit_kb = (17 * 1024);
-                    } else {
-                        $nombre = "";
-                    }
-
-                    break;
-            }
             $leconomico = economicoModelo::datos_economico_modelo($this->conexion_db, "unico", $Economico);
             if ($leconomico["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("No se encuentra el economico");
             } else {
-                if ($nombre != "") {
+                if (isset($_FILES['txtImagenVoucher'])) {
+                    $original = $_FILES['txtImagenVoucher'];
+                    $nombre = $original['name'];
+                    $permitido = array("image/png", "image/jpg", "image/jpeg");
+                    $limit_kb = 1700;
                     if ($original['error'] > 0) {
                         $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
                     } else {
-                        $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/economico/" . $destino . "/");
+                        $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/clientes/comprobante/");
                         if ($resultado != "") {
-                            $Economico->setArchivo($resultado);
+                            $Economico->setVoucher($resultado);
                             $stmt = economicoModelo::actualizar_economico_modelo($this->conexion_db, $Economico);
 
                             if ($stmt->execute()) {
-                                switch ($Economico->getTipoArchivo()) {
-                                    case '1':
-                                        unlink('./adjuntos/economico/IMAGENES/' . $leconomico["list"][0]['archivo']);
-                                        break;
-                                    case '2':
-                                        unlink('./adjuntos/economico/VIDEOS/' . $leconomico["list"][0]['archivo']);
-                                        break;
+                                if ($leconomico["list"][0]['voucher'] != "") {
+                                    switch ((int) $Economico->getTipo()) {
+                                        case 2:
+                                            unlink('./adjuntos/clientes/comprobante/' . $leconomico["list"][0]['voucher']);
+                                            break;
+
+                                    }
                                 }
+
                                 $this->conexion_db->commit();
                                 $insBeanCrud->setMessageServer("ok");
-                                $insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, 0, 20));
+                                //$insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, 0, 20));
+                                $economicoClass = economicoModelo::datos_economico_modelo($this->conexion_db, "unico", $Economico);
+                                if ($economicoClass["countFilter"] > 0) {
+                                    $insBeanCrud->setBeanClass($economicoClass["list"][0]);
+                                }
 
                             } else {
                                 $insBeanCrud->setMessageServer("No hemos podido actualizar el economico");
@@ -249,14 +240,17 @@ class economicoControlador extends economicoModelo
                         }
                     }
                 } else {
-                    $Economico->setArchivo($leconomico["list"][0]['archivo']);
+                    $Economico->setVoucher($leconomico["list"][0]['voucher']);
                     $stmt = economicoModelo::actualizar_economico_modelo($this->conexion_db, $Economico);
                     if ($stmt->execute()) {
                         $this->conexion_db->commit();
                         $insBeanCrud->setMessageServer("ok");
-                        $insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, 0, 20));
+                        $economicoClass = economicoModelo::datos_economico_modelo($this->conexion_db, "unico", $Economico);
+                        if ($economicoClass["countFilter"] > 0) {
+                            $insBeanCrud->setBeanClass($economicoClass["list"][0]);
+                        }
                     } else {
-                        $insBeanCrud->setMessageServer("No hemos podido actualizar el economico");
+                        $insBeanCrud->setMessageServer("No hemos podido actualizar el historial economico");
                     }
                     $stmt->closeCursor();
                     $stmt = null;

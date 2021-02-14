@@ -16,12 +16,16 @@ if (!empty($RESULTADO_token)) {
                     if ($accion == "add") {
                         $personData = json_decode($_POST['class']);
                         $insEconomicoClass = new Economico();
-                        $insEconomicoClass->setTitulo($personData->titulo);
-                        $insEconomicoClass->setResumen($personData->resumen);
-                        $insEconomicoClass->setDescripcion($personData->descripcion);
-                        $insEconomicoClass->setArchivo($personData->archivo);
-                        $insEconomicoClass->setTipoArchivo($personData->tipo_archivo);
-                        $insEconomicoClass->setComentario($personData->comentario);
+                        $insEconomicoClass->setNombre($personData->nombre);
+                        $insEconomicoClass->setApellido($personData->apellido);
+                        $insEconomicoClass->setTelefono($personData->telefono);
+                        $insEconomicoClass->setPais($personData->pais);
+                        $insEconomicoClass->setBanco($personData->banco);
+                        $insEconomicoClass->setMoneda($personData->moneda);
+                        $insEconomicoClass->setComision($personData->comision);
+                        $insEconomicoClass->setPrecio($personData->precio);
+                        $insEconomicoClass->setTipo($personData->tipo);
+                        $insEconomicoClass->setFecha($personData->fecha);
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo $inseconomico->agregar_economico_controlador($insEconomicoClass);
@@ -29,13 +33,17 @@ if (!empty($RESULTADO_token)) {
 
                         $personData = json_decode($_POST['class']);
                         $insEconomicoClass = new Economico();
-                        $insEconomicoClass->setIdEconomico($personData->ideconomico);
-                        $insEconomicoClass->setTitulo($personData->titulo);
-                        $insEconomicoClass->setResumen($personData->resumen);
-                        $insEconomicoClass->setDescripcion($personData->descripcion);
-                        $insEconomicoClass->setArchivo($personData->archivo);
-                        $insEconomicoClass->setTipoArchivo($personData->tipo_archivo);
-                        $insEconomicoClass->setComentario($personData->comentario);
+                        $insEconomicoClass->setIdeconomico($personData->ideconomico);
+                        $insEconomicoClass->setNombre($personData->nombre);
+                        $insEconomicoClass->setApellido($personData->apellido);
+                        $insEconomicoClass->setTelefono($personData->telefono);
+                        $insEconomicoClass->setPais($personData->pais);
+                        $insEconomicoClass->setBanco($personData->banco);
+                        $insEconomicoClass->setMoneda($personData->moneda);
+                        $insEconomicoClass->setComision($personData->comision);
+                        $insEconomicoClass->setPrecio($personData->precio);
+                        $insEconomicoClass->setTipo($personData->tipo);
+                        $insEconomicoClass->setFecha($personData->fecha);
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo $inseconomico->actualizar_economico_controlador($insEconomicoClass);

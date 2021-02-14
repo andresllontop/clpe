@@ -171,7 +171,7 @@ function addConferencia(conferencia = undefined) {
 
     document.querySelector('#txtLinkConferencia').value = (conferencia == undefined) ? '' : conferencia.link;
     document.querySelector('#txtTituloConferencia').value = (conferencia == undefined) ? '' : conferencia.titulo;
-    document.querySelector('#txtFechaConferencia').value = (conferencia == undefined) ? '' : (conferencia.fecha.split(" ")[0]) + "T" + (conferencia.fecha.split(" ")[1]);
+    document.querySelector('#txtFechaConferencia').value = (conferencia == undefined) ? '' : (conferencia.fecha.split(" ")[0]) + "T" + (conferencia.fecha.split(" ")[1].split(":")[0] + ":" + conferencia.fecha.split(" ")[1].split(":")[1]);
 
 
     $("#txtDescripcionConferencia").Editor("setText", (conferencia == undefined) ? '<p style="color:black"></p>' : conferencia.descripcion);
