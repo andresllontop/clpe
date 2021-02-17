@@ -122,7 +122,7 @@
                 <label class="all-tittles" for="txtPaisCliente">País</label>
               </div>
             </div>
-            <div class="col-sm-12">
+            <div class="col-sm-6">
               <div class="group-material">
                 <input id="txtEspecialidadCliente" type="text"
                   class="material-control tooltips-general input-check-user" placeholder="Nombre de usuario" required=""
@@ -132,7 +132,18 @@
                 <label class="all-tittles">Especialidad</label>
               </div>
             </div>
-
+            <div class="col-sm-6">
+              <div class="group-material">
+                <label class="all-tittles" for="txtTipoInscripcionCliente" style="top: -20px;
+                font-size: 17px;
+                color: #333;
+                font-weight: normal;">Tipo de Inscripción</label>
+                <select id="txtTipoInscripcionCliente" class="material-control tooltips-general">
+                  <option value="1" selected>AUTOMÁTICO</option>
+                  <option value="2">CORREO ELECTRÓNICO</option>
+                </select>
+              </div>
+            </div>
             <div id="viewCliente" class="form-row px-3">
               <div class="col-sm-12">
                 <label class="all-tittles">Foto del ALumno</label>

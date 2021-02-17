@@ -18,13 +18,14 @@ class certificadoControlador extends certificadoModelo
             $Certificado->setCuenta(mainModel::limpiar_cadena($Certificado->getCuenta()));
             $Certificado->setNombre(mainModel::limpiar_cadena($Certificado->getNombre()));
 
-            $stmt = $this->conexion_db->prepare("SELECT max(idtarea) AS CONTADOR,fecha FROM `tarea` WHERE cuenta=:Cuenta");
+            $stmt = $this->conexion_db->prepare("SELECT max(fecha) AS fecha_final,min(fecha) AS fecha_inicial FROM `tarea` WHERE cuenta=:Cuenta");
             $stmt->bindValue(":Cuenta", $Certificado->getCuenta(), PDO::PARAM_STR);
             $stmt->execute();
             $datos2 = $stmt->fetchAll();
             foreach ($datos2 as $row2) {
-                if ($row2['CONTADOR'] != null) {
-                    $Certificado->setFecha($row2['fecha']);
+                if ($row2['fecha_final'] != null) {
+                    $Certificado->setFecha($row2['fecha_final']);
+                    $Certificado->setFechaInicial($row2['fecha_inicial']);
                     $stmt = certificadoModelo::agregar_certificado_modelo($this->conexion_db, $Certificado);
                     if ($stmt->execute()) {
                         $this->conexion_db->commit();
@@ -154,16 +155,16 @@ class certificadoControlador extends certificadoModelo
         $insBeanCrud = new BeanCrud();
         try {
             $this->conexion_db->beginTransaction();
-            $certificado = certificadoModelo::datos_certificado_modelo($this->conexion_db, "unico", $Certificado);
+            $certificado = certificadoModelo::datos_certificado_modelo($this->conexion_db, "cuenta", $Certificado);
             if ($certificado["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("No se encuentra el certificado");
             } else {
-                $stmt = certificadoModelo::eliminar_certificado_modelo($this->conexion_db, mainModel::limpiar_cadena($Certificado->getIdcertificado()));
+                $stmt = certificadoModelo::eliminar_certificado_modelo($this->conexion_db, mainModel::limpiar_cadena($Certificado->getCuenta()));
 
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
-                    // $insBeanCrud->setBeanPagination(self::paginador_certificado_controlador($this->conexion_db, 0, 5));
+                    $insBeanCrud->setBeanPagination(self::paginador_certificado_controlador($this->conexion_db, 0, 20, 1, ""));
 
                 } else {
                     $insBeanCrud->setMessageServer("se elimino el certificado");
@@ -189,6 +190,7 @@ class certificadoControlador extends certificadoModelo
         return json_encode($insBeanCrud->__toString());
 
     }
+
     public function actualizar_certificado_controlador($Certificado)
     {
         $insBeanCrud = new BeanCrud();

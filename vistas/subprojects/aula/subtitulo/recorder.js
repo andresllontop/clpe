@@ -761,7 +761,7 @@ function ProcesarAjaxLeccion() {
                 }
 
             } else if (beanCrudResponse.messageServer.toLowerCase() == 'fin') {
-                showAlertTopEnd("info", "CULMINÓ CON ÉXITO SU CURSO", "");
+                showAlertTopEnd("info", "TAREA REGISTRADA FIN DEL CURSO", "haga clic en aceptar");
 
             } else {
                 showAlertTopEnd("info", "INFORMACIÓN!", beanCrudResponse.messageServer);

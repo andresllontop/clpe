@@ -237,40 +237,20 @@ function processAjaxSubtitulo() {
 
             } else if (beanCrudResponse.messageServer.toLowerCase() == 'fin') {
                 finalizadoSelected = "finalizado";
-                document.querySelector("#htmlMensaje").innerHTML = `
-                <div class="container">
-                <p class="mb-2 f-16" style="line-height: 16px;">
-                    Ingrese nombres y apellidos para el certificado de culminación del curso.
-                </p>
-                <form id="formularioCertificado" autocomplete="off" class="form-row">
-                    <div class="col-sm-5 anim fadeInLeft mx-auto">
-                        <span class="input-group">
-                            <label for="contactName" class="d-none">Nombre Completo</label>
-                            <i class="zmdi  zmdi-account-o" style="line-height: 49px;"></i>
-                            <input type="text" id="contactName" class="lg" placeholder="Nombre Completo"
-                                style="font-size: 17px; height: 49px;color:black;" />
-                        </span><!-- .input-group -->
-                        <span class="input-group">
-                            <button class="submit"  data-loading-text="Enviando..."
-                                style=" height: 49px;" type="submit">ENVIAR</button>
-                        </span><!-- .input-group -->
-                    </div><!-- .col-5 -->
-                </form>
-            </div>
-`;
 
-
-
-                if (beanCrudResponse.beanPagination !== null) {
-                    beanPaginationSubtitulo = beanCrudResponse.beanPagination;
-                    listaSubtituloFinalizado(beanPaginationSubtitulo);
-                    if (beanRequestSubtitulo.operation != "anteriorleccion") {
-                        subtituloSelectedInicial = beanPaginationSubtitulo.list[0];
-                        processAjaxSubtituloTitulo(document.querySelector("#bodySubtitulo-titulo"));
-
-                    }
-                }
-
+                $('#modalCargandoCertificado').modal('show');
+                /*
+                
+                                if (beanCrudResponse.beanPagination !== null) {
+                                    beanPaginationSubtitulo = beanCrudResponse.beanPagination;
+                                    //   listaSubtituloFinalizado(beanPaginationSubtitulo);
+                                    if (beanRequestSubtitulo.operation != "anteriorleccion") {
+                                        subtituloSelectedInicial = beanPaginationSubtitulo.list[0];
+                                        // processAjaxSubtituloTitulo(document.querySelector("#bodySubtitulo-titulo"));
+                
+                                    }
+                                }
+                */
             } else {
                 showAlertTopEnd("warning", "Error", beanCrudResponse.messageServer);
             }

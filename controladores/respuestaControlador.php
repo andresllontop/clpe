@@ -94,6 +94,24 @@ class respuestaControlador extends respuestaModelo
                                                         if ($stmt->execute()) {
                                                             $this->conexion_db->commit();
                                                             $insBeanCrud->setMessageServer("ok");
+                                                            $array = explode(".", $RespuestaClass->getTitulo());
+                                                            // aumentar titulo
+                                                            $numerofinal = ($array[2] + 1);
+                                                            if (strlen($numerofinal) == 1) {
+                                                                $numerofinal = "0" . $numerofinal;
+                                                            }
+                                                            $RespuestaClass->setTitulo($array[0] . "." . $array[1] . "." . $numerofinal);
+                                                            $stmt = $this->conexion_db->prepare("SELECT count(idtitulo) AS CONTADOR FROM `titulo` WHERE codigoTitulo=:codigo");
+                                                            $stmt->bindValue(":codigo", $RespuestaClass->getTitulo(), PDO::PARAM_STR);
+                                                            $stmt->execute();
+                                                            $datos = $stmt->fetchAll();
+                                                            foreach ($datos as $row) {
+                                                                if ($row["CONTADOR"] == 0) {
+                                                                    $insBeanCrud->setBeanClass("fin");
+                                                                    $insBeanCrud->setMessageServer("fin");
+                                                                }
+                                                            }
+                                                            /* */
                                                         } else {
                                                             $insBeanCrud->setMessageServer("No se ha podido registrar la tarea.");
                                                         }
@@ -172,6 +190,25 @@ class respuestaControlador extends respuestaModelo
                                             if ($stmt->execute()) {
                                                 $this->conexion_db->commit();
                                                 $insBeanCrud->setMessageServer("ok");
+                                                $array = explode(".", $RespuestaClass->getTitulo());
+                                                // aumentar titulo
+                                                $numerofinal = ($array[2] + 1);
+                                                if (strlen($numerofinal) == 1) {
+                                                    $numerofinal = "0" . $numerofinal;
+                                                }
+                                                $RespuestaClass->setTitulo($array[0] . "." . $array[1] . "." . $numerofinal);
+                                                $stmt = $this->conexion_db->prepare("SELECT count(idtitulo) AS CONTADOR FROM `titulo` WHERE codigoTitulo=:codigo");
+
+                                                $stmt->bindValue(":codigo", $RespuestaClass->getTitulo(), PDO::PARAM_STR);
+                                                $stmt->execute();
+                                                $datos = $stmt->fetchAll();
+                                                foreach ($datos as $row) {
+                                                    if ($row["CONTADOR"] == 0) {
+                                                        $insBeanCrud->setBeanClass("fin");
+                                                        $insBeanCrud->setMessageServer("fin");
+                                                    }
+                                                }
+                                                /* */
                                             } else {
                                                 $insBeanCrud->setMessageServer("No se ha podido registrar la tarea.");
                                             }

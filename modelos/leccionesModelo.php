@@ -574,6 +574,7 @@ class leccionesModelo extends mainModel
                                 $insLeccion = new Leccion();
                                 $insLeccion->setCuenta(array(
                                     "nombre_completo" => $row['nombre'],
+                                    "fecha_inicial" => $row['fecha_inicial'],
                                 ));
                                 $insLeccion->setFecha($row['fecha']);
 

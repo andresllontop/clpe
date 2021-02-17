@@ -91,6 +91,7 @@ function processAjaxCliente() {
             ocupacion: document.querySelector("#txtEspecialidadCliente").value,
             telefono: document.querySelector("#txtTelefonoCliente").value,
             pais: document.querySelector("#txtPaisCliente").value,
+            tipo_inscripcion: document.querySelector("#txtTipoInscripcionCliente").value,
             cuenta: {
                 idcuenta: 0,
                 codigo: "",

@@ -1616,6 +1616,9 @@ class leccionesControlador extends leccionesModelo
         $fecha = explode(" ", $data[0]['fecha']);
         $arrayFecha = explode("-", $fecha[0]);
 
+        $fecha_inicial = explode(" ", $data[0]['cuenta']['fecha_inicial']);
+        $arrayFecha_inicial = explode("-", $fecha_inicial[0]);
+
         $html = '<!DOCTYPE html>
         <html lang="en">
 
@@ -1647,11 +1650,11 @@ class leccionesControlador extends leccionesModelo
                 <div id="details" class="clearfix">
 
                     <div id="invoice" style="width: 100%;">
-                        <h2>' . strtoupper($data[0]['cuenta']['nombre_completo']) . '</h2>
+                        <h2>' . $data[0]['cuenta']['nombre_completo'] . '</h2>
                         <div class="address" style="font-size: 22px;">Ha participado satisfactoriamente en el       curso de:</div>
                         <h2 class="name" style="font-weight: bold;font-family: system-ui;">LECTURA Y        APLICACIÓN DEL LIBRO</h2>
                         <h2 class="name" style="font-weight: bold;">“Piense y Hágase Rico” de Napoleón Hill –       Nivel básico</h2>
-                        <div class="address" style="padding-right: 4cm; padding-left: 4cm;font-size: 22px;      ">Con una duración de 60 horas, realizado de forma virtual hasta el ' . $arrayFecha[2] . ' de  ' . self::Mes($arrayFecha[1]) . ' del ' . $arrayFecha[0] . '
+                        <div class="address" style="padding-right: 4cm;padding-top: 7px; padding-left: 4cm;font-size: 22px;      ">Con una duración de 92 horas, realizado de forma virtual desde el ' . $arrayFecha_inicial[2] . ' de  ' . self::Mes($arrayFecha_inicial[1]) . ' del ' . $arrayFecha_inicial[0] . ' hasta el ' . $arrayFecha[2] . ' de  ' . self::Mes($arrayFecha[1]) . ' del ' . $arrayFecha[0] . '
                         </div>
                     </div>
                     <table style="margin-top: 120px;margin-left: 50px;margin-right: 50px;width: 100%;">
@@ -1659,11 +1662,11 @@ class leccionesControlador extends leccionesModelo
                         <tbody>
                             <tr>
                                 <td class="desc" style="text-align: center;background: transparent;padding: 0;      ">
-                                    <img style="width: 150px;position: absolute;bottom: 5.5cm;left: 5cm;"
+                                    <img style="width: 150px;position: absolute;bottom: 4.5cm;left: 5cm;"
                                         src="' . SERVERURL . 'adjuntos/image/FIRMAJHEINER.png">
                                 </td>
                                 <td class="desc" style="text-align: center;background: transparent;padding: 0;      ">
-                                    <img style="width: 90px;position: absolute;bottom: 5cm;right: 6.5cm;"
+                                    <img style="width: 90px;position: absolute;bottom: 4.5cm;right: 6.5cm;"
                                         src="' . SERVERURL . 'adjuntos/image/FIRMAVICTOR.png">
                                 </td>
                             </tr>

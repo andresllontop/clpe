@@ -25,15 +25,9 @@ if (!empty($RESULTADO_token)) {
                         header('Content-Type: application/json; charset=utf-8');
                         echo $inscliente->agregar_cliente_controlador(1, $insClienteClass);
                     } else if ($accion == "update") {
-                        require_once './plugins/PHPMailer/src/PHPMailer.php';
-                        require_once './plugins/PHPMailer/src/SMTP.php';
-                        require_once './plugins/PHPMailer/src/Exception.php';
-                        require_once './classes/principal/usuario.php';
-                        require_once './classes/principal/empresa.php';
-                        require_once './api/security/auth.php';
-                        $insToken = new Auth();
 
-                        $insUser = new Usuario();
+                        require_once './classes/principal/empresa.php';
+
                         $personData = json_decode($_POST['class']);
                         $insClienteClass = new Cliente();
                         $insClienteClass->setIdCliente($personData->idcliente);
@@ -43,18 +37,50 @@ if (!empty($RESULTADO_token)) {
                         $insClienteClass->setOcupacion($personData->ocupacion);
                         $insClienteClass->setPais($personData->pais);
                         $insClienteClass->setCuenta($personData->cuenta);
-                        $insUser->setId($personData->cuenta->idcuenta);
-                        $insUser->setUsuario($personData->cuenta->usuario);
-                        $insUser->setEmail($personData->cuenta->email);
-                        $insUser->setTipo(2);
-                        $insUser->setCodigo($personData->cuenta->codigo);
 
-                        $respuestaToken = $insToken->autenticar($insUser);
+                        if (isset($personData->tipo_inscripcion)) {
 
-                        header("HTTP/1.1 200");
-                        header('Content-Type: application/json; charset=utf-8');
+                            if ((int) $personData->tipo_inscripcion == 1) {
+                                echo ($inscliente->actualizar_datos_tipo_inscripcion_cliente_controlador(1, $insClienteClass, $personData->economico));
+                            } else {
+                                require_once './plugins/PHPMailer/src/PHPMailer.php';
+                                require_once './plugins/PHPMailer/src/SMTP.php';
+                                require_once './plugins/PHPMailer/src/Exception.php';
+                                require_once './classes/principal/usuario.php';
+                                require_once './api/security/auth.php';
+                                $insToken = new Auth();
+                                $insUser = new Usuario();
+                                $insUser->setId($personData->cuenta->idcuenta);
+                                $insUser->setUsuario($personData->cuenta->usuario);
+                                $insUser->setEmail($personData->cuenta->email);
+                                $insUser->setTipo(2);
+                                $insUser->setCodigo($personData->cuenta->codigo);
+                                $respuestaToken = $insToken->autenticar($insUser);
+                                header("HTTP/1.1 200");
+                                header('Content-Type: application/json; charset=utf-8');
 
-                        echo ($inscliente->actualizar_datos_email_cliente_controlador(1, $insClienteClass, $personData->economico, $respuestaToken['token']));
+                                echo ($inscliente->actualizar_datos_email_cliente_controlador(1, $insClienteClass, $personData->economico, $respuestaToken['token']));
+                            }
+                        } else {
+                            require_once './plugins/PHPMailer/src/PHPMailer.php';
+                            require_once './plugins/PHPMailer/src/SMTP.php';
+                            require_once './plugins/PHPMailer/src/Exception.php';
+                            require_once './classes/principal/usuario.php';
+                            require_once './api/security/auth.php';
+                            $insToken = new Auth();
+                            $insUser = new Usuario();
+                            $insUser->setId($personData->cuenta->idcuenta);
+                            $insUser->setUsuario($personData->cuenta->usuario);
+                            $insUser->setEmail($personData->cuenta->email);
+                            $insUser->setTipo(2);
+                            $insUser->setCodigo($personData->cuenta->codigo);
+                            $respuestaToken = $insToken->autenticar($insUser);
+                            header("HTTP/1.1 200");
+                            header('Content-Type: application/json; charset=utf-8');
+
+                            echo ($inscliente->actualizar_datos_email_cliente_controlador(1, $insClienteClass, $personData->economico, $respuestaToken['token']));
+                        }
+
                     } else if ($accion == "updateestado") {
 
                         $personData = json_decode($_POST['class']);

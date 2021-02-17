@@ -45,7 +45,7 @@ if (!empty($RESULTADO_token)) {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         $insCertificadoClass = new Certificado();
-                        $insCertificadoClass->setIdcertificado($_GET['id']);
+                        $insCertificadoClass->setCuenta($_GET['codigo']);
                         echo $inscertificado->eliminar_certificado_controlador($insCertificadoClass);
                     } else if ($accion == "paginate") {
                         header("HTTP/1.1 200");

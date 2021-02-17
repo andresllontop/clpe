@@ -129,23 +129,25 @@ function processAjaxRespuesta() {
             } else if (beanCrudResponse.messageServer.toLowerCase() == 'fin') {
                 $('#modalCargandoRespuesta').modal('hide');
                 //CURSO CULMINADO
-                document.querySelector('#sectionLeccion').classList.add("d-none");
-                document.querySelector('#sectionPreguntas').classList.add("d-none");
-                document.querySelector('#sectionMensaje').classList.remove("d-none");
-                document.querySelector('#titleManRespuesta').innerHTML = "";
-                document.querySelector('#listaPreguntas').innerHTML = "";
-                swal({
-                    title: "TAREA REGISTRADA, FIN DEL CURSO",
-                    text: "Haga click en aceptar.",
-                    confirmButtonColor: "#2ca441",
-                    confirmButtonText: "Aceptar",
-                    imageUrl: getHostFrontEnd() + 'vistas/assets/img/enviada-carta.png',
-                    closeOnConfirm: false
-                },
-                    function () {
-                        swal.close();
 
-                    });
+
+                document.querySelector("#modalSwallTitulo").innerHTML = "TAREA REGISTRADA <br>FIN DEL CURSO";
+                document.querySelector("#modalSwallContenido").innerText = "Haga click en aceptar.";
+                $('#modalSwallMensaje').modal('show');
+
+                //AGREGANDO EVENTO CLICK
+                document.querySelector('#modalSwallAceptar').onclick = function () {
+                    $('#modalSwallMensaje').modal('hide');
+                    document.querySelector("#modalCargandoSubtitulo .progress-bar").innerText = "Cargando Formulario del Certificado ... ";
+                    beanRequestRespuesta.operation = 'updatestado';
+                    beanRequestRespuesta.type_request = 'POST';
+                    $('#modalCargandoRespuesta').modal('show');
+
+                };
+                document.querySelector('#modalSwallCancelar').onclick = function () {
+                    $('#modalSwallMensaje').modal('hide');
+                    swal("Seleccionaste Cancelar", "No finalizaste el curso,puedes responde nuevamente a las preguntas del Cuestionario");
+                };
             } else {
                 $('#modalCargandoRespuesta').modal('hide');
                 showAlertTopEnd("warning", "Error", beanCrudResponse.messageServer);

@@ -51,13 +51,15 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function processAjaxCliente() {
-    let form_data = new FormData();
+
 
     let parameters_pagination = '';
-    let json = '';
+
 
     switch (beanRequestCliente.operation) {
-
+        case 'delete':
+            parameters_pagination = '?codigo=' + clienteSelected.cuenta.cuentaCodigo;
+            break;
         default:
 
             parameters_pagination +=
@@ -75,9 +77,9 @@ function processAjaxCliente() {
         headers: {
             'Authorization': 'Bearer ' + Cookies.get("clpe_token")
         },
-        data: form_data,
+        data: null,
         cache: false,
-        contentType: ((beanRequestCliente.operation == 'update' || beanRequestCliente.operation == 'add') ? false : 'application/json; charset=UTF-8'),
+        contentType: 'application/json; charset=UTF-8',
         processData: false,
         dataType: 'json'
     }).done(function (beanCrudResponse) {
@@ -143,12 +145,27 @@ function listaCliente(beanPagination) {
 
     let row = "", contador = 1;
     document.querySelector('#tbodyCliente').innerHTML = '';
+    document.querySelector('#headTablaCertificado').innerHTML = `
+    <th class="text-center">#</th>
+    <th class="text-center">NOMBRES</th>
+    <th class="text-center">APELLIDOS</th>
+    <th class="text-center">TELEFONO</th>
+    <th class="text-center">EMAIL</th>
+    <th class="text-center">CERTIFICADO</th>
+    <th class="text-center">TERMINO N01</th>
+    <th class="text-center">VER</th>
+    `;
     if (document.querySelector("#btnCertificadosEntregados").dataset.opcion == 0) {
         document.querySelector('#titleManagerCliente').innerHTML =
             'LISTA DE CERTIFICADOS';
+
     } else {
         document.querySelector('#titleManagerCliente').innerHTML =
             'CERTIFICADOS ENTREGADOS';
+        document.querySelector('#headTablaCertificado').innerHTML += `
+            <th class="text-center">ELIMINAR</th>
+            `;
+
     }
     document.querySelector('#txtCountCliente').value =
         beanPagination.countFilter;
@@ -177,7 +194,10 @@ function listaCliente(beanPagination) {
 <td class="text-center">
 <button class="btn btn-info ver-cliente" ><i class="zmdi zmdi-eye"></i> </button>
 </td>
-</tr>`;
+${document.querySelector("#btnCertificadosEntregados").dataset.opcion == 1 ? '<td class="text-center"><button class="btn btn-danger eliminar-certificado"> <i class="zmdi zmdi-delete"></i> </button></td>' : ""
+            }
+
+</tr > `;
 
     });
 
@@ -234,8 +254,27 @@ function addEventsButtonsCliente() {
             }
         };
     });
-}
+    document.querySelectorAll('.eliminar-certificado').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            clienteSelected = findByCliente(
+                btn.parentElement.parentElement.getAttribute('idcliente')
+            );
 
+            if (clienteSelected != undefined) {
+                beanRequestCliente.type_request = 'GET';
+                beanRequestCliente.operation = 'delete';
+                $('#modalCargandoCliente').modal('show');
+            } else {
+                swal(
+                    "No se encontró el alumno",
+                    "",
+                    "info"
+                );
+            }
+        };
+    });
+}
 
 function addViewArchivosPreviusCliente() {
 
