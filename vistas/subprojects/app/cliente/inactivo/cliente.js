@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestCliente.operation = 'add';
         beanRequestCliente.type_request = 'POST';
         addClass(document.querySelector("#viewDatoMonetario"), "d-none");
+        addClass(document.querySelector("#txtTipoInscripcionCliente").parentElement.parentElement, "d-none");
+
         removeClass(document.querySelector("#viewCliente"), "d-none");
 
         document.querySelector("#btnSubmit").value = "REGISTRAR";
@@ -392,6 +394,8 @@ function addEventsButtonsAdmin() {
 
             if (clienteSelected != undefined) {
                 removeClass(document.querySelector("#viewDatoMonetario"), "d-none");
+                removeClass(document.querySelector("#txtTipoInscripcionCliente").parentElement.parentElement, "d-none");
+
                 document.querySelector("#btnSubmit").value = "INSCRIBIR";
                 addCliente(clienteSelected);
                 clienteSelected.cuenta.estado = 1;

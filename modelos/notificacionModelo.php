@@ -115,8 +115,9 @@ class notificacionModelo extends mainModel
                     $stmt = null;
                     break;
                 case "tarea":
-                    //
+                    //CONFERENCIA
                     $hoy = date('Y-m-d H:i:s');
+
                     $stmt = $conexion->prepare("SELECT *,MIN(fecha) FROM `notificacion` WHERE fecha >= ? and tipo=2");
                     $stmt->bindValue(1, $hoy);
                     $stmt->execute();
@@ -134,7 +135,7 @@ class notificacionModelo extends mainModel
                         }
 
                     }
-                    //
+                    //NOTIFICACION
                     $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR FROM `tarea` WHERE  cuenta=:CuentaCodigo");
                     $stmt->bindValue(":CuentaCodigo", $notificacion->getCuenta(), PDO::PARAM_STR);
                     $stmt->execute();
@@ -175,6 +176,29 @@ class notificacionModelo extends mainModel
                                     }
                                 }
 
+                            }
+                        } else {
+
+                            $stmt = $conexion->prepare("SELECT COUNT(idnotificacion) AS CONTADOR FROM `notificacion` WHERE  (  rango_inicial<0 OR rango_final<0 )  and tipo=1");
+                            $stmt->execute();
+                            $datos2 = $stmt->fetchAll();
+                            foreach ($datos2 as $row2) {
+                                $insBeanPagination->setCountFilter($row2['CONTADOR']);
+                                if ($row2['CONTADOR'] > 0) {
+                                    $stmt = $conexion->prepare("SELECT * FROM `notificacion` WHERE (  rango_inicial<0 OR rango_final<0 )  and tipo=1");
+                                    $stmt->execute();
+                                    $datos = $stmt->fetchAll();
+                                    foreach ($datos as $row) {
+                                        $insNotificacion = new Notificacion();
+                                        $insNotificacion->setIdNotificacion($row['idnotificacion']);
+                                        $insNotificacion->setRangoInicial($row['rango_inicial']);
+                                        $insNotificacion->setRangoFinal($row['rango_final']);
+                                        $insNotificacion->setDescripcion($row['descripcion']);
+                                        $insNotificacion->setTipo($row['tipo']);
+                                        $insBeanPagination->setList($insNotificacion->__toString());
+                                    }
+
+                                }
                             }
                         }
                     }
