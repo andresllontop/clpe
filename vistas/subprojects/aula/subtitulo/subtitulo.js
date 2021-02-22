@@ -312,7 +312,7 @@ function processAjaxSubtitulo() {
 
     }).fail(function (jqXHR, textStatus, errorThrown) {
         $('#modalCargandoSubtitulo').modal("hide");
-        showAlertErrorRequest();
+        showAlertErrorRequest((jqXHR.responseText).trim() + " -- " + errorThrown);
 
 
     });
@@ -367,7 +367,7 @@ function processAjaxSubtituloTitulo(documentId = document.querySelector("#bodySu
         }
 
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        showAlertErrorRequest();
+        showAlertErrorRequest((jqXHR.responseText).trim() + " -- " + errorThrown);
 
 
     });

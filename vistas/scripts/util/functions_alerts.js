@@ -70,11 +70,12 @@ function getTextHtmlFormat(text, count_palabras_for_row) {
     return text_formatter;
 }
 
-function showAlertErrorRequest() {
+function showAlertErrorRequest(texto = "") {
     swal({
-        title: 'Error interno al procesar la solicitud',
+        title: 'Error interno al procesar la solicitud ',
+        text: texto,
         type: "error",
-        timer: 4000,
+        timer: 8000,
         showConfirmButton: false
     });
 }

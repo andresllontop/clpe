@@ -244,13 +244,13 @@ class leccionesControlador extends leccionesModelo
             if ($this->conexion_db->inTransaction()) {
                 $this->conexion_db->rollback();
             }
-            print "¡Error!: " . $th->getMessage() . "<br/>";
+            return "¡Error!: " . $th->getMessage() . "<br/>";
 
         } catch (PDOException $e) {
             if ($this->conexion_db->inTransaction()) {
                 $this->conexion_db->rollback();
             }
-            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+            return "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
 
         } finally {
             if (isset($stmt)) {

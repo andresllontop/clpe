@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#ModalFormularioVideo").on('hide.bs.modal', function () {
         stopStream(window.stream);
         gumVideo.parentElement.classList.remove("col-sm-6");
-        gumVideo.parentElement.classList.add("col-sm-12");
+        gumVideo.parentElement.classList.add("col-sm-9");
     });
 
     if (document.querySelector("#AbrirVideo")) {
@@ -184,7 +184,10 @@ function startRecording() {
             mediaRecorder = new MediaRecorder(window.stream, options);
         } catch (e1) {
             try {
-                options = "video/mp4";
+                options = {
+                    mimeType: "video/mp4", audioBitsPerSecond: 128000,
+                    videoBitsPerSecond: 2500000
+                };
                 mediaRecorder = new MediaRecorder(window.stream, options);
             } catch (e2) {
                 //   alert("MediaRecorder no soportado para estos navegadores.");
@@ -199,7 +202,7 @@ function startRecording() {
     recordButton.dataset.originalTitle = "FINALIZAR GRABACIÓN";
     recorded.parentElement.classList.add("d-none");
     gumVideo.parentElement.classList.remove("col-sm-6");
-    gumVideo.parentElement.classList.add("col-sm-12");
+    gumVideo.parentElement.classList.add("col-sm-9");
     playButton.disabled = true;
     downloadButton.disabled = true;
     document.querySelector("#DownloadVideo").disabled = true;
@@ -242,7 +245,7 @@ function play() {
     let superBuffer = new Blob(recordedBlobs, { type: "video/webm" });
     recordedVideo.src = window.URL.createObjectURL(superBuffer);
     recorded.parentElement.classList.remove("d-none");
-    gumVideo.parentElement.classList.remove("col-sm-12");
+    gumVideo.parentElement.classList.remove("col-sm-9");
     gumVideo.parentElement.classList.add("col-sm-6");
 }
 
@@ -770,7 +773,7 @@ function ProcesarAjaxLeccion() {
 
     }).fail(function (jqXHR, textStatus, errorThrown) {
         $('#modalCargandoLeccion').modal("hide");
-        showAlertErrorRequest();
+        showAlertErrorRequest((jqXHR.responseText).trim() + " -- " + errorThrown);
 
     });
 
