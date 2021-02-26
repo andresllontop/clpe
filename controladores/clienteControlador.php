@@ -1240,57 +1240,57 @@ class clienteControlador extends clienteModelo
     {
         $insBeanPagination = new BeanPagination();
         try {
-            $contador = 0;
-            $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR FROM `tarea` WHERE tipo=0 ");
+            $stmt = $conexion->prepare("SELECT tar.cuenta FROM `tarea` as tar inner join `administrador` as admmini ON tar.cuenta=admmini.Cuenta_Codigo inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE cer.idcertificado is null and tar.tipo=0 and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR cuent.email like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%')OR admmini.pais like concat('%',?,'%')) GROUP BY tar.cuenta ");
+            $stmt->bindValue(1, $filtro, PDO::PARAM_STR);
+            $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
+            $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
+            $stmt->bindValue(4, $filtro, PDO::PARAM_STR);
+            $stmt->bindValue(5, $filtro, PDO::PARAM_STR);
             $stmt->execute();
             $datos = $stmt->fetchAll();
+            $insBeanPagination->setCountFilter(count($datos));
+            if (count($datos) > 0) {
+                $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,sum(CASE WHEN tar.estado = 0 THEN 1 ELSE 0 end) as totalestado,sum(tar.estado) as totalnoestado FROM `tarea` as tar inner join `administrador` as admmini ON tar.cuenta=admmini.Cuenta_Codigo inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE cer.idcertificado is null and tar.tipo=0 and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR cuent.email like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%')OR admmini.pais like concat('%',?,'%')) GROUP BY tar.cuenta ORDER BY max(tar.fecha) DESC LIMIT ?,? ");
+                $stmt->bindValue(1, $filtro, PDO::PARAM_STR);
+                $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
+                $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
+                $stmt->bindValue(4, $filtro, PDO::PARAM_STR);
+                $stmt->bindValue(5, $filtro, PDO::PARAM_STR);
+                $stmt->bindValue(6, $inicio, PDO::PARAM_INT);
+                $stmt->bindValue(7, $registros, PDO::PARAM_INT);
 
-            foreach ($datos as $row) {
-                $insBeanPagination->setCountFilter($row['CONTADOR']);
-                if ($row['CONTADOR'] > 0) {
-                    $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,sum(CASE WHEN tar.estado = 0 THEN 1 ELSE 0 end) as totalestado,sum(tar.estado) as totalnoestado FROM `tarea` as tar inner join `administrador` as admmini ON tar.cuenta=admmini.Cuenta_Codigo inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE cer.idcertificado is null and tar.tipo=0 and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR cuent.email like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%')OR admmini.pais like concat('%',?,'%')) GROUP BY tar.cuenta ORDER BY max(tar.fecha) DESC LIMIT ?,? ");
-                    $stmt->bindValue(1, $filtro, PDO::PARAM_STR);
-                    $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
-                    $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
-                    $stmt->bindValue(4, $filtro, PDO::PARAM_STR);
-                    $stmt->bindValue(5, $filtro, PDO::PARAM_STR);
-                    $stmt->bindValue(6, $inicio, PDO::PARAM_INT);
-                    $stmt->bindValue(7, $registros, PDO::PARAM_INT);
+                $stmt->execute();
+                $datos = $stmt->fetchAll();
 
-                    $stmt->execute();
-                    $datos = $stmt->fetchAll();
+                foreach ($datos as $row) {
 
-                    foreach ($datos as $row) {
-                        $contador++;
-                        $insCliente = new Cliente();
-                        $insCuenta = new Cuenta();
-                        $insCuenta->setIdCuenta($row['idcuenta']);
-                        $insCuenta->setCuentaCodigo($row['CuentaCodigo']);
-                        //$insCuenta->setUsuario($row['usuario']);
-                        //$insCuenta->setClave(mainModel::decryption($row['clave']));
-                        $insCuenta->setEmail($row['email']);
-                        $insCuenta->setEstado($row['estado']);
-                        // $insCuenta->setTipo($row['tipo']);
-                        $insCuenta->setFoto($row['foto']);
-                        //$insCuenta->setPrecio($row['precio_curso']);
-                        // $insCuenta->setVoucher($row['voucher']);
+                    $insCliente = new Cliente();
+                    $insCuenta = new Cuenta();
+                    $insCuenta->setIdCuenta($row['idcuenta']);
+                    $insCuenta->setCuentaCodigo($row['CuentaCodigo']);
+                    //$insCuenta->setUsuario($row['usuario']);
+                    //$insCuenta->setClave(mainModel::decryption($row['clave']));
+                    $insCuenta->setEmail($row['email']);
+                    $insCuenta->setEstado($row['estado']);
+                    // $insCuenta->setTipo($row['tipo']);
+                    $insCuenta->setFoto($row['foto']);
+                    //$insCuenta->setPrecio($row['precio_curso']);
+                    // $insCuenta->setVoucher($row['voucher']);
 
-                        $insCliente->setIdCliente($row['id']);
-                        $insCliente->setNombre($row['AdminNombre']);
-                        $insCliente->setTelefono($row['AdminTelefono']);
-                        $insCliente->setApellido($row['AdminApellido']);
-                        //$insCliente->setOcupacion($row['AdminOcupacion']);
-                        $insCliente->setPais($row['pais']);
-                        $insCliente->setTarea(array("totalestado" => $row['totalestado'],
-                            "totalnoestado" => $row['totalnoestado'],
-                        ));
-                        $insCliente->setCuenta($insCuenta->__toString());
-                        $insBeanPagination->setList($insCliente->__toString());
-
-                    }
+                    $insCliente->setIdCliente($row['id']);
+                    $insCliente->setNombre($row['AdminNombre']);
+                    $insCliente->setTelefono($row['AdminTelefono']);
+                    $insCliente->setApellido($row['AdminApellido']);
+                    //$insCliente->setOcupacion($row['AdminOcupacion']);
+                    $insCliente->setPais($row['pais']);
+                    $insCliente->setTarea(array("totalestado" => $row['totalestado'],
+                        "totalnoestado" => $row['totalnoestado'],
+                    ));
+                    $insCliente->setCuenta($insCuenta->__toString());
+                    $insBeanPagination->setList($insCliente->__toString());
 
                 }
-                $insBeanPagination->setCountFilter($contador);
+
             }
 
             $stmt->closeCursor(); // this is not even required
