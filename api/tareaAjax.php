@@ -58,6 +58,12 @@ if (!empty($RESULTADO_token)) {
                         $insTareaClass->setPagina($_GET['pagina']);
                         $insTareaClass->setRegistro($_GET['registros']);
                         echo json_encode($instarea->datos_tarea_controlador("titulo", $insTareaClass));
+                    } else if ($accion == "obtener") {
+                        header("HTTP/1.1 200");
+                        header('Content-Type: application/json; charset=utf-8');
+                        $insTareaClass = new Tarea();
+                        $insTareaClass->setCuenta($RESULTADO_token->codigo);
+                        echo json_encode($instarea->datos_tarea_controlador("tarea-cantidad", $insTareaClass));
                     } else {
                         header("HTTP/1.1 500");
                     }

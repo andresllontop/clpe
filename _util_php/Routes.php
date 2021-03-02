@@ -11,7 +11,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "0.94";
+            $version_proyect = "0.97";
             /*
             $version_proyect = 1.0; -> antes del 02/09/2020
              */
@@ -50,7 +50,7 @@ class Routes
             $resource = new BeanResource('aula/index', array($path_resource . 'aula/index/index.html'), array($path_resource . 'aula/index/index.js?v=' . $version_proyect, 'plugins/flowplayer/js/flowplayer.async.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect, 'plugins/flowplayer/css/flowplayer.css?v=' . $version_proyect));
             array_push($list_pages, $resource);*/
             //LIBRO
-            $resource = new BeanResource('aula/libro', array($path_resource . 'aula/subtitulo/subtitulo.html', $path_resource . 'aula/subtitulo/cuestionario.html', $path_resource . 'aula/subtitulo/certificado.html'), array($path_resource . 'aula/subtitulo/class.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/subtitulo.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/respuesta.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/recorder.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/certificado.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
+            $resource = new BeanResource('aula/libro', array($path_resource . 'aula/subtitulo/subtitulo.html', $path_resource . 'aula/subtitulo/cuestionario.html', $path_resource . 'aula/subtitulo/certificado.html'), array($path_resource . 'aula/subtitulo/class.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/subtitulo.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/respuesta.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/recorder.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/certificado.js?v=' . $version_proyect, 'plugins/chart/js/morris.min.js?v=' . $version_proyect, 'plugins/chart/js/raphael-min.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect, 'plugins/chart/css/morris.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
 
             /* $resource = new BeanResource('aula/libro', array($path_resource . 'aula/subtitulo/subtitulo.html', $path_resource . 'aula/subtitulo/cuestionario.html'), array($path_resource . 'aula/subtitulo/class.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/subtitulo.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/respuesta.js?v=' . $version_proyect, $path_resource . 'aula/subtitulo/recorder.js?v=' . $version_proyect, 'plugins/flowplayer/js/flowplayer.min.js?v=' . $version_proyect, 'plugins/flowplayer/js/asel.min.js?v=' . $version_proyect, 'plugins/flowplayer/js/hls.min.js?v=' . $version_proyect, 'plugins/flowplayer/js/playlist.min.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect, 'plugins/flowplayer/css/flowplayer.css?v=' . $version_proyect));
@@ -461,7 +461,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "0.94";
+            $version_proyect = "0.97";
             /*
             $version_proyect = 1.0; -> antes del 01/09/2020
              */

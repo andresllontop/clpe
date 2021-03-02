@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
     beanRequestSubtitulo.operation = 'obtener';
     beanRequestSubtitulo.type_request = 'GET';
 
+
+
     $('#sizePageSubtitulo').change(function () {
         beanRequestSubtitulo.type_request = 'GET';
         beanRequestSubtitulo.operation = 'obtener';
@@ -256,6 +258,7 @@ function processAjaxSubtitulo() {
             }
         } else {
             if (finalizadoSelected == undefined) {
+
                 if (beanRequestSubtitulo.operation == "updatestado") {
                     window.location.reload();
                 } else {
@@ -291,6 +294,7 @@ function processAjaxSubtitulo() {
                         }
                     }
                 }
+
             } else {
 
                 if (beanCrudResponse.beanPagination !== null) {
@@ -319,6 +323,39 @@ function processAjaxSubtitulo() {
 
 }
 
+function processAjaxTarea() {
+
+    $.ajax({
+        url: getHostAPI() + "tareas/obtener",
+        type: beanRequestSubtitulo.type_request,
+        headers: {
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+        },
+        data: null,
+        cache: false,
+        contentType: 'application/json; charset=UTF-8',
+        processData: false,
+        dataType: 'json'
+    }).done(function (beanCrudResponse) {
+
+        if (beanCrudResponse.beanPagination !== null) {
+            var donut_chart = Morris.Donut({
+                element: 'chart',
+                resize: true,
+                data: [20, 30],
+                colors: ['#6610f2', '#1CC09f']
+            });
+            donut_chart.setData([{ label: "Realizadas", value: beanCrudResponse.beanPagination.countFilter }, { label: "Faltan", value: (totalTareas() - beanCrudResponse.beanPagination.countFilter) }]);
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        $('#modalCargandoSubtitulo').modal("hide");
+        showAlertErrorRequest((jqXHR.responseText).trim() + " -- " + errorThrown);
+
+
+    });
+
+}
+
 function processAjaxSubtituloTitulo(documentId = document.querySelector("#bodySubtitulo-titulo")) {
 
     circleCargando.containerOcultar = $(documentId);
@@ -338,7 +375,6 @@ function processAjaxSubtituloTitulo(documentId = document.querySelector("#bodySu
         processData: false,
         dataType: 'json'
     }).done(function (beanCrudResponse) {
-        console.log(beanCrudResponse);
         circleCargando.toggleLoader("hide");
         if (beanCrudResponse.messageServer !== null) {
             showAlertTopEnd("warning", "Error", beanCrudResponse.messageServer);
@@ -360,6 +396,7 @@ function processAjaxSubtituloTitulo(documentId = document.querySelector("#bodySu
                 } else {
                     listaSubtituloTituloCuestionario(beanPaginationSubtituloTitulo, documentId);
                 }
+                processAjaxTarea();
             }
             if (finalizadoSelected != undefined) {
                 processAjaxCertificado(document.querySelector("#htmlMensaje"));
@@ -399,7 +436,7 @@ function listaSubtitulo(beanPagination) {
     });
     document.querySelector('.dt-titulo').innerHTML = '"' + subtituloSelected.titulo.nombre + '"';
     document.querySelector('.dt-subtitulo').innerHTML = subtituloSelected.nombre;
-    document.querySelector('.dt-subtitulo-pdf').innerHTML = `<button type="button" class="btn btn-light"><img style="width:35px; height:35px;"src="${getHostFrontEnd()}vistas/assets/img/pdf.png" alt="Subtitulo"><span  class="ml-1">Descargar Lección</span> </button>`;
+    document.querySelector('.dt-subtitulo-pdf').innerHTML = `<button type="button" class="btn btn-light w-50"><img style="width:35px; height:35px;"src="${getHostFrontEnd()}vistas/assets/img/pdf.png" alt="Subtitulo"><span  class="ml-1">Descargar Lección</span> </button>`;
 
     if (player == undefined) {
         $.getScript("https://www.youtube.com/iframe_api", function () {
@@ -996,6 +1033,19 @@ function findBySubtitulo(idblog) {
 
         }
     );
+}
+function totalTareas() {
+    let contador = 0;
+    beanPaginationSubtituloTitulo.list.find(
+        (Blog) => {
+            if (Blog.disponible == undefined) {
+                contador++;
+            }
+
+
+        }
+    );
+    return contador;
 }
 
 function compare(a, b) {

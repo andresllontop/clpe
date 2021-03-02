@@ -289,6 +289,19 @@ class tareaModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+                case "tarea-cantidad":
+
+                    $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR  FROM `tarea` WHERE cuenta=?");
+                    $stmt->bindValue(1, $Leccion->getCuenta(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 default:
                     # code...
                     break;
