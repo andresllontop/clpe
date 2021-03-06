@@ -4,6 +4,7 @@ var beanPaginationRecurso, finalizadoSelected = undefined;
 var subtituloSelected, subtituloSelectedInicial, subtituloSelectedAll, player;
 var videosubtituloSelected;
 var beanRequestSubtitulo = new BeanRequest();
+
 var circleCargando = {
     container: $('.dt-module__content'),
     containerOcultar: $('.dt-module__content-inner'),
@@ -324,7 +325,18 @@ function processAjaxSubtitulo() {
 }
 
 function processAjaxTarea() {
-
+    let color = Chart.helpers.color;
+    let chartColors = {
+        red: '#f37070',
+        pink: '#ff445d',
+        orange: '#ff8f3a',
+        yellow: '#ffde16',
+        lightGreen: '#24cf91',
+        green: '#4ecc48',
+        blue: '#5797fc',
+        skyBlue: '#33d4ff',
+        gray: '#cfcfcf'
+    };
     $.ajax({
         url: getHostAPI() + "tareas/obtener",
         type: beanRequestSubtitulo.type_request,
@@ -339,13 +351,64 @@ function processAjaxTarea() {
     }).done(function (beanCrudResponse) {
 
         if (beanCrudResponse.beanPagination !== null) {
-            var donut_chart = Morris.Donut({
-                element: 'chart',
-                resize: true,
-                data: [20, 30],
-                colors: ['#6610f2', '#1CC09f']
-            });
-            donut_chart.setData([{ label: "Realizadas", value: beanCrudResponse.beanPagination.countFilter }, { label: "Faltan", value: (totalTareas() - beanCrudResponse.beanPagination.countFilter) }]);
+            /*   var donut_chart = Morris.Donut({
+                   element: 'chart',
+                   resize: true,
+                   data: [20, 30],
+                   colors: ['#6c757d', '#1CC09f'],
+                   gridTextSize: 0
+               });
+               donut_chart.setData([{ label: Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter)) + "%", value: 100 - Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter)) }, {
+                   value: Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter)), label: Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter)) + "%"
+               }]);*/
+
+
+            // proposal doughnut Chart Start
+            if ($('#proposal-doughnut').length) {
+                var proposal_data = {
+                    labels: [
+                        "Realizó(%) ",
+                        "Faltan(%) ",
+                    ],
+                    datasets: [
+                        {
+                            data: [Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter)), 100 - Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter))],
+                            backgroundColor: [
+                                color(chartColors.green).alpha(0.8).rgbString(),
+                                color(chartColors.red).alpha(0.8).rgbString(),
+                            ],
+                            hoverBackgroundColor: [
+                                color(chartColors.green).alpha(0.8).rgbString(),
+                                color(chartColors.red).alpha(0.8).rgbString(),
+                            ]
+                        }
+                    ]
+                };
+
+                new Chart(document.getElementById('proposal-doughnut'), {
+                    type: 'doughnut',
+                    data: proposal_data,
+                    options: {
+                        cutoutPercentage: 80,
+                        responsive: false,
+                        legend: {
+                            display: false
+                        }, tooltips: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    return tooltipItem.yLabel;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            // proposal doughnut Chart End
+            document.querySelector("#countRealizadas").innerHTML = beanCrudResponse.beanPagination.countFilter;
+            document.querySelector("#countFaltantes").innerHTML = totalTareas() - beanCrudResponse.beanPagination.countFilter;
+            document.querySelector("#countPorcentaje").innerHTML = Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter)) + "%";
+
+
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         $('#modalCargandoSubtitulo').modal("hide");
@@ -436,7 +499,7 @@ function listaSubtitulo(beanPagination) {
     });
     document.querySelector('.dt-titulo').innerHTML = '"' + subtituloSelected.titulo.nombre + '"';
     document.querySelector('.dt-subtitulo').innerHTML = subtituloSelected.nombre;
-    document.querySelector('.dt-subtitulo-pdf').innerHTML = `<button type="button" class="btn btn-light w-50"><img style="width:35px; height:35px;"src="${getHostFrontEnd()}vistas/assets/img/pdf.png" alt="Subtitulo"><span  class="ml-1">Descargar Lección</span> </button>`;
+    document.querySelector('.dt-subtitulo-pdf').innerHTML = `<button type="button" class="btn btn-light"><img style="width:35px; height:35px;"src="${getHostFrontEnd()}vistas/assets/img/pdf.png" alt="Subtitulo"><figcaption  class="ml-1">Descargar Lección</figcaption> </button>`;
 
     if (player == undefined) {
         $.getScript("https://www.youtube.com/iframe_api", function () {

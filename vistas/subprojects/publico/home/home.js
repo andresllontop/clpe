@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let fetOptions = {
         headers: {
             "Content-Type": 'application/json; charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
             //"Authorization": "Bearer " + token
         },
         method: "GET",

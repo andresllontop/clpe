@@ -6,7 +6,7 @@ function getHostAPI() {
 /* HOST FRONTED*/
 function getHostAPP() {
   return 'http://localhost/';
-  //  return 'http://clpe5.com/'
+  //  return 'https://clpe5.com/'
   ;
 }
 /* */
