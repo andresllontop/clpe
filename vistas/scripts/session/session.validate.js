@@ -258,6 +258,12 @@ function createHTML_CLPE(typeProfile) {
                       `;
     row +=
       `<li class="dt-side-nav__item">
+                                      <a href="${contextPah}app/lecciones/grafica" class="dt-side-nav__link"><i class="zmdi zmdi-account-box zmdi-hc-fw"></i>&nbsp;
+                                     GRÁFICA DE TAREA ALUMNOS N01</a>
+                                      </li>
+                                      `;
+    row +=
+      `<li class="dt-side-nav__item">
                                       <a href="${contextPah}app/lecciones/finalizado" class="dt-side-nav__link"><i class="zmdi zmdi-account-box zmdi-hc-fw"></i>&nbsp;
                                       ALUMNOS TERMINADOS N01</a>
                                       </li>

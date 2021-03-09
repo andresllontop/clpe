@@ -11,7 +11,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "0.99";
+            $version_proyect = "1.00";
             /*
             $version_proyect = 1.0; -> antes del 02/09/2020
              */
@@ -130,7 +130,10 @@ class Routes
             //LECCIONES
             $resource = new BeanResource('app/lecciones', array($path_resource . 'app/leccion/cliente.html', $path_resource . 'app/leccion/comentario/comentario.html', $path_resource . 'app/leccion/cuestionario/cuestionario.html', $path_resource . 'app/leccion/respuesta/respuesta.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/leccion/cliente.js?v=' . $version_proyect, $path_resource . 'app/leccion/comentario/comentario.js?v=' . $version_proyect, $path_resource . 'app/leccion/respuesta/respuesta.js?v=' . $version_proyect, $path_resource . 'app/leccion/cuestionario/cuestionario.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
-            //LECCIONES
+            //LECCIONES Grafica
+            $resource = new BeanResource('app/lecciones/grafica', array($path_resource . 'app/leccion/grafica/cliente.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/leccion/grafica/cliente.js?v=' . $version_proyect, 'plugins/chart/dist/Chart.min.js'), array('css/clpe.css?v=' . $version_proyect));
+            array_push($list_pages, $resource);
+            //LECCIONES finalizado
             $resource = new BeanResource('app/lecciones/finalizado', array($path_resource . 'app/leccion/finalizado/cliente.html', $path_resource . 'app/leccion/finalizado/comentario/comentario.html', $path_resource . 'app/leccion/finalizado/cuestionario/cuestionario.html', $path_resource . 'app/leccion/finalizado/respuesta/respuesta.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/leccion/finalizado/cliente.js?v=' . $version_proyect, $path_resource . 'app/leccion/finalizado/comentario/comentario.js?v=' . $version_proyect, $path_resource . 'app/leccion/finalizado/respuesta/respuesta.js?v=' . $version_proyect, $path_resource . 'app/leccion/finalizado/cuestionario/cuestionario.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
             //CERTIFICADOS
@@ -461,7 +464,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "0.99";
+            $version_proyect = "1.00";
             /*
             $version_proyect = 1.0; -> antes del 01/09/2020
              */

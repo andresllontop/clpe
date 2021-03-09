@@ -90,6 +90,26 @@ class subcapituloModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+                case "total":
+                    $cantidad = 0;
+                    $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo`");
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $cantidad = intval($row['CONTADOR']) + intval($cantidad);
+
+                    }
+                    $stmt = $conexion->prepare("SELECT COUNT(idtest) AS CONTADOR FROM `test`");
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $cantidad = intval($row['CONTADOR']) + intval($cantidad);
+
+                    }
+                    $insBeanPagination->setCountFilter($cantidad);
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 case "subtitulo-titulo":
 
                     $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo`");

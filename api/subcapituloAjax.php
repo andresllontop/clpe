@@ -63,6 +63,10 @@ if (!empty($RESULTADO_token)) {
                     header("HTTP/1.1 200");
                     header('Content-Type: application/json; charset=utf-8');
                     echo json_encode($inssubcapitulo->datos_subcapitulo_controlador("conteo", $insCapituloClass));
+                } else if ($accion == "total") {
+                    header("HTTP/1.1 200");
+                    header('Content-Type: application/json; charset=utf-8');
+                    echo json_encode($inssubcapitulo->datos_subcapitulo_controlador("total", 0));
                 } else {
                     header("HTTP/1.1 500");
                 }
