@@ -41,8 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
 
-
-
         })
         .catch(err => {
             console.log(err);
@@ -140,7 +138,7 @@ function listaCliente(beanPagination) {
     if (beanPagination.list.length == 0) {
         destroyPagination($('#paginationCliente'));
         row += `<tr>
-        <td class="text-center" colspan="9">NO HAY TAREAS</td>
+        <td class="text-center" colspan="8">NO HAY TAREAS</td>
         </tr>`;
 
         document.querySelector('#tbodyCliente').innerHTML += row;
@@ -153,20 +151,17 @@ function listaCliente(beanPagination) {
 <td class="text-center">${cliente.nombre}</td>
 <td class="text-center">${cliente.apellido}</td>
 <td class="text-center ">${cliente.telefono}</td>
-<td class="text-center ">${cliente.cuenta.email}</td>
 <td class="text-center ">${cliente.pais}</td>
 <td class="text-center " style="width:8%;"><img src="${getHostFrontEnd() + ((cliente.cuenta.foto == '' || cliente.cuenta.foto == null) ? 'vistas/assets/img/userclpe.png' : 'adjuntos/clientes/' + cliente.cuenta.foto)}" alt="user-picture" class="img-responsive center-box" width="100%" ></td>
-<td class="text-center" style="width:6em;"> <p style="font-size: 20px;
-border: 2px solid #28a745;"> ${parseInt(cliente.tarea.totalnoestado) + parseInt(cliente.tarea.totalestado)}</p></td>
+<td class="text-center" style="width:6em;"> <p style="font-size: 20px;"> ${parseInt(cliente.tarea.totalnoestado) + parseInt(cliente.tarea.totalestado)}</p></td>
 <td class="text-center ver-lecciones">
-<p style="transform: translateY(52px);margin-top:-45px;">0%</p>
+<p style="transform: translateY(78px);margin-top:-45px; font-size: 23px;" class="f-weight-700">0%</p>
 <!-- Chart -->
 <canvas class="mx-auto mb-sm-0 mb-md-5 mb-xl-0" class="proposal-doughnut"
-    data-fill="50" height="50" width="50"></canvas>
+    data-fill="50" height="100" width="100"></canvas>
 <!-- /chart -->
 </td>
-<td class="text-center "  style="width:6em;"><p style="font-size: 20px;
-border: 2px solid #28a745;"> ${totalLecciones - (parseInt(cliente.tarea.totalnoestado) + parseInt(cliente.tarea.totalestado))}</p></td>
+<td class="text-center "  style="width:6em;"><p style="font-size: 20px;"> ${totalLecciones - (parseInt(cliente.tarea.totalnoestado) + parseInt(cliente.tarea.totalestado))}</p></td>
 </tr>`;
 
     });

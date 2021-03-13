@@ -372,7 +372,7 @@ function processAjaxTarea() {
                     ],
                     datasets: [
                         {
-                            data: [Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter)), 100 - Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter))],
+                            data: [Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (parseInt(beanPaginationSubtituloTitulo.countFilter))), 100 - Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (parseInt(beanPaginationSubtituloTitulo.countFilter)))],
                             backgroundColor: [
                                 color(chartColors.green).alpha(0.8).rgbString(),
                                 color(chartColors.red).alpha(0.8).rgbString(),
@@ -405,8 +405,8 @@ function processAjaxTarea() {
             }
             // proposal doughnut Chart End
             document.querySelector("#countRealizadas").innerHTML = beanCrudResponse.beanPagination.countFilter;
-            document.querySelector("#countFaltantes").innerHTML = totalTareas() - beanCrudResponse.beanPagination.countFilter;
-            document.querySelector("#countPorcentaje").innerHTML = Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (totalTareas() - beanCrudResponse.beanPagination.countFilter)) + "%";
+            document.querySelector("#countFaltantes").innerHTML = parseInt(beanPaginationSubtituloTitulo.countFilter) - beanCrudResponse.beanPagination.countFilter;
+            document.querySelector("#countPorcentaje").innerHTML = Math.round((beanCrudResponse.beanPagination.countFilter) * 100 / (parseInt(beanPaginationSubtituloTitulo.countFilter))) + "%";
 
 
         }

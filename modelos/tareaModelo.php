@@ -291,7 +291,7 @@ class tareaModelo extends mainModel
                     break;
                 case "tarea-cantidad":
 
-                    $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR  FROM `tarea` WHERE cuenta=?");
+                    $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR  FROM `tarea` WHERE cuenta=? and tipo=0");
                     $stmt->bindValue(1, $Leccion->getCuenta(), PDO::PARAM_STR);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();

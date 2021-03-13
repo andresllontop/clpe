@@ -99,13 +99,14 @@ class subcapituloModelo extends mainModel
                         $cantidad = intval($row['CONTADOR']) + intval($cantidad);
 
                     }
+                    /*
                     $stmt = $conexion->prepare("SELECT COUNT(idtest) AS CONTADOR FROM `test`");
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
-                        $cantidad = intval($row['CONTADOR']) + intval($cantidad);
+                    $cantidad = intval($row['CONTADOR']) + intval($cantidad);
 
-                    }
+                    }*/
                     $insBeanPagination->setCountFilter($cantidad);
                     $stmt->closeCursor();
                     $stmt = null;
