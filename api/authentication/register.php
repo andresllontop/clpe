@@ -19,6 +19,8 @@ if (isset($_SERVER['CONTENT_TYPE'])) {
                         $insClienteClass->setTelefono($_POST["telefonoRegister"]);
                         $insClienteClass->setOcupacion($_POST["oficioRegister"]);
                         $insClienteClass->setPais($_POST["countryRegister"]);
+                        $insClienteClass->setTipoMedio($_POST["radioTipoComunicacionRegister"]);
+                        $insClienteClass->setVendedor($_POST["codigoVendedorRegister"]);
                         $insCuentaClass = new Cuenta();
                         $insCuentaClass->setEmail($_POST["emailRegister"]);
                         $insCuentaClass->setUsuario($_POST["nombreRegister"]);

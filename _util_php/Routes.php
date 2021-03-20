@@ -11,7 +11,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "1.00";
+            $version_proyect = "1.02";
             /*
             $version_proyect = 1.0; -> antes del 02/09/2020
              */
@@ -83,6 +83,9 @@ class Routes
             array_push($list_pages, $resource);
             //PERSONAL
             $resource = new BeanResource('app/personal', array($path_resource . 'app/personal/personal.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/personal/personal.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
+            array_push($list_pages, $resource);
+            //PERSONAL
+            $resource = new BeanResource('app/vendedores', array($path_resource . 'app/vendedor/vendedor.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/vendedor/vendedor.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
             //CONVOCATORIA-CUESTIONARIO
             $resource = new BeanResource('app/convocatoria/registro', array($path_resource . 'app/convocatoria/cuestionario/convocatoria.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/convocatoria/cuestionario/convocatoria.js?v=' . $version_proyect, $path_resource . 'app/convocatoria/cuestionario/class.js?v=' . $version_proyect, 'vistas/js/editor.js', $path_resource . 'app/footer/footer.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
@@ -464,7 +467,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "1.00";
+            $version_proyect = "1.02";
             /*
             $version_proyect = 1.0; -> antes del 01/09/2020
              */
@@ -649,6 +652,9 @@ class Routes
             array_push($list_pages, $resource);
             //notificacion
             $resource = new BeanResource('api/notificacion', array($path_resource . 'notificacionAjax.php'), array(), array());
+            array_push($list_pages, $resource);
+            //vendedor
+            $resource = new BeanResource('api/vendedor', array($path_resource . 'vendedorAjax.php'), array(), array());
             array_push($list_pages, $resource);
             //conferencia
             $resource = new BeanResource('api/conferencia', array($path_resource . 'conferenciaAjax.php'), array(), array());

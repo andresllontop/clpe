@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelector('#txtDescripcionHome').innerHTML = beanPaginationFooterPublico.list[0].mision;
                 listaFooterPublico(beanPaginationFooterPublico);
             }
-            console.log(json);
 
         })
         .catch(err => {

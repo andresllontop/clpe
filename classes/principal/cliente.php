@@ -10,6 +10,8 @@ class Cliente
     private $ocupacion;
     private $pais;
     private $tarea;
+    private $vendedor;
+    private $tipomedio;
 
     public function setIdCliente($idcliente)
     {
@@ -78,6 +80,23 @@ class Cliente
     {
         return $this->tarea;
     }
+    public function setVendedor($vendedor)
+    {
+        $this->vendedor = $vendedor;
+    }
+    public function getVendedor()
+    {
+        return $this->vendedor;
+    }
+
+    public function setTipoMedio($tipomedio)
+    {
+        $this->tipomedio = $tipomedio;
+    }
+    public function getTipoMedio()
+    {
+        return $this->tipomedio;
+    }
 
     public function __toString()
     {
@@ -85,6 +104,8 @@ class Cliente
         array("nombre" => $this->nombre,
             "apellido" => $this->apellido,
             "cuenta" => $this->cuenta,
+            "tipomedio" => $this->tipomedio,
+            "vendedor" => $this->vendedor,
             "tarea" => $this->tarea,
             "ocupacion" => $this->ocupacion,
             "idcliente" => $this->idcliente,

@@ -372,6 +372,10 @@ function createHTML_CLPE(typeProfile) {
                       <a href="${contextPah}app/personal"><i
                           class="zmdi zmdi-trending-up zmdi-hc-fw"></i>Nuevo Personal Administrativo</a>
                     </li>
+                    <li class="dt-side-nav__item">
+                    <a href="${contextPah}app/vendedores"><i
+                        class="zmdi zmdi-trending-up zmdi-hc-fw"></i>Nuevo Vendedor</a>
+                  </li>
                   </ul>
                 </li>`;
   }

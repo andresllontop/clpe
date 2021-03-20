@@ -54,7 +54,8 @@ function processAjaxAdministrador() {
             cuenta: {
                 email: document.querySelector("#txtEmail").value,
                 usuario: document.querySelector("#txtUsuario").value,
-                clave: document.querySelector("#txtPassword1").value
+                clave: document.querySelector("#txtPassword1").value,
+                perfil: user_session.perfil
             }
         };
 

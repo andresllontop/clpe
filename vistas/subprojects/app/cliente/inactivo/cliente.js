@@ -20,12 +20,13 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#btnAbrirCliente").click(function () {
         beanRequestCliente.operation = 'add';
         beanRequestCliente.type_request = 'POST';
+        document.querySelector("#btnSubmit").innerHTML = "REGISTRAR";
         addClass(document.querySelector("#viewDatoMonetario"), "d-none");
         addClass(document.querySelector("#txtTipoInscripcionCliente").parentElement.parentElement, "d-none");
 
         removeClass(document.querySelector("#viewCliente"), "d-none");
 
-        document.querySelector("#btnSubmit").value = "REGISTRAR";
+
         $("#tituloModalManCliente").html("REGISTRAR ALUMNO");
         $("#ventanaModalManCliente").modal("show");
         addCliente();
@@ -83,7 +84,15 @@ function processAjaxCliente() {
         beanRequestCliente.operation == 'update' ||
         beanRequestCliente.operation == 'add'
     ) {
+        let radioButTrat = document.getElementsByName("radioTipoComunicacion");
+        let valorRadio = 0;
+        for (var i = 0; i < radioButTrat.length; i++) {
 
+            if (radioButTrat[i].checked == true) {
+                valorRadio = radioButTrat[i].value
+            }
+
+        }
         let today = new Date();
         let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -92,7 +101,9 @@ function processAjaxCliente() {
             apellido: document.querySelector("#txtApellidoCliente").value,
             ocupacion: document.querySelector("#txtEspecialidadCliente").value,
             telefono: document.querySelector("#txtTelefonoCliente").value,
+            vendedor: document.querySelector("#txtCodigoVendedorCliente").value == "" ? null : document.querySelector("#txtCodigoVendedorCliente").value,
             pais: document.querySelector("#txtPaisCliente").value,
+            tipomedio: valorRadio,
             tipo_inscripcion: document.querySelector("#txtTipoInscripcionCliente").value,
             cuenta: {
                 idcuenta: 0,
@@ -245,6 +256,14 @@ function addCliente(cliente = undefined) {
 
     document.querySelector('#txtNombreCliente').value = (cliente == undefined) ? '' : cliente.nombre;
     document.querySelector('#txtApellidoCliente').value = (cliente == undefined) ? '' : cliente.apellido;
+    document.querySelector('#txtCodigoVendedorCliente').value = (cliente == undefined) ? '' : cliente.vendedor;
+    if (cliente == undefined) {
+        document.getElementsByName("radioTipoComunicacion")[4].checked == true;
+
+    } else {
+        document.getElementsByName("radioTipoComunicacion")[parseInt(cliente.tipomedio) - 1].checked == true;
+    }
+
 
     document.querySelector('#txtTelefonoCliente').value = (cliente == undefined) ? '' : cliente.telefono;
     document.querySelector('#txtEspecialidadCliente').value = (cliente == undefined) ? '' : cliente.ocupacion;
@@ -286,7 +305,22 @@ function addCliente(cliente = undefined) {
     addViewArchivosPrevius();
 
 }
+function TipoMedioComunicacion(params) {
+    switch (parseInt(params)) {
+        case 1:
+            return "Facebook";
+        case 2:
+            return "Youtube";
+        case 3:
+            return "Página web Club de Lectura";
+        case 4:
+            return "Página web YYYYY";
+        default:
+            return "OTROS MEDIOS";
 
+    }
+
+}
 function listaCliente(beanPagination) {
     document.querySelector('#tbodyCliente').innerHTML = '';
     document.querySelector('#titleCliente').innerHTML =
@@ -310,6 +344,8 @@ function listaCliente(beanPagination) {
 <td class="text-center" >${cliente.apellido}</td>
 <td class="text-center" >${cliente.telefono}</td>
 <td class="text-center" >${cliente.cuenta.email}</td>
+<td class="text-center" >${TipoMedioComunicacion(cliente.tipomedio)}</td>
+<td class="text-center " >${cliente.vendedor == null ? "" : cliente.vendedor}</td>
 <td class="text-center d-none" >${cliente.cuenta.usuario}</td>
 <td class="text-center d-none"><img src="${getHostFrontEnd()}${(cliente.cuenta.foto == "" || cliente.cuenta.foto == null) ? "vistas/assets/img/userclpe.png" : "adjuntos/clientes/" + cliente.cuenta.foto}" class="img-responsive center-box" style="width:50px;height:60px;"></td>
 <td class="text-center d-none" >${cliente.cuenta.precio}</td>
@@ -353,7 +389,7 @@ function addEventsButtonsAdmin() {
 
             if (clienteSelected != undefined && clienteSelected.cuenta.estado == 0) {
                 removeClass(document.querySelector("#viewDatoMonetario"), "d-none");
-                document.querySelector("#btnSubmit").value = "INSCRIBIR";
+                document.querySelector("#btnSubmit").innerHTML = "INSCRIBIR";
                 clienteSelected.cuenta.estado = 1;
                 beanRequestCliente.type_request = 'POST';
                 beanRequestCliente.operation = 'update';
@@ -372,7 +408,7 @@ function addEventsButtonsAdmin() {
 
             if (clienteSelected != undefined) {
                 addClass(document.querySelector("#viewDatoMonetario"), "d-none");
-                document.querySelector("#btnSubmit").value = "INSCRIBIR";
+                document.querySelector("#btnSubmit").innerHTML = "INSCRIBIR";
                 addCliente(clienteSelected);
                 $("#tituloModalManCliente").html("VER DATOS DEL ALUMNO");
                 removeClass(document.querySelector("#viewCliente"), "d-none");
@@ -396,7 +432,7 @@ function addEventsButtonsAdmin() {
                 removeClass(document.querySelector("#viewDatoMonetario"), "d-none");
                 removeClass(document.querySelector("#txtTipoInscripcionCliente").parentElement.parentElement, "d-none");
 
-                document.querySelector("#btnSubmit").value = "INSCRIBIR";
+                document.querySelector("#btnSubmit").innerHTML = "INSCRIBIR";
                 addCliente(clienteSelected);
                 clienteSelected.cuenta.estado = 1;
                 $("#tituloModalManCliente").html("INSCRIBIR ALUMNO");
@@ -433,6 +469,21 @@ function addEventsButtonsAdmin() {
 
 function addViewArchivosPrevius() {
 
+    document.getElementsByName("radioTipoComunicacion").forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onchange = function () {
+
+            if (btn.checked == true && parseInt(btn.value) == parseInt(4)) {
+                removeClass(document.querySelector("#txtCodigoVendedorCliente").parentElement.parentElement, "d-none");
+
+            } else if (btn.checked == true) {
+                addClass(document.querySelector("#txtCodigoVendedorCliente").parentElement.parentElement, "d-none");
+            }
+
+
+
+        }
+    });
     $("#txtImagenCliente").change(function () {
         filePreview(this, "#imagePreview");
     });
@@ -497,7 +548,23 @@ function findByCliente(idcliente) {
 }
 
 var validarFormularioCliente = () => {
+    let radioButTrat = document.getElementsByName("radioTipoComunicacion");
+    let valorRadio = 0;
+    for (var i = 0; i < radioButTrat.length; i++) {
 
+        if (radioButTrat[i].checked == true) {
+            valorRadio = radioButTrat[i].value;
+        }
+
+    }
+    if (valorRadio < 1 && valorRadio > 5) {
+        showAlertTopEnd("info", "Vacío", "Selecciona un medio de comunicación correcto en la pregunta");
+        return false;
+    }
+    if (valorRadio == 4 && document.querySelector("#txtCodigoVendedorCliente").value == "") {
+        showAlertTopEnd("info", "Vacío", "Ingrese Código Vendedor");
+        return false;
+    }
     if (document.querySelector("#txtNombreCliente").value == "") {
         showAlertTopEnd("info", "Vacío", "Ingrese Nombre");
         return false;

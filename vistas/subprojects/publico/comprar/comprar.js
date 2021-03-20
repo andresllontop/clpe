@@ -124,6 +124,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $('#registerOtroMedio').submit(function (event) {
         if (validarFormularioRegisterOtroCompra()) {
+            let radioButTrat = document.getElementsByName("radioTipoComunicacionOtro2");
+            let valorRadio = 0;
+            for (var i = 0; i < radioButTrat.length; i++) {
+
+                if (radioButTrat[i].checked == true) {
+                    valorRadio = radioButTrat[i].value
+                }
+
+            }
             $('#modalCargandoCompra').modal('show');
             let form_data = new FormData();
             let jso = {
@@ -135,6 +144,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 pass: document.querySelector('#txtpassCuentaOtro').value,
                 pais: paisSelectedCompra.nombre,
                 precio: parseFloat(beanPaginationFooter.precio),
+                vendedor: document.querySelector("#txtCodigoVendedorClienteOtro2").value == "" ? null : document.querySelector("#txtCodigoVendedorClienteOtro2").value,
+                tipomedio: valorRadio,
                 email: document.querySelector('#txtemailCuentaOtro').value
             };
             let dataImagen = $("#txtvoucherCuentaOtro").prop("files")[0];
@@ -331,6 +342,21 @@ function eventoCompra() {
         if (this.checked) {
             document.querySelector(".description-1").classList.add("d-none");
             document.querySelector(".description-2").classList.remove("d-none");
+            document.getElementsByName("radioTipoComunicacionOtro2").forEach((btn) => {
+                //AGREGANDO EVENTO CLICK
+                btn.onchange = function () {
+
+                    if (btn.checked == true && parseInt(btn.value) == parseInt(4)) {
+                        removeClass(document.querySelector("#txtCodigoVendedorClienteOtro2").parentElement, "d-none");
+
+                    } else if (btn.checked == true) {
+                        addClass(document.querySelector("#txtCodigoVendedorClienteOtro2").parentElement, "d-none");
+                    }
+
+
+
+                }
+            });
         }
     };
 }
@@ -574,6 +600,23 @@ var validarFormularioRegisterCompraCuenta = () => {
 }
 /*OTRO MEDIO */
 var validarFormularioRegisterOtroCompra = () => {
+    let radioButTrat = document.getElementsByName("radioTipoComunicacionOtro2");
+    let valorRadio = 0;
+    for (var i = 0; i < radioButTrat.length; i++) {
+
+        if (radioButTrat[i].checked == true) {
+            valorRadio = radioButTrat[i].value;
+        }
+
+    }
+    if (valorRadio < 1 && valorRadio > 5) {
+        showAlertTopEnd("info", "Vacío", "Selecciona un medio de comunicación correcto en la pregunta");
+        return false;
+    }
+    if (valorRadio == 4 && document.querySelector("#txtCodigoVendedorClienteOtro2").value == "") {
+        showAlertTopEnd("info", "Vacío", "Ingrese Código Vendedor");
+        return false;
+    }
     let letra = letra_campo(
         document.querySelector('#txtnombreCuentaOtro'),
         document.querySelector('#txtapellidoCuentaOtro'),

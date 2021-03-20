@@ -101,6 +101,8 @@ try {
                             $insClienteClass->setTelefono($compraData->telefono);
                             $insClienteClass->setOcupacion($compraData->profesion);
                             $insClienteClass->setPais($compraData->pais);
+                            $insClienteClass->setVendedor($compraData->vendedor);
+                            $insClienteClass->setTipoMedio($compraData->tipomedio);
                             $insCuentaClass = new Cuenta();
                             $insCuentaClass->setEmail($compraData->address);
                             $insCuentaClass->setUsuario($compraData->nombre);

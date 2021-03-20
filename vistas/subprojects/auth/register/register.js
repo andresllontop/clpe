@@ -65,7 +65,21 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector(".paises").innerHTML = `<i class="flag-icon ${paisSelected.icon} mr-2"></i>${paisSelected.nombre} (+${paisSelected.codigo})`;
     };
 
+    document.getElementsByName("radioTipoComunicacionRegister").forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onchange = function () {
 
+            if (btn.checked == true && parseInt(btn.value) == parseInt(4)) {
+                removeClass(document.querySelector("#txtCodigoVendedorCliente").parentElement, "d-none");
+
+            } else if (btn.checked == true) {
+                addClass(document.querySelector("#txtCodigoVendedorCliente").parentElement, "d-none");
+            }
+
+
+
+        }
+    });
 
 });
 
@@ -131,6 +145,27 @@ function processAjaxRegister() {
 }
 
 var validarFormularioRegister = () => {
+    let radioButTrat = document.getElementsByName("radioTipoComunicacionRegister");
+    let valorRadio = 0;
+    for (var i = 0; i < radioButTrat.length; i++) {
+
+        if (radioButTrat[i].checked == true) {
+            valorRadio = radioButTrat[i].value;
+        }
+
+    }
+    if (valorRadio < 1 && valorRadio > 5) {
+        showAlertTopEnd("info", "Vacío", "Selecciona un medio de comunicación correcto en la pregunta");
+        return false;
+    }
+    if (valorRadio == 4 && document.querySelector("#txtCodigoVendedorCliente").value == "") {
+        showAlertTopEnd("info", "Vacío", "Ingrese Código Vendedor");
+        return false;
+    } else {
+        document.querySelector("#txtCodigoVendedorCliente").value == null;
+    }
+
+
     let letra = letra_campo(
         document.querySelector('#txtombreRegister'),
         document.querySelector('#txtapellidoRegister'),
@@ -211,6 +246,7 @@ var validarFormularioRegister = () => {
         });
         return false;
     }
+
     return true;
 }
 

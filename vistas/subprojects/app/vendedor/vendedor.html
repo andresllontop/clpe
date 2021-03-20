@@ -1,0 +1,175 @@
+<!--contenido de la pagina  -->
+
+
+<div class="container-fluid page-header ">
+    <div class="form-row">
+        <div class="dropdown col-2">
+            <input type="hidden" id="pageVendedor" value="1">
+            <select id="sizePageVendedor" class="form-control">
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+            </select>
+        </div>
+        <h3 class="text-center all-tittles col-8" id="titleManagerVendedor">Lista de Vendedor</h3>
+
+        <div class="col-2 text-right">
+            <button class="btn btn-primary" id="btnAbrirvendedor">
+                <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+            </button>
+        </div>
+    </div>
+</div>
+<div class="container-fluid py-2">
+
+
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="text-center">CODIGO</th>
+                    <th class="text-center">NOMBRE COMPLETO</th>
+                    <th class="text-center">TELEFONO</th>
+                    <th class="text-center">PAIS</th>
+                    <th class="text-center">EMPRESA</th>
+                    <th class="text-center">EDITAR</th>
+                    <th class="text-center">ELIMINAR</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyVendedor"></tbody>
+        </table>
+    </div>
+    <nav class="border-top py-2 text-center" aria-label="Page navigation example">
+        <ul id="paginationVendedor" class="pagination pagination-sm justify-content-center">
+        </ul>
+    </nav>
+    <!-- /pagination BLOG -->
+</div>
+
+<div id="ventanaModalManVendedor" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="formularioVendedor" autocomplete="off">
+                <div class="modal-header">
+
+                    <h4 class="modal-title text-center w-100" id="tituloModalManVendedor"></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        style="margin-top: -1em;margin-right: -1.5em;">
+                        <span aria-hidden="true" class="m-0"
+                            style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="margin-top:20px;">
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="group-material">
+                                <input id="txtNombreVendedor" type="text"
+                                    class="material-control tooltips-general input-check-user" placeholder="Asunto"
+                                    required="" maxlength="100" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,20}"
+                                    data-toggle="tooltip" data-placement="top" title="Escribe los Nombres">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Nombres</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="group-material">
+                                <input id="txtApellidoVendedor" type="text"
+                                    class="material-control tooltips-general input-check-user" placeholder="apellidos"
+                                    required="" maxlength="100" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,20}"
+                                    data-toggle="tooltip" data-placement="top" title="Escribe Apellidos">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Apellidos :</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="group-material">
+                                <input id="txtTelefonoVendedor" type="text" class="material-control tooltips-general "
+                                    placeholder="Teléfono" data-toggle="tooltip" required="" data-placement="top"
+                                    title="" data-original-title="Escribela url de Teléfono">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Teléfono:</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="group-material">
+
+                                <input id="txtPaisVendedor" type="text" class="material-control tooltips-general "
+                                    placeholder="País" data-toggle="tooltip" required="" data-placement="top" title=""
+                                    data-original-title="Escribe País">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>País:</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="group-material">
+
+                                <span class="all-tittles" style="top: -15px;
+                                position: absolute;"> Tipo de Vendedor</span>
+                                <select id="txtTipoVendedor" type="text" class="material-control tooltips-general "
+                                    placeholder="País" data-toggle="tooltip" required="" data-placement="top" title=""
+                                    data-original-title="Escribe Tipo de Vendedor">
+                                    <option value="1" selected>Natural</option>
+                                    <option value="2">Jurídica</option>
+                                </select>
+
+
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12 d-none">
+                            <div class="group-material">
+
+                                <input id="txtEmpresaVendedor" type="text" class="material-control tooltips-general "
+                                    placeholder="Empresa a la que Pertenece" data-toggle="tooltip" data-placement="top"
+                                    title="" data-original-title="Escribe Empresa a la que Pertenece">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Empresa a la que Pertenece:</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="group-material">
+                                <input id="txtCodigoVendedor" type="text" class="material-control tooltips-general "
+                                    placeholder="Codigo de Vendedor" data-toggle="tooltip" required=""
+                                    data-placement="top" title="" data-original-title="Escribe Codigo de Vendedor">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Codigo de Vendedor:</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger " data-dismiss="modal">
+                        CERRAR
+                    </button>
+                    <button type="submit" class="btn btn-primary ">
+                        GUARDAR
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--final del contenido de la pagina  -->
+
+<div class="modal fade" id="modalCargandoVendedor" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="progress" style="margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        Cargando Vendedor. . .
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -21,6 +21,8 @@ if (!empty($RESULTADO_token)) {
                         $insClienteClass->setOcupacion($personData->ocupacion);
                         $insClienteClass->setPais($personData->pais);
                         $insClienteClass->setCuenta($personData->cuenta);
+                        $insClienteClass->setVendedor($personData->vendedor);
+                        $insClienteClass->setTipoMedio($personData->tipomedio);
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo $inscliente->agregar_cliente_controlador(1, $insClienteClass);
