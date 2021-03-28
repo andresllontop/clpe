@@ -206,7 +206,7 @@ function addEventsButtonsCliente() {
                 ],
                 datasets: [
                     {
-                        data: [parseInt(clienteSelected.tarea.totalnoestado) + parseInt(clienteSelected.tarea.totalestado), totalLecciones - (parseInt(clienteSelected.tarea.totalnoestado) + parseInt(clienteSelected.tarea.totalestado))],
+                        data: [80, 20],
                         backgroundColor: [
                             color(chartColors.green).alpha(0.8).rgbString(),
                             color(chartColors.red).alpha(0.8).rgbString(),
@@ -236,7 +236,7 @@ function addEventsButtonsCliente() {
                     }
                 }
             });
-            btn.firstElementChild.innerHTML = Math.round(100 * (parseInt(clienteSelected.tarea.totalnoestado) + parseInt(clienteSelected.tarea.totalestado)) / totalLecciones) + "%";
+
         } else {
             swal(
                 "No se encontró el alumno",

@@ -1,4 +1,4 @@
-var beanPaginationCliente;
+var beanPaginationCliente, totalLecciones = 0;
 var clienteSelected;
 var beanRequestCliente = new BeanRequest();
 document.addEventListener('DOMContentLoaded', function () {
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoCliente').modal('show');
     });
 
-    $('#modalCargandoCliente').modal('show');
+    // $('#modalCargandoCliente').modal('show');
 
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();
@@ -32,6 +32,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     });
+
+    document.querySelector('#tbodyCliente').innerHTML += `<tr>
+    <td class="text-center" colspan="10">Espere cargando ...</td>
+    </tr>`;
+    let fetOptions = {
+        headers: {
+            "Content-Type": 'application/json; charset=UTF-8',
+            // "Access-Control-Allow-Origin": "*",
+            "Authorization": 'Bearer ' + Cookies.get("clpe_token")
+        },
+        method: "GET",
+    }
+    Promise.all([
+        fetch(getHostAPI() + "cliente/tarea?filtro=&pagina=1&registros=20", fetOptions),
+
+        fetch(getHostAPI() + "subtitulos/total", fetOptions)
+    ])
+        .then(responses => Promise.all(responses.map((res) => res.json())))
+        .then(json => {
+            if (json[1].beanPagination !== null) {
+                totalLecciones = json[1].beanPagination.countFilter;
+            }
+            if (json[0].beanPagination !== null) {
+                beanPaginationCliente = json[0].beanPagination;
+                listaCliente(beanPaginationCliente);
+            }
+
+
+        })
+        .catch(err => {
+            console.log(err);
+            showAlertErrorRequest();
+        });
 
 
 });
@@ -114,17 +147,25 @@ function listaCliente(beanPagination) {
     beanPagination.list.forEach((cliente) => {
 
         row += `<tr  idcliente="${cliente.idcliente}" class="aula-cursor-mano">
-<td class="text-center ver-lecciones">${contador++}</td>
-<td class="text-center ver-lecciones">${cliente.nombre}</td>
-<td class="text-center ver-lecciones">${cliente.apellido}</td>
-<td class="text-center ver-lecciones">${cliente.telefono}</td>
-<td class="text-center ver-lecciones">${cliente.cuenta.email}</td>
-<td class="text-center ver-lecciones">${cliente.pais}</td>
-<td class="text-center ver-lecciones" style="width:6em;"> <p style="font-size: 20px;
+<td class="text-center ver-lecciones pt-5">${contador++}</td>
+<td class="text-center ver-lecciones pt-5">${cliente.nombre}</td>
+<td class="text-center ver-lecciones pt-5">${cliente.apellido}</td>
+<td class="text-center ver-lecciones pt-5">${cliente.telefono}</td>
+<td class="text-center ver-lecciones pt-5 d-none">${cliente.cuenta.email}</td>
+<td class="text-center ver-lecciones pt-5">${cliente.pais}</td>
+<td class="text-center ver-lecciones ver-grafica">
+<p style="transform: translateY(69px);margin-top:-52px; font-size: 20px;" class="f-weight-700">0%</p>
+<!-- Chart -->
+<canvas class="mx-auto mb-sm-0 mb-md-5 mb-xl-0" class="proposal-doughnut"
+    data-fill="50" height="80" width="80"></canvas>
+<!-- /chart -->
+</td>
+<td class="text-center ver-lecciones pt-5" style="width:6em;"> <p style="font-size: 20px;
 border: 2px solid #7030a0;"> ${cliente.tarea.totalestado}</p></td>
-<td class="text-center ver-lecciones" style="width:6em;"> <p style="font-size: 20px;
+<td class="text-center ver-lecciones pt-5" style="width:6em;"> <p style="font-size: 20px;
 border: 2px solid #28a745;"> ${parseInt(cliente.tarea.totalnoestado) + parseInt(cliente.tarea.totalestado)}</p></td>
-<td class="text-center ver-lecciones" style="width:8%;"><img src="${getHostFrontEnd() + ((cliente.cuenta.foto == '' || cliente.cuenta.foto == null) ? 'vistas/assets/img/userclpe.png' : 'adjuntos/clientes/' + cliente.cuenta.foto)}" alt="user-picture" class="img-responsive center-box" width="100%" ></td>
+
+<td class="text-center ver-lecciones pt-5" style="width:8%;"><img src="${getHostFrontEnd() + ((cliente.cuenta.foto == '' || cliente.cuenta.foto == null) ? 'vistas/assets/img/userclpe.png' : 'adjuntos/clientes/' + cliente.cuenta.foto)}" alt="user-picture" class="img-responsive center-box" width="100%" ></td>
 
 </tr>`;
 
@@ -144,8 +185,74 @@ border: 2px solid #28a745;"> ${parseInt(cliente.tarea.totalnoestado) + parseInt(
 }
 
 function addEventsButtonsCliente() {
+    let color = Chart.helpers.color;
+    let chartColors = {
+        red: '#f37070',
+        pink: '#ff445d',
+        orange: '#ff8f3a',
+        yellow: '#ffde16',
+        lightGreen: '#24cf91',
+        green: '#4ecc48',
+        blue: '#5797fc',
+        skyBlue: '#33d4ff',
+        gray: '#cfcfcf'
+    };
 
+    document.querySelectorAll('.ver-grafica').forEach((btn) => {
+        clienteSelected = findByCliente(
+            btn.parentElement.getAttribute('idcliente')
+        );
+        if (clienteSelected != undefined) {
+            var proposal_data = {
+                labels: [
+                    "Realizó(%) ",
+                    "Faltan(%) ",
+                ],
+                datasets: [
+                    {
+                        data: [parseInt(clienteSelected.tarea.totalnoestado) + parseInt(clienteSelected.tarea.totalestado), totalLecciones - (parseInt(clienteSelected.tarea.totalnoestado) + parseInt(clienteSelected.tarea.totalestado))],
+                        backgroundColor: [
+                            color(chartColors.green).alpha(0.8).rgbString(),
+                            color(chartColors.red).alpha(0.8).rgbString(),
+                        ],
+                        hoverBackgroundColor: [
+                            color(chartColors.green).alpha(0.8).rgbString(),
+                            color(chartColors.red).alpha(0.8).rgbString(),
+                        ]
+                    }
+                ]
+            };
+
+            new Chart(btn.lastElementChild, {
+                type: 'doughnut',
+                data: proposal_data,
+                options: {
+                    cutoutPercentage: 80,
+                    responsive: false,
+                    legend: {
+                        display: false
+                    }, tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.yLabel;
+                            }
+                        }
+                    }
+                }
+            });
+            btn.firstElementChild.innerHTML = Math.round(100 * (parseInt(clienteSelected.tarea.totalnoestado) + parseInt(clienteSelected.tarea.totalestado)) / totalLecciones) + "%";
+
+        } else {
+            swal(
+                "No se encontró el alumno",
+                "",
+                "info"
+            );
+        }
+
+    });
     document.querySelectorAll('.ver-lecciones').forEach((btn) => {
+
         //AGREGANDO EVENTO CLICK
         btn.onclick = function () {
             clienteSelected = findByCliente(
