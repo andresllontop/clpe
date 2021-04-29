@@ -16,17 +16,10 @@ try {
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'POST':
                     if ($accion == "charge") {
-                        // Cargamos Requests y Culqi PHP
-                        require './plugins/plugins-culqui/requests/library/Requests.php';
-                        Requests::register_autoloader();
-                        require './plugins/plugins-culqui/culqi/lib/culqi.php';
-                        require_once './controladores/empresaControlador.php';
 
+                        require_once './controladores/empresaControlador.php';
+                        require_once './core/functions.php';
                         $insempresa = new empresaControlador();
-                        // Configurar tu API Key y autenticación
-                        //$SECRET_KEY = "sk_live_d9a2e00a6758a93a";
-                        $SECRET_KEY = "sk_test_JNrOjdt65NMO8Eef";
-                        $culqi = new Culqi\Culqi(array('api_key' => $SECRET_KEY));
 
                         $compraData = json_decode($_POST['class']);
                         $empresa = $insempresa->datos_empresa_controlador("conteo-publico", 0)['beanPagination']['list']['0'];
@@ -34,53 +27,39 @@ try {
                         header('Content-Type: application/json; charset=utf-8');
                         $respuestaValidar = json_decode(ValidaUsuario($compraData));
                         if ($respuestaValidar->messageServer == "ok") {
-                            // Creando Cargo a una tarjeta
-                            $charge = $culqi->Charges->create(
-                                array(
-                                    //"amount" => $empresa['precio'] * 100,
-                                    "amount" => $compraData->precio * 100,
-                                    "antifraud_details" => array(
-                                        "country_code" => $compraData->country_code,
-                                        "first_name" => $compraData->nombre,
-                                        "last_name" => $compraData->apellido,
-                                        "phone_number" => $compraData->telefono,
-                                    ),
-                                    "capture" => true,
-                                    "currency_code" => $compraData->currency,
-                                    "description" => "Venta en Producción",
-                                    "installments" => 0,
-                                    "email" => $compraData->email,
-                                    "source_id" => $compraData->token,
-                                )
-                            );
+                            $authorization = generateAuthorization($empresa['precio'], $compraData->purchase, $compraData->transactionToken, generateToken());
 
-                            $repuestaCulqi = json_decode(json_encode($charge));
+                            if (isset($authorization->errorCode)) {
+                                $respuestaValidar->messageServer = 'Pago denegado: ' . $authorization->data->ACTION_DESCRIPTION . ' -- Fecha :' . date('Y-m-d H:i:s', intval(($authorization->data->TRANSACTION_DATE) / 1000)) . ' -- N° Pedido :' . $authorization->data->TRACE_NUMBER;
+                                echo (json_encode($respuestaValidar));
+                            } else {
+                                if (isset($authorization->dataMap)) {
+                                    if ($authorization->dataMap->ACTION_CODE == "000") {
+                                        CreateUsuario($compraData, json_decode(json_encode(array(
+                                            "nombre_banco" => $authorization->dataMap->BRAND,
+                                            //"comision" => (($authorization->dataMap->AMOUNT) * 26.05) / 100,
+                                            "comision" => 0,
+                                            "moneda" => $authorization->order->currency,
+                                            "precio" => $authorization->dataMap->AMOUNT,
+                                            "tipo" => 1,
+                                            "requestNiubiz" => $authorization,
+                                            "fecha" => date('Y-m-d H:i:s', intval(($authorization->dataMap->TRANSACTION_DATE) / 1000)),
+                                        )
+                                        )));
 
-                            /*
-                            print_r($repuestaCulqi);
-                            //MONTO A DEPOSITAR
-                            echo ($repuestaCulqi->transfer_amount) / 100;
-                            // MONTO DE COBRO DE CULQI
-                            echo ($repuestaCulqi->total_fee) / 100;
-                            //MONTO DE COMPRA
-                            echo ($repuestaCulqi->current_amount) / 100;
-                            //TIPO DE MONEDA
-                            echo ($repuestaCulqi->currency_code);
-                            //nOMBRE DEL BANCO
-                            echo ($repuestaCulqi->source->iin->issuer->name);
-                            //date
-                            echo 'DATE:' . date('d/m/Y H:i:s', intval($repuestaCulqi->capture_date/1000)) . PHP_EOL;
-                             */
-                            CreateUsuario($compraData, json_decode(json_encode(array(
-                                "nombre_banco" => $repuestaCulqi->source->iin->issuer->name,
-                                "comision" => ($repuestaCulqi->total_fee) / 100,
-                                "moneda" => $repuestaCulqi->currency_code,
-                                "precio" => ($repuestaCulqi->current_amount) / 100,
-                                "tipo" => 1,
-                                "fecha" => date('Y-m-d H:i:s', intval(($repuestaCulqi->capture_date) / 1000)))
-                            )));
+                                    }
+                                } else if (isset($authorization->data)) {
+
+                                    if ($authorization->data->ACTION_CODE != "000") {
+                                        $respuestaValidar->messageServer = 'Pago denegado: ' . $authorization->data->ACTION_DESCRIPTION . ' -- Fecha :' . date('Y-m-d H:i:s', intval(($authorization->data->TRANSACTION_DATE) / 1000)) . ' -- N° Pedido :' . $authorization->data->TRACE_NUMBER;
+                                        echo (json_encode($respuestaValidar));
+                                    }
+                                }
+                            }
+
                         } else {
                             echo (json_encode($respuestaValidar));
+
                         }
 
                     } elseif ($accion == "clasico") {
@@ -159,7 +138,7 @@ function CreateUsuario($Data, $repuestaCulqi)
         //
         echo $inscliente->agregar_publico_culqui_cliente_controlador($insClienteClass, $repuestaCulqi);
     } else {
-        header("HTTP/1.1 403");
+        header("HTTP/1.1 401");
     }
 }
 function ValidaUsuario($Data)

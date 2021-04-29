@@ -1,18 +1,33 @@
 function closeSession() {
   let keys = keysCOOKIES();
   for (let i = 0; i < keys.length; i++) {
-    //console.log('remove' + keys[i]);
     Cookies.remove(keys[i]);
   }
   //REDIRECCIONAMOS EL LOGIN
   location.href = getHostAPP() + getContextAPP() + "index";
 }
-
 function keysCOOKIES() {
   var keys = ['clpe_token', 'clpe_user'];
   return keys;
 }
+function closeCOOKIESNiubiz() {
+  let keys = keysCOOKIESNiubiz();
+  for (let i = 0; i < keys.length; i++) {
+    Cookies.remove(keys[i]);
+  }
+}
 
+function keysCOOKIESNiubiz() {
+  var keys = ['clpe_niubiz', 'clpe_empresa_compra', 'clpe_niubiz_date'];
+  return keys;
+}
+
+function setCookieSessionNiubiz(test) {
+  if (test != undefined) {
+    Cookies.set('clpe_niubiz', test);
+  }
+
+}
 function parseJwt(token) {
   try {
     var base64Url = token.split('.')[1];
@@ -21,22 +36,21 @@ function parseJwt(token) {
 
     return true;
   } catch (error) {
-    console.log('Error el token no es valido');
+    //console.log('Error el token no es valido');
     return true;
   }
   //return JSON.parse(window.atob(base64));
 }
 
 function setCookieSession(token, user) {
-  console.log(token);
-  console.log(user);
+
   Cookies.set('clpe_token', token);
   Cookies.set('clpe_user', user);
 }
 
 function sendIndex() {
   let user = Cookies.getJSON('clpe_user');
-  console.log(user);
+
   if (user == undefined) {
     closeSession();
     return;

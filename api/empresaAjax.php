@@ -22,7 +22,7 @@ if (!empty($RESULTADO_token)) {
                         header('Content-Type: application/json; charset=utf-8');
                         $empresaBean = $insempresa->datos_empresa_controlador("conteo-publico", 0);
                         // $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][0]["precio"], 'USD', ip_info(get_client_ip(), "countrycode"));
-                        $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][0]["precio"], 'USD', "UY");
+                        $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][0]["precio"], 'USD', "PE");
                         echo json_encode(array("nombre" => $empresaBean["beanPagination"]["list"][0]["nombre"],
                             "email" => $empresaBean["beanPagination"]["list"][0]["email"],
                             "telefono" => $empresaBean["beanPagination"]["list"][0]["telefono"],
@@ -103,6 +103,15 @@ if (!empty($RESULTADO_token)) {
                     header("HTTP/1.1 200");
                     header('Content-Type: application/json; charset=utf-8');
                     echo $insempresa->actualizar_mision_empresa_controlador($insEmpresaClass);
+                } else if ($accion == "updateterminocondicion") {
+
+                    $personData = json_decode($_POST['class']);
+                    $insEmpresaClass = new Empresa();
+                    $insEmpresaClass->setIdEmpresa($personData->idempresa);
+                    $insEmpresaClass->setTerminoCondicion($personData->terminoCondicion);
+                    header("HTTP/1.1 200");
+                    header('Content-Type: application/json; charset=utf-8');
+                    echo $insempresa->actualizar_terminocondicion_empresa_controlador($insEmpresaClass);
                 } else {
                     header("HTTP/1.1 500");
                 }

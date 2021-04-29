@@ -74,6 +74,7 @@ class empresaModelo extends mainModel
 
                                 $insEmpresa = new Empresa();
                                 $insEmpresa->setIdEmpresa($row['idempresa']);
+                                $insEmpresa->setTerminoCondicion($row['terminoCondicion']);
                                 $insEmpresa->setTelefono($row['EmpresaTelefono']);
                                 $insEmpresa->setVision($row['vision']);
                                 $insEmpresa->setYoutube($row['youtube']);
@@ -142,6 +143,13 @@ class empresaModelo extends mainModel
 
         $sql = $conexion->prepare("UPDATE `empresa` SET mision=:EmMision  WHERE idempresa=:ID");
         $sql->bindValue(":EmMision", $Empresa->getMision(), PDO::PARAM_STR);
+        $sql->bindValue(":ID", $Empresa->getIdEmpresa(), PDO::PARAM_INT);
+        return $sql;
+    }protected function actualizar_terminocondicion_empresa_modelo($conexion, $Empresa)
+    {
+
+        $sql = $conexion->prepare("UPDATE `empresa` SET terminoCondicion=:TerminoCondicion  WHERE idempresa=:ID");
+        $sql->bindValue(":TerminoCondicion", $Empresa->getTerminoCondicion(), PDO::PARAM_STR);
         $sql->bindValue(":ID", $Empresa->getIdEmpresa(), PDO::PARAM_INT);
         return $sql;
     }

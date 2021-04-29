@@ -401,77 +401,63 @@ const limpiar_campo = (cadena) => {
     cadena = cadena.replace('´', '');
     return cadena;
 };
-const numero_campo = (campo1, ...campoN) => {
+const numero_campo = (...campoN) => {
     let numero = /^[0-9.]*$/;
-    let dato1 = limpiar_campo(campo1.value),
-        datoN = '',
-        retorno;
-    dato1 = eliminarCaracteres(dato1, " ");
-    let valor = numero.test(dato1) && (dato1 == '' ? false : true);
-    if (valor) {
-        campoN.every((campon) => {
-            datoN = limpiar_campo(campon.value);
-            datoN = eliminarCaracteres(datoN, " ");
-            valor = numero.test(datoN) && valor && (datoN == '' ? false : true);
-            if (valor == false) {
-                retorno = campon;
-                return;
-            }
-        });
-    } else {
-        retorno = campo1;
-    }
+    let datoN = '',
+        retorno = undefined, valor;
+
+    campoN.every((campon) => {
+        datoN = limpiar_campo(campon.value);
+        datoN = eliminarCaracteres(datoN, " ");
+        valor = numero.test(datoN) && (datoN == '' ? false : true);
+        if (valor == false) {
+            retorno = campon;
+            return false;
+        } else {
+            return true;
+        }
+    });
+
     return retorno;
 };
-const letra_numero_campo = (campo1, ...campoN) => {
+const letra_numero_campo = (...campoN) => {
     let letra = /^[\u00F1A-Za-z0-9.,-áéióúÁÉÍÓÚ\-\s]*$/;
-    let dato1 = limpiar_campo(campo1.value),
-        datoN = '',
-        retorno;
-    let valor = letra.test(dato1) && (dato1 == '' ? false : true);
+    let datoN = '', valor,
+        retorno = undefined;
 
-    if (valor == true) {
-        if (campo1.labels.length > 0)
-            campoN.every((campon) => {
-                datoN = limpiar_campo(campon.value);
-                valor = letra.test(datoN) && valor && (datoN == '' ? false : true);
-                if (valor == false) {
-                    retorno = campon;
 
-                    return;
-                }
-            });
-    } else {
-        retorno = campo1;
-    }
+    campoN.every((campon) => {
+        datoN = limpiar_campo(campon.value);
+        valor = letra.test(datoN) && (datoN == '' ? false : true);
+        if (valor == false) {
+            retorno = campon;
+            return false;
+        } else {
+            return true;
+        }
+    });
+
 
     return retorno;
 };
-const letra_campo = (campo1, ...campoN) => {
+/*propagación */
+const letra_campo = (...campoN) => {
     let letra = /^[A-Za-záéíóúÁÉÍÓÚñÑ\-.\s]*$/;
-    let dato1 = limpiar_campo(campo1.value),
-        datoN = '',
-        retorno;
-    let valor = letra.test(dato1) && (dato1 == '' ? false : true);
-    if (valor == true) {
-        if (campo1.labels.length > 0)
-            removeClass(campo1.labels[0], 'text-danger font-weight-400');
-        campoN.every((campon) => {
-            datoN = limpiar_campo(campon.value);
-            valor = letra.test(datoN) && valor && (datoN == '' ? false : true);
-            if (valor == false) {
-                retorno = campon;
-
-                return;
-            } else {
-                if (campon.labels.length > 0)
-                    removeClass(campon.labels[0], 'text-danger font-weight-400');
+    let datoN, valor,
+        retorno = undefined;
+    campoN.every((campon) => {
+        datoN = limpiar_campo(campon.value);
+        valor = letra.test(datoN) && (datoN == '' ? false : true);
+        if (valor == false) {
+            retorno = campon;
+            return false;
+        } else {
+            if (campon.labels.length > 0) {
+                removeClass(campon.labels[0], 'text-danger font-weight-400');
             }
-        });
-    } else {
-        retorno = campo1;
-    }
-
+            return true;
+        }
+    });
     return retorno;
 };
 const email_campo = (campo1, ...campoN) => {
@@ -499,28 +485,24 @@ const email_campo = (campo1, ...campoN) => {
     return retorno;
 };
 
-const password_campo = (campo1, ...campoN) => {
-    let pass = /[A-Za-z0-9!?-]{8,12}/;
-
-    let dato1 = limpiar_campo(campo1.value),
+const password_campo = (...campoN) => {
+    let pass = /[A-Za-z0-9!.?-]{8,20}/;
+    let
         datoN = '',
-        retorno;
-    dato1 = eliminarCaracteres(dato1, " ");
-    let valor = pass.test(dato1) && (dato1 == '' ? false : true);
-    if (valor) {
+        retorno, valor;
 
-        campoN.every((campon) => {
-            datoN = limpiar_campo(campon.value);
-            datoN = eliminarCaracteres(datoN, " ");
-            valor = pass.test(datoN) && valor && (datoN == '' ? false : true);
-            if (valor == false) {
-                retorno = campon;
-                return;
-            }
-        });
-    } else {
-        retorno = campo1;
-    }
+    campoN.every((campon) => {
+        datoN = limpiar_campo(campon.value);
+        datoN = eliminarCaracteres(datoN, " ");
+        valor = pass.test(datoN) && (datoN == '' ? false : true);
+        if (valor == false) {
+            retorno = campon;
+            return false;
+        } else {
+            return true;
+        }
+    });
+
     return retorno;
 };
 

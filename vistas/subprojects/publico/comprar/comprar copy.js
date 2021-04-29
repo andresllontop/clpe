@@ -8,76 +8,59 @@ var beanRequestComprar = new BeanRequest();
 var current_fs, next_fs, previous_fs; //fieldsets
 var left, opacity, scale; //fieldset properties which we will animate
 var animating; //flag to prevent quick multi-click glitches
-var stateCompra;
+let stateCompra;
 document.addEventListener('DOMContentLoaded', function () {
-    stateCompra = new Array({ codigo: "355", icon: "flag-icon-al", nombre: "Albania" }, { codigo: "376", icon: "flag-icon-ad", nombre: "Andorra" }, { codigo: "244", icon: "flag-icon-ao", nombre: "Angola" }, { codigo: "54", icon: "flag-icon-ar", nombre: "Argentina" }, { codigo: "374", icon: "flag-icon-am", nombre: "Armenia" }, { codigo: "61", icon: "flag-icon-au", nombre: "Australia" }, { codigo: "43", icon: "flag-icon-at", nombre: "Austria" }, { codigo: "973", icon: "flag-icon-bh", nombre: "Bahrain" }, { codigo: "880", icon: "flag-icon-bd", nombre: "Bangladesh" }, { codigo: "591", icon: "flag-icon-bo", nombre: "Bolivia" }, { codigo: "55", icon: "flag-icon-br", nombre: "Brazil" }, { codigo: "359", icon: "flag-icon-bg", nombre: "Bulgaria" }, { codigo: "1", icon: "flag-icon-ca", nombre: "Canada" }, { codigo: "236", icon: "flag-icon-cf", nombre: "Central African Republic" }, { codigo: "56", icon: "flag-icon-cl", nombre: "Chile" }, { codigo: "57", icon: "flag-icon-co", nombre: "Colombia" }, { codigo: "506", icon: "flag-icon-cr", nombre: "Costa Rica" }, { codigo: "53", icon: "flag-icon-cu", nombre: "Cuba" }, { codigo: "45", icon: "flag-icon-dk", nombre: "Dinamarca" }, { codigo: "1809", icon: "flag-icon-do", nombre: "Dominican Republic" }, { codigo: "593", icon: "flag-icon-ec", nombre: "Ecuador" }, { codigo: "503", icon: "flag-icon-sv", nombre: "El Salvador" }, { codigo: "001", icon: "flag-icon-us", nombre: "Estados Unidos" }, { codigo: "33", icon: "flag-icon-fr", nombre: "France" }, { codigo: "502", icon: "flag-icon-gt", nombre: "Guatemala" }, { codigo: "504", icon: "flag-icon-hn", nombre: "Honduras" }, { codigo: "39", icon: "flag-icon-it", nombre: "Italy" }, { codigo: "1876", icon: "flag-icon-jm", nombre: "Jamaica" }, { codigo: "81", icon: "flag-icon-jp", nombre: "Japan" }, { codigo: "52", icon: "flag-icon-mx", nombre: "México" }, { codigo: "505", icon: "flag-icon-ni", nombre: "Nicaragua" }, { codigo: "507", icon: "flag-icon-pa", nombre: "Panama" }, { codigo: "595", icon: "flag-icon-py", nombre: "Paraguay" }, { codigo: "51", icon: "flag-icon-pe", nombre: "Perú" }, { codigo: "351", icon: "flag-icon-pt", nombre: "Portugal" }, { codigo: "44", icon: "flag-icon-gb", nombre: "Reino Unido" }, { codigo: "7", icon: "flag-icon-ru", nombre: "Rusia" }, { codigo: "90", icon: "flag-icon-tr", nombre: "Turquía" }, { codigo: "598", icon: "flag-icon-uy", nombre: "Uruguay" }, { codigo: "58", icon: "flag-icon-ve", nombre: "Venezuela" }, { codigo: "260", icon: "flag-icon-zm", nombre: "Zambia" });
-    if (Cookies.get("clpe_niubiz_date") != undefined) {
-        if ((new Date(parseInt(Cookies.get("clpe_niubiz_date"))) - parseInt(new Date().getTime())) < 0) {
-            closeCOOKIESNiubiz();
-        }
-    }
-    if (Cookies.get("clpe_niubiz") != undefined) {
-        let sesionCompra = JSON.parse(Cookies.get("clpe_niubiz"));
-        if (sesionCompra != undefined) {
-            if (sesionCompra.nombre != undefined) {
-                document.querySelector("#txtnombreCuenta").value = sesionCompra.nombre;
-                document.querySelector("#txtapellidoCuenta").value = sesionCompra.apellido;
-                document.querySelector("#txtprofesionCuenta").value = sesionCompra.profesion;
-                document.querySelector("#txtTelefonoCuenta").value = sesionCompra.telefono;
-                document.querySelector("#txtcountryCuenta").value = sesionCompra.pais;
-                document.querySelector("#txtemailCuenta").value = sesionCompra.address;
-                document.querySelector("#txtpassCuenta").value = sesionCompra.pass;
-                document.querySelector("#txtpassconfirmCuenta").value = sesionCompra.pass;
+    let paises = "<option value=''>[Pais]</option>", codigos = '';
+    circleCargando.containerOcultar = $(document.querySelector("#precioCompra"));
+    circleCargando.container = $(document.querySelector("#precioCompra").parentElement);
+    circleCargando.createLoader();
+    circleCargando.toggleLoader("show");
+    fetch(getHostAPI() + "empresa/paginate" +
+        "?filtro=&pagina=1&registros=1", {
+        headers: {
+            "Content-Type": 'application/json; charset=UTF-8',
+        },
+        method: "GET"
+    })
+        .then(response => response.json())
+        .then(json => {
+            circleCargando.toggleLoader("hide");
+            beanPaginationFooter = json;
+            document.querySelector('#visitaContador').innerHTML = json.countFilter;
+            document.querySelector('#precioCompra').innerHTML = `<small class="mr-1">${json.pais.currencySymbol}</small>` + json.precio;
+            if (!(json.pais.currencyId == "USD")) {
+                document.querySelector('#precioCompraUSD').innerHTML = `= <small class="mr-1">$</small>` + json.precio_USD + `<small class="mx-1">USD</small>` + ` <i class="flag-icon flag-icon-us mr-2"></i>`;
             }
 
-        }
-    }
 
-    if (Cookies.get("clpe_empresa_compra") == undefined) {
-        circleCargando.containerOcultar = $(document.querySelector("#precioCompra"));
-        circleCargando.container = $(document.querySelector("#precioCompra").parentElement);
-        circleCargando.createLoader();
-        circleCargando.toggleLoader("show");
-        fetch(getHostAPI() + "empresa/paginate" +
-            "?filtro=&pagina=1&registros=1", {
-            headers: {
-                "Content-Type": 'application/json; charset=UTF-8',
-            },
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(json => {
-                circleCargando.toggleLoader("hide");
-                Cookies.set('clpe_empresa_compra', json);
-                //20 minutos de expiracion
-                Cookies.set('clpe_niubiz_date', parseInt(new Date().getTime()) + parseInt(20 * 60 * 1000));
-                requestEmpresa(json);
+            document.querySelector('#emailComprar').innerHTML = json.email;
+            document.querySelector('#emailComprar').setAttribute("href", "mailto:" + json.email);
 
-            })
-            .catch(err => {
-                circleCargando.toggleLoader("hide");
-                showAlertErrorRequest();
-                console.log(err);
+            paisSelectedCompra = findByPaisesCompra(json.pais.name);
+            document.querySelector(".paises-cuentaOtro").innerHTML = `<i class="flag-icon ${paisSelectedCompra.icon} mr-2"></i>${paisSelectedCompra.nombre} (+${paisSelectedCompra.codigo})`;
+            document.querySelector(".paises-cuenta").innerHTML = document.querySelector(".paises-cuentaOtro").innerHTML;
+            stateCompra.forEach(country => {
+                if (removeAccents(country.nombre).toLocaleLowerCase() == removeAccents(json.pais.name).toLocaleLowerCase()) {
+                    paises += `<option value="${country.nombre}" selected>${country.nombre}</option>`;
+                    codigos += `<li class="aula-cursor-mano"><i class="flag-icon ${country.icon} mr-2"></i>${country.nombre} (+${country.codigo})</li>`;
+                    document.querySelector('#precioCompra').innerHTML = `<small class="mr-1">${json.pais.currencySymbol}</small>${json.precio}<i class="flag-icon ${country.icon} mx-2"></i>`;
+                } else {
+                    paises += `<option value="${country.nombre}">${country.nombre}</option>`;
+                    codigos += `<li class="aula-cursor-mano"><i class="flag-icon ${country.icon} mr-2"></i>${country.nombre} (+${country.codigo})</li>`;
+                }
+
             });
-    } else {
-        requestEmpresa(JSON.parse(Cookies.get("clpe_empresa_compra")));
+            document.querySelector("#txtcountryCuenta").innerHTML = paises;
+            document.querySelector("#txtTelefonoCodigoCuenta").innerHTML = codigos;
+            document.querySelector("#txtTelefonoCodigoCuentaOtro").innerHTML = codigos;
+            document.querySelector("#txtcountryCuentaOtro").innerHTML = paises;
 
-    }
-    document.getElementsByName("radioTipoComunicacionCuenta").forEach((btn) => {
-        //AGREGANDO EVENTO CLICK
-        btn.onchange = function () {
-
-            if (btn.checked == true && parseInt(btn.value) == parseInt(4)) {
-                removeClass(document.querySelector("#txtCodigoVendedorCuenta").parentElement, "d-none");
-
-            } else if (btn.checked == true) {
-                addClass(document.querySelector("#txtCodigoVendedorCuenta").parentElement, "d-none");
-            }
-
-
-
-        }
-    });
+        })
+        .catch(err => {
+            circleCargando.toggleLoader("hide");
+            showAlertErrorRequest();
+            console.log(err);
+        });
     //INICIALIZANDO VARIABLES DE SOLICITUD
     beanRequestComprar.entity_api = 'compra';
     beanRequestComprar.operation = 'charge';
@@ -96,13 +79,36 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#txtTelefonoCodigoCuenta > li").click(function (btn) {
         document.querySelector(".paises-cuenta").innerHTML = btn.currentTarget.innerHTML;
     });
-    document.querySelector("#buyButtonPagarCompra").onclick = () => {
+
+    $('#msform').submit(function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    $('#buyButtonPagarCompra').on('click', function (e) {
         if (validarFormularioRegisterCompra()) {
-            payNiubiz();
-
+            if (Culqi.publicKey == "") {
+                // Configura tu llave pública
+                //Culqi.publicKey = 'pk_live_14dc8b11d5b6330a';
+                Culqi.publicKey = 'pk_test_GzO42vPMPg4fZtz3';
+                // Configura tu Culqi Checkout
+                if (!(beanPaginationFooter.pais.currencyId == "PEN" || beanPaginationFooter.pais.currencyId == "USD")) {
+                    beanPaginationFooter.pais.currencyId = "USD";
+                    beanPaginationFooter.precio = beanPaginationFooter.precio_USD;
+                }
+                Culqi.settings({
+                    title: 'CLPE',
+                    currency: beanPaginationFooter.pais.currencyId,
+                    description: 'Curso Online de Club de Lectura',
+                    amount: parseFloat(beanPaginationFooter.precio) * 100
+                });
+            }
+            //currency: beanPaginationFooter.pais.currencyId,
+            // Abre el formulario con las opciones de Culqi.settings
+            beanRequestComprar.operation = 'charge';
+            Culqi.open(); e.preventDefault();
         }
-    };
-
+    });
 
     /*OTRO MEDIO */
     $("#txtTelefonoCodigoCuentaOtro > li").click(function (btn) {
@@ -168,39 +174,7 @@ var findByPaisesCompra = (nombre) => {
         }
     );
 };
-function requestEmpresa(json) {
-    let paises = "<option value=''>[Pais]</option>", codigos = '';
-    beanPaginationFooter = json;
-    document.querySelector('#visitaContador').innerHTML = json.countFilter;
-    document.querySelector('#precioCompra').innerHTML = `<small class="mr-1">${json.pais.currencySymbol}</small>` + json.precio;
-    if (!(json.pais.currencyId == "USD")) {
-        document.querySelector('#precioCompraUSD').innerHTML = `= <small class="mr-1">$</small>` + json.precio_USD + `<small class="mx-1">USD</small>` + ` <i class="flag-icon flag-icon-us mr-2"></i>`;
-    }
 
-
-    document.querySelector('#emailComprar').innerHTML = json.email;
-    document.querySelector('#emailComprar').setAttribute("href", "mailto:" + json.email);
-
-    paisSelectedCompra = findByPaisesCompra(json.pais.name);
-    document.querySelector(".paises-cuentaOtro").innerHTML = `<i class="flag-icon ${paisSelectedCompra.icon} mr-2"></i>${paisSelectedCompra.nombre} (+${paisSelectedCompra.codigo})`;
-    document.querySelector(".paises-cuenta").innerHTML = document.querySelector(".paises-cuentaOtro").innerHTML;
-    stateCompra.forEach(country => {
-        if (removeAccents(country.nombre).toLocaleLowerCase() == removeAccents(json.pais.name).toLocaleLowerCase()) {
-            paises += `<option value="${country.nombre}" selected>${country.nombre}</option>`;
-            codigos += `<li class="aula-cursor-mano"><i class="flag-icon ${country.icon} mr-2"></i>${country.nombre} (+${country.codigo})</li>`;
-            document.querySelector('#precioCompra').innerHTML = `<small class="mr-1">${json.pais.currencySymbol}</small>${json.precio}<i class="flag-icon ${country.icon} mx-2"></i>`;
-        } else {
-            paises += `<option value="${country.nombre}">${country.nombre}</option>`;
-            codigos += `<li class="aula-cursor-mano"><i class="flag-icon ${country.icon} mr-2"></i>${country.nombre} (+${country.codigo})</li>`;
-        }
-
-    });
-    document.querySelector("#txtcountryCuenta").innerHTML = paises;
-    document.querySelector("#txtTelefonoCodigoCuenta").innerHTML = codigos;
-    document.querySelector("#txtTelefonoCodigoCuentaOtro").innerHTML = codigos;
-    document.querySelector("#txtcountryCuentaOtro").innerHTML = paises;
-    sesionNiubiz();
-}
 function eventoCompra() {
     document.querySelector("#span-ocultar-passCuenta2").onclick = () => {
 
@@ -257,9 +231,10 @@ function eventoCompra() {
     }
 
     document.body.style.background = "#f7f7f7 url(" + getHostFrontEnd() + "vistas/subprojects/publico/blog/img/pattern.png) repeat top left";
+    $("body").append('<script src="https://checkout.culqi.com/v2"></script>');
 
 
-
+    stateCompra = new Array({ codigo: "355", icon: "flag-icon-al", nombre: "Albania" }, { codigo: "376", icon: "flag-icon-ad", nombre: "Andorra" }, { codigo: "244", icon: "flag-icon-ao", nombre: "Angola" }, { codigo: "54", icon: "flag-icon-ar", nombre: "Argentina" }, { codigo: "374", icon: "flag-icon-am", nombre: "Armenia" }, { codigo: "61", icon: "flag-icon-au", nombre: "Australia" }, { codigo: "43", icon: "flag-icon-at", nombre: "Austria" }, { codigo: "973", icon: "flag-icon-bh", nombre: "Bahrain" }, { codigo: "880", icon: "flag-icon-bd", nombre: "Bangladesh" }, { codigo: "591", icon: "flag-icon-bo", nombre: "Bolivia" }, { codigo: "55", icon: "flag-icon-br", nombre: "Brazil" }, { codigo: "359", icon: "flag-icon-bg", nombre: "Bulgaria" }, { codigo: "1", icon: "flag-icon-ca", nombre: "Canada" }, { codigo: "236", icon: "flag-icon-cf", nombre: "Central African Republic" }, { codigo: "56", icon: "flag-icon-cl", nombre: "Chile" }, { codigo: "57", icon: "flag-icon-co", nombre: "Colombia" }, { codigo: "506", icon: "flag-icon-cr", nombre: "Costa Rica" }, { codigo: "53", icon: "flag-icon-cu", nombre: "Cuba" }, { codigo: "45", icon: "flag-icon-dk", nombre: "Dinamarca" }, { codigo: "1809", icon: "flag-icon-do", nombre: "Dominican Republic" }, { codigo: "593", icon: "flag-icon-ec", nombre: "Ecuador" }, { codigo: "503", icon: "flag-icon-sv", nombre: "El Salvador" }, { codigo: "001", icon: "flag-icon-us", nombre: "Estados Unidos" }, { codigo: "33", icon: "flag-icon-fr", nombre: "France" }, { codigo: "502", icon: "flag-icon-gt", nombre: "Guatemala" }, { codigo: "504", icon: "flag-icon-hn", nombre: "Honduras" }, { codigo: "39", icon: "flag-icon-it", nombre: "Italy" }, { codigo: "1876", icon: "flag-icon-jm", nombre: "Jamaica" }, { codigo: "81", icon: "flag-icon-jp", nombre: "Japan" }, { codigo: "52", icon: "flag-icon-mx", nombre: "México" }, { codigo: "505", icon: "flag-icon-ni", nombre: "Nicaragua" }, { codigo: "507", icon: "flag-icon-pa", nombre: "Panama" }, { codigo: "595", icon: "flag-icon-py", nombre: "Paraguay" }, { codigo: "51", icon: "flag-icon-pe", nombre: "Perú" }, { codigo: "351", icon: "flag-icon-pt", nombre: "Portugal" }, { codigo: "44", icon: "flag-icon-gb", nombre: "Reino Unido" }, { codigo: "7", icon: "flag-icon-ru", nombre: "Rusia" }, { codigo: "90", icon: "flag-icon-tr", nombre: "Turquía" }, { codigo: "598", icon: "flag-icon-uy", nombre: "Uruguay" }, { codigo: "58", icon: "flag-icon-ve", nombre: "Venezuela" }, { codigo: "260", icon: "flag-icon-zm", nombre: "Zambia" });
 
     let mastercard = $(".mastercard");
     let visa = $(".visa");
@@ -360,7 +335,6 @@ function eventoCompra() {
         if (this.checked) {
             document.querySelector(".description-2").classList.add("d-none");
             document.querySelector(".description-1").classList.remove("d-none");
-
         }
 
     };
@@ -387,272 +361,48 @@ function eventoCompra() {
     };
 }
 
-function sesionNiubiz() {
-    // ¡Objeto Token creado exitosamente!
-    circleCargando.containerOcultar = $(document.querySelector("#txtNumeroTarjeta").parentElement.parentElement);
-    circleCargando.container = $(document.querySelector("#txtNumeroTarjeta").parentElement.parentElement.parentElement);
-    circleCargando.createLoader();
-    circleCargando.toggleLoader("show");
+function culqi() {
+    if (Culqi.token) { // ¡Objeto Token creado exitosamente!
+        $('#modalCargandoCompra').modal('show');
+        let token = Culqi.token.id;
+        let email = Culqi.token.email;
+        let form_data = new FormData();
+        if (!(beanPaginationFooter.pais.currencyId == "PEN" || beanPaginationFooter.pais.currencyId == "USD")) {
+            beanPaginationFooter.pais.currencyId = "USD";
+            beanPaginationFooter.precio = beanPaginationFooter.precio_USD;
+        }
+        let jso = {
+            id: "",
+            telefono: paisSelectedCompra.codigo + document.querySelector('#txtTelefonoCuenta').value,
+            nombre: document.querySelector('#txtnombreCuenta').value,
+            apellido: document.querySelector('#txtapellidoCuenta').value,
+            profesion: document.querySelector('#txtprofesionCuenta').value,
+            address: document.querySelector('#txtemailCuenta').value,
+            pass: document.querySelector('#txtpassCuenta').value,
+            pais: paisSelectedCompra.nombre,
+            country_code: beanPaginationFooter.pais.id,
+            precio: parseFloat(beanPaginationFooter.precio),
+            currency: beanPaginationFooter.pais.currencyId,
+            token: token,
+            email: email
+        };
+        form_data.append("class", JSON.stringify(jso));
+
+        processAjaxRegisterCompra(form_data);
+
+    } else { // ¡Hubo algún problema!
+        // Mostramos JSON de objeto error en consola
+        console.log(Culqi.error);
+        if (Culqi.error) {
+            showAlertTopEnd("info", Culqi.error, Culqi.error.merchant_message, 10000);
+        }
 
 
-    /* if (!(beanPaginationFooter.pais.currencyId == "PEN" || beanPaginationFooter.pais.currencyId == "USD")) {
-         beanPaginationFooter.pais.currencyId = "USD";
-         beanPaginationFooter.precio = beanPaginationFooter.precio_USD;
-     }
- */
-    if (!(beanPaginationFooter.pais.currencyId == "USD")) {
-        beanPaginationFooter.pais.currencyId = "USD";
-        beanPaginationFooter.precio = beanPaginationFooter.precio_USD;
+
     }
-    fetch(getHostAPI() + "niubiz/sesion" +
-        "?amount=" + parseFloat(beanPaginationFooter.precio_USD) + "&channel=web", {
-        headers: {
-            "Content-Type": 'application/json; charset=UTF-8',
-        },
-        method: "GET"
-    })
-        .then(response => response.json())
-        .then(json => {
-            console.log(json);
-            window.configuration = {
-                sessionkey: String(json.sesionKey),
-                channel: String(json.channel),
-                merchantid: String(json.merchantId),
-                purchasenumber: String(json.purchaseNumber),
-                amount: String(json.amount),
-                callbackurl: '',
-                language: "es",
-                font: "https://fonts.googleapis.com/css?family=Montserrat:400&display=swap",
-            };
-
-            window.purchase = String(json.purchaseNumber);
-            window.dcc = false;
-            window.amount = json.amount;
-            window.channel = "web";
-            window.expirationTime = json.expirationTime;
-            window.payform.setConfiguration(window.configuration);
-
-            var elementStyles = {
-                base: {
-                    color: 'black',
-                    margin: '0',
-                    // width: '100% !important',
-                    // fontWeight: 700,
-                    fontFamily: "'Montserrat', sans-serif",
-                    // fontSize: '16px',
-                    fontSmoothing: 'antialiased',
-                    placeholder: {
-                        color: '#999999'
-                    },
-                    autofill: {
-                        color: '#e39f48',
-                    }
-                },
-                invalid: {
-                    color: '#E25950',
-                    '::placeholder': {
-                        color: '#FFCCA5',
-                    }
-                }
-            };
-
-            // Número de tarjeta
-            window.cardNumber = window.payform.createElement(
-                'card-number', {
-                style: elementStyles,
-                placeholder: 'Número de Tarjeta'
-            },
-                'txtNumeroTarjeta'
-            );
-
-            window.cardNumber.then(element => {
-
-                element.on('bin', function (data) {
-                    console.log('BIN: ', data);
-                });
-
-                element.on('dcc', function (data) {
-                    console.log('DCC', data);
-                    if (data != null) {
-                        var response = confirm("Usted tiene la opción de pagar su factura en: PEN " + window.amount + " o " + data['currencyCodeAlpha'] + " " + data['amount'] + ". Una vez haya hecho su elección, la transacción continuará con la moneda seleccionada. Tasa de cambio PEN a " + data['currencyCodeAlpha'] + ": " + data['exchangeRate'] + " \n \n" + data['currencyCodeAlpha'] + " " + data['amount'] + "\nPEN = " + data['currencyCodeAlpha'] + " " + data['exchangeRate'] + "\nMARGEN FX: " + data['markup']);
-                        if (response == true) {
-                            window.dcc = true;
-                        } else {
-                            window.dcc = false;
-                        }
-                    }
-                });
-
-                element.on('installments', function (data) {
-                    console.log('INSTALLMENTS: ', data);
-                    if (data != null && window.channel == "web") {
-                        window.credito = true;
-                        var cuotas = document.getElementById('cuotas');
-                        cuotas.style.display = "block";
-
-                        var select = document.createElement('select');
-                        select.setAttribute("class", "form-control form-control-sm mb-4");
-                        select.setAttribute("id", "selectCuotas");
-                        optionDefault = document.createElement('option');
-                        optionDefault.value = optionDefault.textContent = "Sin cuotas";
-                        select.appendChild(optionDefault);
-                        data.forEach(function (item) {
-                            option = document.createElement('option');
-                            option.value = option.textContent = item;
-                            select.appendChild(option);
-                        });
-                        cuotas.appendChild(select);
-                    }
-
-                });
-
-                element.on('change', function (data) {
-                    console.log('CHANGE: ', data);
-                    document.getElementById("msjNroTarjeta").style.display = "none";
-                    document.getElementById("msjFechaVencimiento").style.display = "none";
-                    document.getElementById("msjCvv").style.display = "none";
-                    if (data.length != 0) {
-                        data.forEach(function (d) {
-                            if (d['code'] == "invalid_number") {
-                                document.getElementById("msjNroTarjeta").style.display = "block";
-                                document.getElementById("msjNroTarjeta").innerText = d['message'];
-                            }
-                            if (d['code'] == "invalid_expiry") {
-                                document.getElementById("msjFechaVencimiento").style.display = "block";
-                                document.getElementById("msjFechaVencimiento").innerText = d['message'];
-                            }
-                            if (d['code'] == "invalid_cvc") {
-                                document.getElementById("msjCvv").style.display = "block";
-                                document.getElementById("msjCvv").innerText = d['message'];
-                            }
-                        });
-                    }
-                })
-            });
-
-            // Cvv2
-            window.cardCvv = payform.createElement(
-                'card-cvc', {
-                style: elementStyles,
-                placeholder: 'CVV'
-            },
-                'txtCvv'
-            );
-
-            window.cardCvv.then(element => {
-                element.on('change', function (data) {
-                    console.log('CHANGE CVV2: ', data);
-                })
-            });
-
-
-
-            // Fecha de vencimiento
-            window.cardExpiry = payform.createElement(
-                'card-expiry', {
-                style: elementStyles,
-                placeholder: 'MM/AAAA'
-            }, 'txtFechaVencimiento'
-            );
-
-            window.cardExpiry.then(element => {
-                element.on('change', function (data) {
-                    console.log('CHANGE F.V: ', data);
-                })
-            });
-
-            circleCargando.toggleLoader("hide");
-        })
-        .catch(err => {
-            showAlertErrorRequest();
-            console.log(err);
-        });
-    //
-
-
 };
 
-function payNiubiz() {
-    $('#modalCargandoCompra').modal('show');
-    let radioButTrat = document.getElementsByName("radioTipoComunicacionCuenta");
-    let valorRadio = 0;
-    for (var i = 0; i < radioButTrat.length; i++) {
-
-        if (radioButTrat[i].checked == true) {
-            valorRadio = radioButTrat[i].value
-        }
-
-    }
-    let form_data = new FormData();
-    let json = {
-        id: "",
-        telefono: paisSelectedCompra.codigo + document.querySelector('#txtTelefonoCuenta').value,
-        nombre: document.querySelector('#txtnombreCuenta').value,
-        apellido: document.querySelector('#txtapellidoCuenta').value,
-        profesion: document.querySelector('#txtprofesionCuenta').value,
-        address: document.querySelector('#txtemailCuenta').value,
-        pass: document.querySelector('#txtpassCuenta').value,
-        pais: paisSelectedCompra.nombre,
-        country_code: beanPaginationFooter.pais.id,
-        precio: parseFloat(beanPaginationFooter.precio_USD),
-        //currency: beanPaginationFooter.pais.currencyId,
-        currency: 'USD',
-        alias: 'KS',
-        currencyConversion: window.dcc,
-        recurrence: false,
-        vendedor: document.querySelector("#txtCodigoVendedorCuenta").value == "" ? null : document.querySelector("#txtCodigoVendedorCuenta").value,
-        tipomedio: valorRadio,
-
-    };
-
-
-
-    // console.log('configuration: ', window.configuration);
-
-    window.payform.createToken(
-        [window.cardNumber, window.cardExpiry, window.cardCvv], {
-        name: json.nombre,
-        lastName: json.apellido,
-        email: json.address,
-        alias: 'KS'
-    }).then(function (data) {
-        console.log(data);
-        if (window.channel == "web") {
-            json.transactionToken = data.transactionToken;
-            json.amount = window.amount;
-            json.purchase = window.purchase;
-            form_data.append("class", JSON.stringify(json));
-            processAjaxRegisterCompra(form_data, json);
-
-        }
-
-    }).catch(function (error) {
-        $('#modalCargandoCompra').modal('hide');
-        showAlertTopEnd("warning", "Error ", JSON.parse(error).errorMessage);
-        setTimeout(function () { location.reload(); }, 8000);
-
-    });
-
-}
-
 var validarFormularioRegisterCompra = () => {
-    let radioButTrat = document.getElementsByName("radioTipoComunicacionCuenta");
-    let valorRadio = 0;
-    for (var i = 0; i < radioButTrat.length; i++) {
-
-        if (radioButTrat[i].checked == true) {
-            valorRadio = radioButTrat[i].value;
-        }
-
-    }
-    if (valorRadio < 1 && valorRadio > 5) {
-        showAlertTopEnd("info", "Vacío", "Selecciona un medio de comunicación correcto en la pregunta");
-        return false;
-    }
-    if (valorRadio == 4 && document.querySelector("#txtCodigoVendedorCuenta").value == "") {
-        showAlertTopEnd("info", "Vacío", "Ingrese Código Vendedor");
-        return false;
-    }
     let letra = letra_campo(
         document.querySelector('#txtnombreCuenta'),
         document.querySelector('#txtapellidoCuenta'),
@@ -751,27 +501,19 @@ var validarFormularioRegisterCompra = () => {
 }
 
 var validarFormularioRegisterCompraPersonales = () => {
-
     let letra = letra_campo(
         document.querySelector('#txtnombreCuenta'),
         document.querySelector('#txtapellidoCuenta'),
         document.querySelector('#txtprofesionCuenta')
     );
-    removeClass(document.querySelector('#txtnombreCuenta').labels[0], 'text-danger-compra font-weight-400');
-    removeClass(document.querySelector('#txtnombreCuenta'), 'border-danger-compra');
-    removeClass(document.querySelector('#txtapellidoCuenta').labels[0], 'text-danger-compra font-weight-400');
-    removeClass(document.querySelector('#txtapellidoCuenta'), 'border-danger-compra');
-    removeClass(document.querySelector('#txtprofesionCuenta').labels[0], 'text-danger-compra font-weight-400');
-    removeClass(document.querySelector('#txtprofesionCuenta'), 'border-danger-compra');
+
     if (letra != undefined) {
-        addClass(letra.labels[0], 'text-danger-compra font-weight-400');
-        addClass(letra, 'border-danger-compra');
         if (letra.value == '') {
-            showAlertTopEnd('info', "Formato Incorrecto", 'Por favor ingrese datos al campo ' + letra.labels[0].innerText.toLowerCase());
+            showAlertTopEnd('info', "Formato Incorrecto", 'Por favor ingrese datos al campo ' + letra.labels[0].innerText);
         } else {
             showAlertTopEnd(
                 'info', "Formato Incorrecto",
-                'Por favor ingrese sólo letras, al campo ' + letra.labels[0].innerText.toLowerCase()
+                'Por favor ingrese sólo letras, al campo ' + letra.labels[0].innerText
             );
         }
 
@@ -782,10 +524,8 @@ var validarFormularioRegisterCompraPersonales = () => {
     );
 
     if (numero != undefined) {
-        addClass(numero.labels[0], 'text-danger-compra font-weight-400');
-        addClass(numero, 'border-danger-compra');
         if (numero.value == '') {
-            showAlertTopEnd('info', "Formato Incorrecto", 'Por favor ingrese datos al campo ' + numero.labels[0].innerText.toLowerCase());
+            showAlertTopEnd('info', "Formato Incorrecto", 'Por favor ingrese datos al campo ' + numero.labels[0].innerText);
         } else {
             showAlertTopEnd(
                 'info', "Formato Incorrecto",
@@ -793,13 +533,8 @@ var validarFormularioRegisterCompraPersonales = () => {
         }
 
         return false;
-    } else {
-        removeClass(document.querySelector('#txtTelefonoCuenta').labels[0], 'text-danger-compra font-weight-400');
-        removeClass(document.querySelector('#txtTelefonoCuenta'), 'border-danger-compra');
     }
     if (document.querySelector("#txtcountryCuenta").value == "") {
-        addClass(document.querySelector("#txtcountryCuenta").labels[0], 'text-danger-compra font-weight-400');
-        addClass(document.querySelector("#txtcountryCuenta"), 'border-danger-compra');
         swal({
             title: "Formato Incorrecto",
             text: "Selecciona País",
@@ -807,24 +542,6 @@ var validarFormularioRegisterCompraPersonales = () => {
             timer: 10000,
             showConfirmButton: false
         });
-        return false;
-    }
-    let radioButTrat = document.getElementsByName("radioTipoComunicacionCuenta");
-    let valorRadio = 0;
-    for (var i = 0; i < radioButTrat.length; i++) {
-
-        if (radioButTrat[i].checked == true) {
-            valorRadio = radioButTrat[i].value;
-        }
-
-    }
-    if (valorRadio < 1 && valorRadio > 5) {
-
-        showAlertTopEnd("info", "Vacío", "Selecciona un medio de comunicación correcto en la pregunta");
-        return false;
-    }
-    if (valorRadio == 4 && document.querySelector("#txtCodigoVendedorCuenta").value == "") {
-        showAlertTopEnd("info", "Vacío", "Ingrese Código Vendedor");
         return false;
     }
     return true;
@@ -837,8 +554,6 @@ var validarFormularioRegisterCompraCuenta = () => {
     );
 
     if (email != undefined) {
-        addClass(email.labels[0], 'text-danger-compra font-weight-400');
-        addClass(email, 'border-danger-compra');
         if (email.value == '') {
             swal({
                 title: "vacío!",
@@ -858,9 +573,6 @@ var validarFormularioRegisterCompraCuenta = () => {
         }
 
         return false;
-    } else {
-        removeClass(document.querySelector('#txtemailCuenta').labels[0], 'text-danger-compra font-weight-400');
-        removeClass(document.querySelector('#txtemailCuenta'), 'border-danger-compra');
     }
     if (limpiar_campo(document.querySelector("#txtpassCuenta").value) == "") {
         swal({
@@ -1021,7 +733,7 @@ var validarFormularioRegisterOtroCompra = () => {
     return true;
 }
 
-function processAjaxRegisterCompra(form_data, json = undefined) {
+function processAjaxRegisterCompra(form_data) {
     $.ajax({
         url: getHostAPI() + beanRequestComprar.entity_api + "/" + beanRequestComprar.operation,
         type: "POST",
@@ -1063,7 +775,6 @@ function processAjaxRegisterCompra(form_data, json = undefined) {
         },
     }).done(function (beanCrudResponse) {
         $('#modalCargandoCompra').modal('hide');
-
         if (beanCrudResponse.messageServer != undefined) {
             if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
 
@@ -1071,17 +782,7 @@ function processAjaxRegisterCompra(form_data, json = undefined) {
                 document.querySelector(".success-compra").setAttribute("style", "background: white;border: 0 none;border-radius: 3px;box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);padding: 20px 30px;box-sizing: border-box;margin: 0 10%;");
                 if (document.querySelector("#compraRadios1").checked) {
                     document.querySelector(".next").dispatchEvent(new Event('click'));
-                    document.querySelector(".success-compra").innerHTML = `<h2 class="text-center">COMPRA EXITOSA!</h2>
-                    <p> N° de Pedido : ${beanCrudResponse.beanClass.nPedido} </p>
-                    <p> Apellido y Nombre : ${beanCrudResponse.beanClass.nombre} </p>
-                    <p> Fecha y Hora de Pedido : ${beanCrudResponse.beanClass.fecha} </p>
-                    <p> Importe de la Transacción : ${beanCrudResponse.beanClass.importe} </p>
-                    <p> Tipo de Moneda : ${beanCrudResponse.beanClass.tipoCurrency} </p>
-                    <p> Producto : "TALLER DE LECTURA PIENSE Y HAGASE RICO"</p>
-                    <p> Tarjeta : ${beanCrudResponse.beanClass.marcaTarjeta} </p>
-                    <p> N° de Tarjeta : ${beanCrudResponse.beanClass.tarjeta} </p>
-                    
-                    <p>se envió a tu correo un código de verificación para que puedas acceder al curso.</p>`;
+                    document.querySelector(".success-compra").innerHTML = `<h2 class="text-center">COMPRA EXITOSA!</h2><p>se envió a tu correo un código de verificación para que puedas acceder al curso.</p>`;
                 } else {
                     document.querySelector(".success-compra").innerHTML = `<h2 class="text-center">COMPRA EXITOSA!</h2><p>en un máximo de 24 horas el administrador de Club de Lectura para emprendedores verificará el depósito realizado, y enviará a tu correo un código de verificación para que puedas acceder al curso.</p>`;
                 }
@@ -1091,22 +792,24 @@ function processAjaxRegisterCompra(form_data, json = undefined) {
                 });
             } else {
                 showAlertTopEnd("warning", "Error", beanCrudResponse.messageServer);
-                setTimeout(function () { location.reload(); }, 8000);
-
             }
         } else {
-            showAlertErrorRequest();
-            setTimeout(function () { location.reload(); }, 8000);
-
+            beanCrudResponse = JSON.parse(beanCrudResponse);
+            if (beanCrudResponse.object != undefined) {
+                if (beanCrudResponse.object == "error") {
+                    showAlertTopEnd("info", "", beanCrudResponse.merchant_message, 10000);
+                } else {
+                    showAlertTopEnd("success", "", beanCrudResponse.merchant_message, 10000);
+                }
+            }
         }
 
-        setCookieSessionNiubiz(json);
+
 
     }).fail(function (jqXHR, textStatus, errorThrown) {
         $('#modalCargandoCompra').modal('hide');
         showAlertErrorRequest();
-        setCookieSessionNiubiz(json);
-        setTimeout(function () { location.reload(); }, 8000);
+
     });
 
 }

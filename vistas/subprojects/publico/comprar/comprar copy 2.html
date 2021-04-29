@@ -41,9 +41,9 @@
 
                     </ul>
                     <!-- multistep form -->
-                    <form id="msform" class="my-4 w-xs-100" autocomplete="off">
+                    <form id="msform" class="my-4 w-xs-100">
                         <!-- fieldsets -->
-                        <fieldset class="mx-0 w-100" style="position: relative;">
+                        <fieldset class="mx-0 w-100">
                             <h2 class="fs-title">Datos Personales</h2>
                             <ul class="form-list">
                                 <li class="form-list__row">
@@ -83,58 +83,13 @@
 
 
                                 </li>
-                                <li class="form-list__row">
-                                    <label class="text-left">¿ Porqué medio te enteraste
-                                        de la Plataforma Club de
-                                        Lectura?</label>
-
-                                    <div class="form-check col-sm-6">
-                                        <input class="form-check-input" type="radio" name="radioTipoComunicacionCuenta"
-                                            value="1">
-                                        <label class="form-check-label">
-                                            Facebook
-                                        </label>
-                                    </div>
-                                    <div class="form-check col-sm-6">
-                                        <input class="form-check-input" type="radio" name="radioTipoComunicacionCuenta"
-                                            value="2">
-                                        <label class="form-check-label">
-                                            Youtube
-                                        </label>
-                                    </div>
-                                    <div class="form-check col-sm-6">
-                                        <input class="form-check-input" type="radio" name="radioTipoComunicacionCuenta"
-                                            value="3">
-                                        <label class="form-check-label">
-                                            Página web Club de Lectura
-                                        </label>
-                                    </div>
-                                    <div class="form-check col-sm-6">
-                                        <input class="form-check-input" type="radio" name="radioTipoComunicacionCuenta"
-                                            value="4">
-                                        <label class="form-check-label">
-                                            Página web YYYYY
-                                        </label>
-                                    </div>
-                                    <div class="form-check ">
-                                        <input checked class="form-check-input" type="radio"
-                                            name="radioTipoComunicacionCuenta" value="5">
-                                        <label class="form-check-label">
-                                            OTROS MEDIOS
-                                        </label>
-                                    </div>
-                                </li>
-                                <li class="form-list__row d-none">
-                                    <label class="text-left" for="txtCodigoVendedorCuenta">Código Vendedor</label>
-                                    <input type="text" id="txtCodigoVendedorCuenta" autocomplete="off" />
-                                </li>
                             </ul>
                             <button type="button" name="next" class="next button w-50"> <span>Continuar</span><i
                                     class="zmdi zmdi-caret-right ml-3"></i>
                             </button>
 
                         </fieldset>
-                        <fieldset class="mx-0 w-100" style="position: relative;">
+                        <fieldset class="mx-0 w-100">
                             <h2 class="fs-title">CREA TU CUENTA</h2>
 
                             <ul class="form-list">
@@ -157,61 +112,33 @@
                                 </li>
 
                             </ul>
-
-                            <button type="button" name="previous" class="previous button btn-warning col-6 mx-5">
-                                <i class="zmdi zmdi-caret-left mr-3"></i> <span>Regresar</span>
+                            <button type="button" name="next" class="next button w-50"> <span>Continuar</span><i
+                                    class="zmdi zmdi-caret-right ml-3"></i>
                             </button>
-                            <button type="button" name="next" class="next button  col-6 mx-5">
-                                <span>Continuar</span><i class="zmdi zmdi-caret-right ml-3"></i>
-                            </button>
-
                         </fieldset>
-
-                        <fieldset class="w-xs-100 mx-xs-0" style="position: relative;">
-                            <h2 class="fs-title pb-3">Datos de Pago</h2>
-
-                            <ul class="form-list">
-
-                                <li class="form-list__row">
-                                    <label class="text-left mb-3">Número de Tarjeta</label>
-                                    <div id="txtNumeroTarjeta" class="form-control-payform ncp-card"></div>
-                                    <small id="msjNroTarjeta" class="form-text text-muted red-text m-0"></small>
-
-                                </li>
-                                <li class="form-list__row form-list__row--inline">
-                                    <div class="col-6">
-                                        <label class="text-left mb-3">Fecha Caducidad</label>
-                                        <div id="txtFechaVencimiento" class="form-control-payform"></div>
-                                        <small id="msjFechaVencimiento"
-                                            class="form-text text-muted red-text m-0"></small>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="text-left mb-3">Codigo </label>
-                                        <div id="txtCvv" class="form-control-payform"></div>
-                                        <small id="msjCvv" class="form-text text-muted red-text m-0"></small>
-                                    </div>
-                                </li>
-
-
-
-
-                            </ul>
-                            <p class="details-title">Si tienes dudas sobre como completar este paso, contacta a
-                                <a href="" id="emailComprar"></a>.
-                            </p>
-                            <p class="details-title py-3">Club de Lectura para Emprendedores está procesando este
-                                pedido,
+                        <fieldset class="mx-0 w-100">
+                            <h2 class="fs-title">Datos de Pago</h2>
+                            <small class="details-title">Si tienes dudas sobre como completar este paso, contacta a
+                                <a href="" id="emailComprar"></a>.</small><br>
+                            <small class="details-title">Club de Lectura para Emprendedores está procesando este pedido,
                                 al continuar
                                 estas de acuerdo con
-                                los <a href="terminoscondiciones" target="_blank">términos de
-                                    compra</a>.</p>
-                            <button type="button" name="previous" class="previous button btn-warning col-6 mx-5">
-                                <i class="zmdi zmdi-caret-left mr-3"></i> <span>Regresar</span>
-                            </button>
-                            <button type="button" class="button mx-5 col-6 " id="buyButtonPagarCompra">Pagar
-                                Ahora</button>
-                        </fieldset>
+                                los términos de
+                                compra.</small>
+                            <ul class="form-list mt-3">
+                                <li>
+                                    <div class="form-group" id="credit_cards">
+                                        <img class="visa">
+                                        <img class="mastercard">
+                                        <img class="amex">
+                                    </div>
+                                    <button type="submit" class="button" id="buyButtonPagarCompra">PAGAR AHORA</button>
+                                </li>
+                            </ul>
+                            <input style="display: none;" type="button" name="previous" class="previous action-button"
+                                value="Previous" />
 
+                        </fieldset>
 
 
                     </form>
@@ -317,28 +244,28 @@
                                         de la Plataforma Club de
                                         Lectura?</label>
 
-                                    <div class="form-check col-sm-6">
+                                    <div class="form-check">
                                         <input class="form-check-input" type="radio" name="radioTipoComunicacionOtro2"
                                             value="1">
                                         <label class="form-check-label">
                                             Facebook
                                         </label>
                                     </div>
-                                    <div class="form-check col-sm-6">
+                                    <div class="form-check">
                                         <input class="form-check-input" type="radio" name="radioTipoComunicacionOtro2"
                                             value="2">
                                         <label class="form-check-label">
                                             Youtube
                                         </label>
                                     </div>
-                                    <div class="form-check col-sm-6">
+                                    <div class="form-check">
                                         <input class="form-check-input" type="radio" name="radioTipoComunicacionOtro2"
                                             value="3">
                                         <label class="form-check-label">
                                             Página web Club de Lectura
                                         </label>
                                     </div>
-                                    <div class="form-check col-sm-6">
+                                    <div class="form-check">
                                         <input class="form-check-input" type="radio" name="radioTipoComunicacionOtro2"
                                             value="4">
                                         <label class="form-check-label">
@@ -375,7 +302,6 @@
 
 
                     </form>
-
                 </div>
 
             </div>

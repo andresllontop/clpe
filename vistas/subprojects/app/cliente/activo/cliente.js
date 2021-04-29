@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();
     });
+    $("#modalCargandoCliente").on('hide.bs.modal', function () {
+        beanRequestCliente.type_request = 'GET';
+        beanRequestCliente.operation = 'paginate';
+    });
     $("#formularioClienteSearch").submit(function (event) {
         event.preventDefault();
         event.stopPropagation();

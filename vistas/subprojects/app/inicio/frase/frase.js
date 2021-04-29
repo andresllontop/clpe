@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
         event.stopPropagation();
         beanRequestFrase.type_request = 'POST';
         beanRequestFrase.operation = 'updatefrase';
-        if (validarDormularioVideo()) {
-            $('#modalCargandoFrase').modal('show');
-        }
+
+        $('#modalCargandoFrase').modal('show');
+
 
     });
     $("#txtDescripcionFrase").Editor();
@@ -111,31 +111,6 @@ function listaFrase(beanPagination) {
 
 }
 
-function findIndexFrase(idbusqueda) {
-    return beanPaginationFrase.list.findIndex(
-        (Frase) => {
-            if (Frase.idvideo == parseInt(idbusqueda))
-                return Frase;
 
 
-        }
-    );
-}
 
-function findByFrase(idvideo) {
-    return beanPaginationFrase.list.find(
-        (Frase) => {
-            if (parseInt(idvideo) == Frase.idvideo) {
-                return Frase;
-            }
-
-
-        }
-    );
-}
-
-var validarDormularioVideo = () => {
-
-
-    return true;
-}

@@ -258,10 +258,10 @@ function addCliente(cliente = undefined) {
     document.querySelector('#txtApellidoCliente').value = (cliente == undefined) ? '' : cliente.apellido;
     document.querySelector('#txtCodigoVendedorCliente').value = (cliente == undefined) ? '' : cliente.vendedor;
     if (cliente == undefined) {
-        document.getElementsByName("radioTipoComunicacion")[4].checked == true;
+        document.getElementsByName("radioTipoComunicacion")[4].checked = true;
 
     } else {
-        document.getElementsByName("radioTipoComunicacion")[parseInt(cliente.tipomedio) - 1].checked == true;
+        document.getElementsByName("radioTipoComunicacion")[parseInt(cliente.tipomedio == null ? 5 : cliente.tipomedio) - 1].checked = true;
     }
 
 

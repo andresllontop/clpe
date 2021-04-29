@@ -541,7 +541,10 @@ class leccionesControlador extends leccionesModelo
             } else {
                 $stmt = leccionesModelo::eliminar_video_lecciones_modelo($this->conexion_db, mainModel::limpiar_cadena($Leccion->getIdleccion()));
                 if ($stmt->execute()) {
-                    unlink('./adjuntos/video-usuarios/' . $lecciones["list"][0]['video']);
+                    if ($lecciones["list"][0]['video'] != "" || $lecciones["list"][0]['video'] != null) {
+                        unlink('./adjuntos/video-usuarios/' . $lecciones["list"][0]['video']);
+                    }
+
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
                     //  $Leccion->setCuenta($lecciones['list'][0]['cuenta']);

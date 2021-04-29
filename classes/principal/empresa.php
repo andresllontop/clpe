@@ -4,6 +4,7 @@ class Empresa
 {
     private $idempresa;
     private $nombre;
+    private $terminoCondicion;
     private $telefono;
     private $telefonoSegundo;
     private $mision;
@@ -150,12 +151,21 @@ class Empresa
     {
         return $this->instagram;
     }
+    public function setTerminoCondicion($terminoCondicion)
+    {
+        $this->terminoCondicion = $terminoCondicion;
+    }
+    public function getTerminoCondicion()
+    {
+        return $this->terminoCondicion;
+    }
     public function __toString()
     {
         return
         array("nombre" => $this->nombre,
             "mision" => $this->mision,
             "frase" => $this->frase,
+            "terminoCondicion" => $this->terminoCondicion,
             "instagram" => $this->instagram,
             "email" => $this->email,
             "vision" => $this->vision,

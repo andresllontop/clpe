@@ -469,93 +469,106 @@ class clienteControlador extends clienteModelo
             $insCuenta->setVerificacion(rand(1000, 9999));
             $insCuenta->setEstado(1);
             $insCuenta->setTipo(2);
+            if (($Cliente->getTipoMedio()) < 0 && ($Cliente->getTipoMedio()) > 5) {
+                $insBeanCrud->setMessageServer("Formato de datos incorrectos");
 
-            //
-            $stmt = $this->conexion_db->query("SELECT MAX(idcuenta) AS MAXIMO FROM `cuenta`");
-            $datos3 = $stmt->fetchAll();
-            foreach ($datos3 as $row3) {
-                if ($row3['MAXIMO'] > 0) {
-                    $cuentacodigo = mainModel::generar_codigo_aleatorio("AC", 7, $row3['MAXIMO'] + 1);
-                    $insCuenta->setCuentaCodigo($cuentacodigo);
-                    $insCuenta->setVoucher("CULQI");
-                    $stmt = clienteModelo::agregar_cuenta_culqui_modelo($this->conexion_db, $insCuenta);
-                    if ($stmt->execute()) {
-                        $Cliente->setCuenta($cuentacodigo);
-                        $stmt = clienteModelo::agregar_cliente_modelo($this->conexion_db, $Cliente);
+            } else {
+                //
+                $stmt = $this->conexion_db->query("SELECT MAX(idcuenta) AS MAXIMO FROM `cuenta`");
+                $datos3 = $stmt->fetchAll();
+                foreach ($datos3 as $row3) {
+                    if ($row3['MAXIMO'] > 0) {
+                        $cuentacodigo = mainModel::generar_codigo_aleatorio("AC", 7, $row3['MAXIMO'] + 1);
+                        $insCuenta->setCuentaCodigo($cuentacodigo);
+                        $insCuenta->setVoucher("CULQI");
+                        $stmt = clienteModelo::agregar_cuenta_culqui_modelo($this->conexion_db, $insCuenta);
                         if ($stmt->execute()) {
-                            $stmt = $this->conexion_db->query("SELECT COUNT(idlibro) AS CONTADOR FROM `libro`");
-                            $datos4 = $stmt->fetchAll();
-                            foreach ($datos4 as $row4) {
-                                if ($row4['CONTADOR'] > 0) {
-                                    $stmt = $this->conexion_db->query("SELECT MIN(codigo) AS MINIMO FROM `libro`");
-                                    $datos5 = $stmt->fetchAll();
-                                    foreach ($datos5 as $row5) {
-                                        $insLibroCuenta = new LibroCuenta();
-                                        $insLibroCuenta->setCuenta($cuentacodigo);
-                                        $insLibroCuenta->setLibro($row5['MINIMO']);
-                                        $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
-                                        if ($stmt->execute()) {
-                                            $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $culqi);
+                            $Cliente->setCuenta($cuentacodigo);
+                            $stmt = clienteModelo::agregar_cliente_modelo($this->conexion_db, $Cliente);
+                            if ($stmt->execute()) {
+                                $stmt = $this->conexion_db->query("SELECT COUNT(idlibro) AS CONTADOR FROM `libro`");
+                                $datos4 = $stmt->fetchAll();
+                                foreach ($datos4 as $row4) {
+                                    if ($row4['CONTADOR'] > 0) {
+                                        $stmt = $this->conexion_db->query("SELECT MIN(codigo) AS MINIMO FROM `libro`");
+                                        $datos5 = $stmt->fetchAll();
+                                        foreach ($datos5 as $row5) {
+                                            $insLibroCuenta = new LibroCuenta();
+                                            $insLibroCuenta->setCuenta($cuentacodigo);
+                                            $insLibroCuenta->setLibro($row5['MINIMO']);
+                                            $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
                                             if ($stmt->execute()) {
-                                                $this->conexion_db->commit();
-                                                // $insBeanCrud->setMessageServer("ok");
-                                                //obtener la cuenta registrada
-                                                $insToken = new Auth();
-                                                $insUser = new Usuario();
-                                                $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta", $insCuenta);
-                                                if ($clienteunico["countFilter"] == 0) {
-                                                    $insBeanCrud->setMessageServer("no se encuentra el usuario");
+                                                $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $culqi);
+                                                if ($stmt->execute()) {
+                                                    $this->conexion_db->commit();
+                                                    // $insBeanCrud->setMessageServer("ok");
+                                                    //obtener la cuenta registrada
+                                                    $insToken = new Auth();
+                                                    $insUser = new Usuario();
+                                                    $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta", $insCuenta);
+                                                    if ($clienteunico["countFilter"] == 0) {
+                                                        $insBeanCrud->setMessageServer("no se encuentra el usuario");
+                                                    } else {
+                                                        $insUser->setId($clienteunico["list"][0]['cuenta']['idcuenta']);
+                                                        $insUser->setUsuario($clienteunico["list"][0]['cuenta']['usuario']);
+                                                        $insUser->setEmail($clienteunico["list"][0]['cuenta']['email']);
+                                                        $insUser->setTipo(2);
+                                                        $insUser->setCodigo($clienteunico["list"][0]['cuenta']['cuentaCodigo']);
+                                                        //
+
+                                                        $Cliente->setCuenta((object) array("codigo" => $insCuenta->getCuentaCodigo(),
+                                                            "usuario" => $insCuenta->getUsuario(),
+                                                            "clave" => $insCuenta->getClave(),
+                                                            "email" => $insCuenta->getEmail(),
+                                                            "perfil" => $insCuenta->getPerfil(),
+                                                            "cuentaverificacion" => $insCuenta->getVerificacion(),
+                                                            "precio" => $insCuenta->getPrecio(),
+                                                            "estado" => $insCuenta->getEstado(),
+                                                            "voucher" => $insCuenta->getVoucher(),
+                                                            "tipo" => $insCuenta->getTipo(),
+                                                            "foto" => $insCuenta->getFoto(),
+                                                            "idcuenta" => $clienteunico["list"][0]['cuenta']['idcuenta'],
+
+                                                        ));
+                                                        $responsemensaje = self::enviar_mensaje_controlador($this->conexion_db, $Cliente, $insToken->autenticar($insUser)['token']);
+
+                                                        $insBeanCrud->setMessageServer($responsemensaje['messageServer']);
+                                                        $insBeanCrud->setBeanClass(array("nPedido" => $culqi->requestNiubiz->order->purchaseNumber,
+                                                            "nombre" => ($Cliente->getApellido() . " " . $Cliente->getNombre()),
+                                                            "fecha" => $culqi->fecha,
+                                                            "importe" => $culqi->requestNiubiz->dataMap->AMOUNT,
+                                                            "tipoCurrency" => $culqi->requestNiubiz->order->currency,
+                                                            "descripcionProducto" => "CLUB DE LECTURA",
+                                                            "tarjeta" => $culqi->requestNiubiz->dataMap->CARD,
+                                                            "marcaTarjeta" => $culqi->nombre_banco,
+                                                        ));
+                                                    }
                                                 } else {
-                                                    $insUser->setId($clienteunico["list"][0]['cuenta']['idcuenta']);
-                                                    $insUser->setUsuario($clienteunico["list"][0]['cuenta']['usuario']);
-                                                    $insUser->setEmail($clienteunico["list"][0]['cuenta']['email']);
-                                                    $insUser->setTipo(2);
-                                                    $insUser->setCodigo($clienteunico["list"][0]['cuenta']['cuentaCodigo']);
-                                                    //
-
-                                                    $Cliente->setCuenta((object) array("codigo" => $insCuenta->getCuentaCodigo(),
-                                                        "usuario" => $insCuenta->getUsuario(),
-                                                        "clave" => $insCuenta->getClave(),
-                                                        "email" => $insCuenta->getEmail(),
-                                                        "perfil" => $insCuenta->getPerfil(),
-                                                        "cuentaverificacion" => $insCuenta->getVerificacion(),
-                                                        "precio" => $insCuenta->getPrecio(),
-                                                        "estado" => $insCuenta->getEstado(),
-                                                        "voucher" => $insCuenta->getVoucher(),
-                                                        "tipo" => $insCuenta->getTipo(),
-                                                        "foto" => $insCuenta->getFoto(),
-                                                        "idcuenta" => $clienteunico["list"][0]['cuenta']['idcuenta'],
-
-                                                    ));
-                                                    $responsemensaje = self::enviar_mensaje_controlador($this->conexion_db, $Cliente, $insToken->autenticar($insUser)['token']);
-                                                    $insBeanCrud->setMessageServer($responsemensaje['messageServer']);
+                                                    $insBeanCrud->setMessageServer("No hemos podido registrar el historial económico.");
                                                 }
+
                                             } else {
-                                                $insBeanCrud->setMessageServer("No hemos podido registrar el historial económico.");
+                                                $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
                                             }
 
-                                        } else {
-                                            $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
                                         }
 
+                                    } else {
+                                        $insBeanCrud->setMessageServer("No se encuentra libro para registrar al usuario");
                                     }
-
-                                } else {
-                                    $insBeanCrud->setMessageServer("No se encuentra libro para registrar al usuario");
                                 }
-                            }
 
+                            } else {
+                                $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
+                            }
                         } else {
-                            $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
+                            $insBeanCrud->setMessageServer("No hemos podido registrar la cuenta");
                         }
-                    } else {
-                        $insBeanCrud->setMessageServer("No hemos podido registrar la cuenta");
+
                     }
 
                 }
-
             }
-
         } catch (Exception $th) {
             if ($this->conexion_db->inTransaction()) {
                 $this->conexion_db->rollback();

@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#modalCargandoEconomico").on('shown.bs.modal', function () {
         processAjaxEconomico();
     });
+    $("#modalCargandoEconomico").on('hide.bs.modal', function () {
+        beanRequestEconomico.type_request = 'GET';
+        beanRequestEconomico.operation = 'paginate';
+    });
 
     $("#ventanaModalManEconomico").on('hide.bs.modal', function () {
         beanRequestEconomico.type_request = 'GET';
@@ -239,7 +243,7 @@ function listaEconomico(beanPagination) {
 <td class="text-center ">${(economico.voucher == null || economico.voucher == "") ? "SIN VOUCHER" : ("<img src='" + getHostFrontEnd() + "adjuntos/clientes/comprobante/" + economico.voucher + "' class='img-responsive center-box' style='width:50px;height:60px;'>")
             }</td >
     <td class="text-center">
-        <button class="btn btn-${economico.tipo == 2 ? "info" : "warning"}">${economico.tipo == 2 ? "EFECTIVO" : "CULQI"}</button></td >
+        <button class="btn btn-${economico.tipo == 2 ? "info" : "warning"}">${economico.tipo == 2 ? "EFECTIVO" : "NIUBIZ"}</button></td >
 <td class="text-center">${economico.fecha.split(" ")[0].split("-")[2] + "/" + economico.fecha.split(" ")[0].split("-")[1] + "/" + economico.fecha.split(" ")[0].split("-")[0] + " " + economico.fecha.split(" ")[1]}</td>
 <td class="text-center">
 <button class="btn btn-success editar-economico"><i class="zmdi zmdi-edit"></i></button>

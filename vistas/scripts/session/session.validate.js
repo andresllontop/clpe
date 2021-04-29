@@ -94,6 +94,10 @@ function createHTML_CLPE(typeProfile) {
                         class="zmdi zmdi-comment-edit zmdi-hc-fw"></i>&nbsp;&nbsp; Frase</a>
                   </li>
                   <li class="dt-side-nav__item">
+                    <a href="${contextPah}app/inicio/terminocondicion" class="dt-side-nav__link">&nbsp;&nbsp;&nbsp;&nbsp;<i
+                        class="zmdi zmdi-comment-edit zmdi-hc-fw"></i>&nbsp;&nbsp; Término y Condición</a>
+                  </li>
+                  <li class="dt-side-nav__item">
                     <a href="${contextPah}app/inicio/empresa" class="dt-side-nav__link">&nbsp;&nbsp;&nbsp;&nbsp;<i
                         class="zmdi zmdi-balance zmdi-hc-fw"></i>&nbsp;&nbsp; Pie de Página</a>
                   </li>

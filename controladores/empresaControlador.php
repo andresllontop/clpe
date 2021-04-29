@@ -134,6 +134,52 @@ class empresaControlador extends empresaModelo
         return json_encode($insBeanCrud->__toString());
 
     }
+    public function actualizar_terminocondicion_empresa_controlador($Empresa)
+    {
+        $insBeanCrud = new BeanCrud();
+        try {
+            $this->conexion_db->beginTransaction();
+
+            $Empresa->setIdEmpresa(mainModel::limpiar_cadena($Empresa->getIdEmpresa()));
+            $Empresa->setTerminoCondicion(mainModel::limpiar_cadena($Empresa->getTerminoCondicion()));
+            $libro = empresaModelo::datos_empresa_modelo($this->conexion_db, "unico", $Empresa);
+            if ($libro["countFilter"] == 0) {
+                $insBeanCrud->setMessageServer("error en el servidor, No hemos encontrado la empresa");
+            } else {
+
+                $stmt = empresaModelo::actualizar_terminocondicion_empresa_modelo($this->conexion_db, $Empresa);
+                if ($stmt->execute()) {
+                    $this->conexion_db->commit();
+                    $insBeanCrud->setMessageServer("ok");
+                    $insBeanCrud->setBeanPagination(self::datos_empresa_controlador("conteo", 5)["beanPagination"]);
+
+                } else {
+                    $insBeanCrud->setMessageServer("error en el servidor, No hemos podido actualizar la empresa");
+                }
+
+            }
+        } catch (Exception $th) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            if (isset($stmt)) {
+                $stmt->closeCursor();
+                $stmt = null;
+            }
+            $this->conexion_db = null;
+        }
+        return json_encode($insBeanCrud->__toString());
+
+    }
     public function datos_empresa_controlador($tipo, $codigo)
     {
 
