@@ -9,7 +9,7 @@ if (!empty($RESULTADO_token)) {
     $insempresa = new empresaControlador();
     $accion = $RESULTADO_token->accion;
     if (!isset($RESULTADO_token->tipo)) {
-        if ($accion == "obtener" || $accion == "paginate") {
+        if ($accion == "obtener" || $accion == "paginate" || preg_match("/curso-/i", $accion) == 1) {
             switch ($_SERVER['REQUEST_METHOD']) {
 
                 case 'GET':
@@ -17,21 +17,30 @@ if (!empty($RESULTADO_token)) {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo json_encode($insempresa->datos_empresa_controlador("conteo-publico", 0));
-                    } elseif ($accion == "paginate") {
+                    } elseif (preg_match("/-/i", $accion) == 1) {
+                        require_once './classes/principal/curso.php';
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        $empresaBean = $insempresa->datos_empresa_controlador("conteo-publico", 0);
-                        // $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][0]["precio"], 'USD', ip_info(get_client_ip(), "countrycode"));
-                        $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][0]["precio"], 'USD', "PE");
-                        echo json_encode(array("nombre" => $empresaBean["beanPagination"]["list"][0]["nombre"],
-                            "email" => $empresaBean["beanPagination"]["list"][0]["email"],
-                            "telefono" => $empresaBean["beanPagination"]["list"][0]["telefono"],
-                            "precio" => $paiscurrency["precio"],
-                            "precio_USD" => $paiscurrency["precio_USD"],
-                            "pais" => $paiscurrency["pais"],
-                            "countFilter" => $empresaBean["beanPagination"]["countFilter"],
+                        $empresaBean = $insempresa->datos_empresa_curso_controlador(explode("-", $accion)[1], 0);
+                        //print_r($empresaBean);
+                        if ($empresaBean["messageServer"] == "ok") {
 
-                        ));
+                            // $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][0]["precio"], 'USD', ip_info(get_client_ip(), "countrycode"));
+                            $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][1]["precio"], 'USD', "PE");
+                            echo json_encode(array("messageServer" => $empresaBean["messageServer"], "nombre" => $empresaBean["beanPagination"]["list"][1]["titulo"],
+                                "email" => $empresaBean["beanPagination"]["list"][0]["email"],
+                                "telefono" => $empresaBean["beanPagination"]["list"][0]["telefono"],
+                                "precio" => $paiscurrency["precio"],
+                                "precio_USD" => $paiscurrency["precio_USD"],
+                                "pais" => $paiscurrency["pais"],
+                                "countFilter" => $empresaBean["beanPagination"]["countFilter"],
+
+                            ));
+                        } else {
+                            echo json_encode(array("messageServer" => $empresaBean["messageServer"],
+
+                            ));
+                        }
 
                     } else {
                         header("HTTP/1.1 500");

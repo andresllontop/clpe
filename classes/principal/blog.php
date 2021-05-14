@@ -6,7 +6,10 @@ class Blog
     private $titulo;
     private $resumen;
     private $descripcion;
+    private $descripcionAutor;
     private $archivo;
+    private $autor;
+    private $foto;
     private $tipoArchivo;
     private $comentario;
 
@@ -42,6 +45,14 @@ class Blog
     {
         return $this->descripcion;
     }
+    public function setDescripcionAutor($descripcionAutor)
+    {
+        $this->descripcionAutor = $descripcionAutor;
+    }
+    public function getDescripcionAutor()
+    {
+        return $this->descripcionAutor;
+    }
     public function setArchivo($archivo)
     {
         $this->archivo = $archivo;
@@ -68,15 +79,32 @@ class Blog
     {
         return $this->comentario;
     }
-
+    public function setAutor($autor)
+    {
+        $this->autor = $autor;
+    }
+    public function getAutor()
+    {
+        return $this->autor;
+    }public function setFoto($foto)
+    {
+        $this->foto = $foto;
+    }
+    public function getFoto()
+    {
+        return $this->foto;
+    }
     public function __toString()
     {
         return
         array("archivo" => $this->archivo,
             "tipoArchivo" => $this->tipoArchivo,
+            "autor" => $this->autor,
+            "foto" => $this->foto,
             "comentario" => $this->comentario,
             "resumen" => $this->resumen,
             "descripcion" => $this->descripcion,
+            "descripcionAutor" => $this->descripcionAutor,
             "idblog" => $this->idblog,
             "titulo" => $this->titulo,
         );

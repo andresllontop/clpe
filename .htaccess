@@ -10,11 +10,11 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule ^([a-zA-Z0-9]+)$ index.php
+RewriteRule ^([a-zA-Z\-0-9]+)$ index.php
 #la siguiente para que acepte la linea al final de la url
-#RewriteRule ^([a-zA-Z0-9]+)/$ index.php [L]
-RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ index.php [L]
-#RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/$ index.php [L]
-RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ index.php [L]
-RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ index.php [L]
-RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ index.php [L]
+#RewriteRule ^([a-zA-Z\-0-9]+)/$ index.php [L]
+RewriteRule ^([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)$ index.php [L]
+#RewriteRule ^([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)/$ index.php [L]
+RewriteRule ^([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)$ index.php [L]
+RewriteRule ^([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)$ index.php [L]
+RewriteRule ^([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)/([a-zA-Z\-0-9]+)$ index.php [L]

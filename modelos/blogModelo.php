@@ -13,13 +13,16 @@ class blogModelo extends mainModel
     protected function agregar_blog_modelo($conexion, $blog)
     {
         $sql = $conexion->prepare("INSERT INTO `blog`
-            (titulo,descripcion,archivo,tipoArchivo,resumen)
-             VALUES(:Titulo,:Descripcion,:Imagen,:Tipo,:Resumen)");
+            (titulo,descripcion,archivo,tipoArchivo,resumen,autor,foto,autordescripcion)
+             VALUES(:Titulo,:Descripcion,:Imagen,:Tipo,:Resumen,:Autor,:Foto,:DescripAutor)");
         $sql->bindValue(":Titulo", $blog->getTitulo(), PDO::PARAM_STR);
         $sql->bindValue(":Descripcion", $blog->getDescripcion(), PDO::PARAM_STR);
         $sql->bindValue(":Imagen", $blog->getArchivo(), PDO::PARAM_STR);
         $sql->bindValue(":Tipo", $blog->getTipoArchivo(), PDO::PARAM_INT);
         $sql->bindValue(":Resumen", $blog->getResumen(), PDO::PARAM_STR);
+        $sql->bindValue(":Foto", $blog->getFoto(), PDO::PARAM_STR);
+        $sql->bindValue(":Autor", $blog->getAutor(), PDO::PARAM_STR);
+        $sql->bindValue(":DescripAutor", $blog->getDescripcionAutor(), PDO::PARAM_STR);
         return $sql;
     }
     protected function datos_blog_modelo($conexion, $tipo, $blog)
@@ -44,6 +47,9 @@ class blogModelo extends mainModel
                                 $insBlog->setIdBlog($row['idblog']);
                                 $insBlog->setTitulo($row['titulo']);
                                 $insBlog->setResumen($row['resumen']);
+                                $insBlog->setAutor($row['autor']);
+                                $insBlog->setFoto($row['foto']);
+                                $insBlog->setDescripcionAutor($row['autordescripcion']);
                                 $insBlog->setDescripcion($row['descripcion']);
                                 $insBlog->setArchivo($row['archivo']);
                                 $insBlog->setTipoArchivo($row['tipoArchivo']);
@@ -76,6 +82,9 @@ class blogModelo extends mainModel
                                         $insBlog = new Blog();
                                         $insBlog->setIdBlog($row['idblog']);
                                         $insBlog->setTitulo($row['titulo']);
+                                        $insBlog->setDescripcionAutor($row['autordescripcion']);
+                                        $insBlog->setAutor($row['autor']);
+                                        $insBlog->setFoto($row['foto']);
                                         $insBlog->setResumen($row['resumen']);
                                         $insBlog->setDescripcion($row['descripcion']);
                                         $insBlog->setArchivo($row['archivo']);
@@ -114,13 +123,17 @@ class blogModelo extends mainModel
     {
         $sql = $conexion->prepare("UPDATE `blog`
             SET titulo=:Titulo,descripcion=:Descripcion,
-            archivo=:Imagen,tipoArchivo=:Tipo,resumen=:Resumen
+            archivo=:Imagen,tipoArchivo=:Tipo,resumen=:Resumen,autor=:Autor,
+            foto=:Foto, autordescripcion=:DescripAutor
             WHERE idblog=:ID");
         $sql->bindValue(":Titulo", $blog->getTitulo(), PDO::PARAM_STR);
         $sql->bindValue(":Descripcion", $blog->getDescripcion(), PDO::PARAM_STR);
         $sql->bindValue(":Imagen", $blog->getArchivo(), PDO::PARAM_STR);
         $sql->bindValue(":Tipo", $blog->getTipoArchivo(), PDO::PARAM_INT);
         $sql->bindValue(":Resumen", $blog->getResumen(), PDO::PARAM_STR);
+        $sql->bindValue(":Foto", $blog->getFoto(), PDO::PARAM_STR);
+        $sql->bindValue(":Autor", $blog->getAutor(), PDO::PARAM_STR);
+        $sql->bindValue(":DescripAutor", $blog->getDescripcionAutor(), PDO::PARAM_STR);
         $sql->bindValue(":ID", $blog->getIdblog(), PDO::PARAM_INT);
 
         return $sql;

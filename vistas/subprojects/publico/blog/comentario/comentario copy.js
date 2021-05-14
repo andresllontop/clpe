@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         window.location.href = getHostFrontEnd() + "blog";
     }
-    document.querySelector(".fb-comments").setAttribute("data-href", window.location.href);
 
 });
 
@@ -70,56 +69,91 @@ document.addEventListener('DOMContentLoaded', function () {
 function listaBlog(beanPagination) {
     document.querySelector('#txtBlogComentario').innerHTML = '';
 
+    let row = "";
+
     if (beanPagination.length == 0) {
         return;
     }
-    /*
+    let $fragmentMeta = document.createDocumentFragment();
+    let $meta = document.createElement("meta");
+    $meta.setAttribute("property", "og:locale");
+    $meta.setAttribute("content", "en_ES");
+    $fragmentMeta.appendChild($meta);
+    //
+    $meta = document.createElement("meta");
+    $meta.setAttribute("property", "og:type");
+    $meta.setAttribute("content", "article");
+    $fragmentMeta.appendChild($meta);
+    //
+    $meta = document.createElement("meta");
+    $meta.setAttribute("property", "og:url");
+    $meta.setAttribute("content", window.location.href);
+    $fragmentMeta.appendChild($meta);
+    //
+    $meta = document.createElement("meta");
+    $meta.setAttribute("property", "og:site_name");
+    $meta.setAttribute("content", "CLUB DE LECTURA PARA EMPRENDEDORES");
+    $fragmentMeta.appendChild($meta);
+    //
+    $meta = document.createElement("meta");
+    $meta.setAttribute("property", "article:publisher");
+    // $meta.setAttribute("content", "https://www.facebook.com/andres.llontop.1297");
+    $meta.setAttribute("content", "https://www.facebook.com/zrii.c.peru");
+    $fragmentMeta.appendChild($meta);
+    //
+    $meta = document.createElement("meta");
+    $meta.setAttribute("property", "article:author");
+    $meta.setAttribute("content", "https://www.facebook.com/zrii.c.peru");
+    $fragmentMeta.appendChild($meta);
+    document.querySelector("head").appendChild($fragmentMeta);
+    //
     $("body").prepend('<script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v3.3"></script>');
     $("body").prepend('<div id="fb-root"></div>');
 
-    */
-    let $meta;
+    //
+    $meta = document.createElement("div");
+    $meta.setAttribute("class", "fb-comments");
+    $meta.setAttribute("data-href", window.location.href);
+    $meta.setAttribute("data-width", "100%");
+    $meta.setAttribute("data-numposts", "5");
+    document.querySelector("#txtBlogComentario").parentElement.appendChild($meta);
 
     beanPagination.list.forEach((blog) => {
-
+        $meta = document.createElement("meta");
+        $meta.setAttribute("property", "og:title");
+        $meta.setAttribute("content", blog.titulo);
+        $fragmentMeta.appendChild($meta);
+        //
+        $meta = document.createElement("meta");
+        $meta.setAttribute("property", "og:description");
+        $meta.setAttribute("content", blog.descripcion);
+        $fragmentMeta.appendChild($meta);
 
 
         document.querySelector("#txtTituloComentario").innerHTML = blog.titulo;
         if (parseInt(blog.tipoArchivo) === 1) {
-            $meta = document.createElement("div");
-            $meta.innerHTML = ` <span class="image anim fadeIn"><img src="${getHostFrontEnd()}adjuntos/blog/IMAGENES/${blog.archivo}"  alt="${blog.archivo}"/> </span>`;
-
-            document.querySelector("#txtBlogComentario").appendChild($meta);
-
+            row += ` <span class="image anim fadeIn"><img src="${getHostFrontEnd()}adjuntos/blog/IMAGENES/${blog.archivo}"  alt="${blog.archivo}"/> </span>`;
+            //
+            $meta = document.createElement("meta");
+            $meta.setAttribute("property", "og:image");
+            $meta.setAttribute("content", getHostFrontEnd() + "adjuntos/blog/IMAGENES/" + blog.archivo);
+            $fragmentMeta.appendChild($meta);
         } else {
-            $meta = document.createElement("div");
-            $meta.innerHTML = `<span class="image anim fadeIn"><video controls loop data-smart-video autoplay style="width:100%;height:100%;" src="${getHostFrontEnd()}adjuntos/blog/VIDEOS/${blog.archivo}"></video> </span>`;
-
-            document.querySelector("#txtBlogComentario").appendChild($meta);
+            row += `<span class="image anim fadeIn"><video controls loop data-smart-video autoplay style="width:100%;height:100%;" src="${getHostFrontEnd()}adjuntos/blog/VIDEOS/${blog.archivo}"></video> </span>`;
         }
-
-        if (blog.foto != null) {
-            $meta = document.createElement("div");
-            $meta.setAttribute("class", "anim fadeIn d-inline-flex");
-            $meta.innerHTML = `<span class="pr-5" style="margin-top: 25px;"><img src="${getHostFrontEnd()}adjuntos/blog/IMAGENES/${blog.foto}"style="width: 7em;"  alt="${blog.foto}"/> <figcaption class="text-center">${blog.autor}</figcaption></span>
-            <section>${blog.descripcionAutor}</section>`;
-            document.querySelector("#txtBlogComentario").appendChild($meta);
-
-        }
+        row += ` <p class="anim fadeIn">${blog.descripcion}</p>
+        `;
 
 
-        $meta = document.createElement("section");
-        $meta.setAttribute("class", "anim fadeIn");
-        $meta.innerHTML = blog.descripcion;
-        document.querySelector("#txtBlogComentario").appendChild($meta);
 
+        document.querySelector("head").appendChild($fragmentMeta);
     });
 
+    document.querySelector('#txtBlogComentario').innerHTML = row;
 
     smartVideo();
 
 }
-
 function smartVideo() {
     let videos = document.querySelectorAll("video[data-smart-video]");
     const cb = function (entries) {

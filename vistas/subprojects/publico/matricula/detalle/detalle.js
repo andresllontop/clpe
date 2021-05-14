@@ -116,6 +116,17 @@ function listaCurso(beanPagination) {
       }
       document.querySelector('#imagenLibro').innerHTML = `<img  width="100%" height="100%" src="${getHostFrontEnd() + "adjuntos/libros/" + curso.imagenlibro}">`;
       document.querySelector('#comprarCurso').innerHTML = (curso.tipo == 1 ? '<i class="zmdi zmdi-shopping-cart"></i> Comprar Ahora' : '<i class="zmdi zmdi-comment-video"></i> Vía Zoom');
+      if (curso.tipo == 1) {
+        document.querySelector('#comprarCurso').parentElement.setAttribute("href", getHostFrontEnd() + "comprar/" + curso.idcurso);
+        document.querySelector('#comprarCurso').parentElement.setAttribute("target", getHostFrontEnd() + "_blank");
+
+
+      } else {
+
+        $("#comprarCurso").click(function () {
+          $("#ventanaModalPrecioZoom").modal("show");
+        });
+      }
       document.querySelector('#tituloCurso').innerHTML = curso.titulo;
 
     }

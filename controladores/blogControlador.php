@@ -14,7 +14,9 @@ class blogControlador extends blogModelo
             $this->conexion_db->beginTransaction();
             $Blog->setDescripcion(mainModel::limpiar_cadena($Blog->getDescripcion()));
             $Blog->setResumen(mainModel::limpiar_cadena($Blog->getResumen()));
+            $Blog->setAutor(mainModel::limpiar_cadena($Blog->getAutor()));
             $Blog->setComentario(mainModel::limpiar_cadena($Blog->getComentario()));
+            $Blog->setDescripcionAutor(mainModel::limpiar_cadena($Blog->getDescripcionAutor()));
 
             switch ((int) $Blog->getTipoArchivo()) {
                 case 1:
@@ -22,7 +24,7 @@ class blogControlador extends blogModelo
                     $nombre = $original['name'];
                     $permitido = array("image/png", "image/jpg", "image/jpeg");
                     $destino = "IMAGENES";
-                    $limit_kb = 1700;
+                    $limit_kb = 4 * 1024;
                     break;
                 case 2:
                     $original = $_FILES['txtVideoBlog'];
@@ -32,28 +34,48 @@ class blogControlador extends blogModelo
                     $limit_kb = (17 * 1024);
                     break;
             }
-
-            if ($original['error'] > 0) {
-                $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+            if (!isset($_FILES['txtImagenAutorBlog'])) {
+                $insBeanCrud->setMessageServer("Ingrese foto del Autor");
             } else {
-                $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/blog/" . $destino . "/");
-                if ($resultado != "") {
-                    $Blog->setArchivo($resultado);
-                    $stmt = blogModelo::agregar_blog_modelo($this->conexion_db, $Blog);
-                    if ($stmt->execute()) {
-                        $this->conexion_db->commit();
-                        $insBeanCrud->setMessageServer("ok");
-                        $insBeanCrud->setBeanPagination(self::paginador_blog_controlador($this->conexion_db, 0, 20));
-                    } else {
-                        $insBeanCrud->setMessageServer("No hemos podido registrar el blog");
-                    }
-                    $stmt->closeCursor();
-                    $stmt = null;
-                } else {
-                    $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido, cambie el nombre de la imagen o seleccione otra imagen");
-                }
+                $originalAutor = $_FILES['txtImagenAutorBlog'];
+                $nombreAutor = $originalAutor['name'];
+                if ($original['error'] > 0 || $originalAutor['error'] > 0) {
+                    if ($originalAutor['error'] > 0) {
 
+                        $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra foto del autor");
+                    } else {
+
+                        $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+                    }
+
+                } else {
+                    $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/blog/" . $destino . "/");
+                    if ($resultado != "") {
+                        $Blog->setArchivo($resultado);
+                        $resultadoAutor = mainModel::archivo(array("image/png", "image/jpg", "image/jpeg"), 4 * 1024, $originalAutor, $nombreAutor, "./adjuntos/blog/IMAGENES/");
+                        if ($resultadoAutor != "") {
+                            $Blog->setFoto($resultadoAutor);
+                            $stmt = blogModelo::agregar_blog_modelo($this->conexion_db, $Blog);
+                            if ($stmt->execute()) {
+                                $this->conexion_db->commit();
+                                $insBeanCrud->setMessageServer("ok");
+                                $insBeanCrud->setBeanPagination(self::paginador_blog_controlador($this->conexion_db, 0, 20));
+                            } else {
+                                $insBeanCrud->setMessageServer("No hemos podido registrar el blog");
+                            }
+                            $stmt->closeCursor();
+                            $stmt = null;
+                        } else {
+                            $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido, cambie el nombre de la imagen o seleccione otra foto del autor");
+                        }
+
+                    } else {
+                        $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido, cambie el nombre de la imagen o seleccione otra imagen");
+                    }
+
+                }
             }
+
         } catch (Exception $th) {
             if ($this->conexion_db->inTransaction()) {
                 $this->conexion_db->rollback();
@@ -109,10 +131,14 @@ class blogControlador extends blogModelo
                         $insBlog->setIdBlog($row['idblog']);
                         $insBlog->setTitulo($row['titulo']);
                         $insBlog->setResumen($row['resumen']);
+                        $insBlog->setAutor($row['autor']);
+                        $insBlog->setFoto($row['foto']);
                         $insBlog->setDescripcion($row['descripcion']);
+                        $insBlog->setDescripcionAutor($row['autordescripcion']);
                         $insBlog->setArchivo($row['archivo']);
                         $insBlog->setTipoArchivo($row['tipoArchivo']);
                         $insBlog->setComentario($row['comentario']);
+
                         $insBeanPagination->setList($insBlog->__toString());
                     }
                 }
@@ -164,11 +190,20 @@ class blogControlador extends blogModelo
 
                     switch ($blog["list"][0]['tipoArchivo']) {
                         case '1':
-                            unlink('./adjuntos/blog/IMAGENES/' . $blog["list"][0]['archivo']);
+                            if ($blog["list"][0]['archivo'] != "") {
+                                unlink('./adjuntos/blog/IMAGENES/' . $blog["list"][0]['archivo']);
+                            }
+
                             break;
                         case '2':
-                            unlink('./adjuntos/blog/VIDEOS/' . $blog["list"][0]['archivo']);
+                            if ($blog["list"][0]['archivo'] != "") {
+                                unlink('./adjuntos/blog/VIDEOS/' . $blog["list"][0]['archivo']);
+                            }
+
                             break;
+                    }
+                    if ($blog["list"][0]['foto'] != "" || $blog["list"][0]['foto'] != null) {
+                        unlink('./adjuntos/blog/IMAGENES/' . $blog["list"][0]['foto']);
                     }
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
@@ -205,8 +240,9 @@ class blogControlador extends blogModelo
             $this->conexion_db->beginTransaction();
             $Blog->setDescripcion(mainModel::limpiar_cadena($Blog->getDescripcion()));
             $Blog->setResumen(mainModel::limpiar_cadena($Blog->getResumen()));
+            $Blog->setAutor(mainModel::limpiar_cadena($Blog->getAutor()));
             $Blog->setComentario(mainModel::limpiar_cadena($Blog->getComentario()));
-
+            $Blog->setDescripcionAutor(mainModel::limpiar_cadena($Blog->getDescripcionAutor()));
             switch ((int) $Blog->getTipoArchivo()) {
                 case 1:
                     if (isset($_FILES['txtImagenBlog'])) {
@@ -214,7 +250,7 @@ class blogControlador extends blogModelo
                         $nombre = $original['name'];
                         $permitido = array("image/png", "image/jpg", "image/jpeg");
                         $destino = "IMAGENES";
-                        $limit_kb = 1700;
+                        $limit_kb = 4 * 1024;
                     } else {
                         $nombre = "";
                     }
@@ -233,55 +269,126 @@ class blogControlador extends blogModelo
 
                     break;
             }
+
             $lblog = blogModelo::datos_blog_modelo($this->conexion_db, "unico", $Blog);
             if ($lblog["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("No se encuentra el blog");
             } else {
-                if ($nombre != "") {
-                    if ($original['error'] > 0) {
-                        $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+                if (isset($_FILES['txtImagenAutorBlog'])) {
+                    $valorDefault = true;
+                    $originalAutor = $_FILES['txtImagenAutorBlog'];
+                    $nombreAutor = $originalAutor['name'];
+                    if ($originalAutor['error'] > 0) {
+                        $valorDefault = false;
+                        $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra foto del autor");
                     } else {
-                        $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/blog/" . $destino . "/");
-                        if ($resultado != "") {
-                            $Blog->setArchivo($resultado);
-                            $stmt = blogModelo::actualizar_blog_modelo($this->conexion_db, $Blog);
+                        $resultadoAutor = mainModel::archivo(array("image/png", "image/jpg", "image/jpeg"), 4 * 1024, $originalAutor, $nombreAutor, "./adjuntos/blog/IMAGENES/");
+                        if ($resultadoAutor != "") {
+                            $Blog->setFoto($resultadoAutor);
+                        } else {
+                            $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido, cambie el nombre de la imagen o seleccione otra foto del autor");
+                            $valorDefault = false;
+                        }
 
-                            if ($stmt->execute()) {
-                                switch ($Blog->getTipoArchivo()) {
-                                    case '1':
-                                        unlink('./adjuntos/blog/IMAGENES/' . $lblog["list"][0]['archivo']);
-                                        break;
-                                    case '2':
-                                        unlink('./adjuntos/blog/VIDEOS/' . $lblog["list"][0]['archivo']);
-                                        break;
+                    }
+
+                    if ($valorDefault) {
+                        if ($nombre != "") {
+                            if ($original['error'] > 0) {
+                                $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+                            } else {
+                                $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/blog/" . $destino . "/");
+                                if ($resultado != "") {
+                                    $Blog->setArchivo($resultado);
+                                    $stmt = blogModelo::actualizar_blog_modelo($this->conexion_db, $Blog);
+
+                                    if ($stmt->execute()) {
+                                        switch ($Blog->getTipoArchivo()) {
+                                            case '1':
+                                                unlink('./adjuntos/blog/IMAGENES/' . $lblog["list"][0]['archivo']);
+                                                break;
+                                            case '2':
+                                                unlink('./adjuntos/blog/VIDEOS/' . $lblog["list"][0]['archivo']);
+                                                break;
+                                        }
+                                        $this->conexion_db->commit();
+                                        $insBeanCrud->setMessageServer("ok");
+                                        $insBeanCrud->setBeanPagination(self::paginador_blog_controlador($this->conexion_db, 0, 20));
+
+                                    } else {
+                                        $insBeanCrud->setMessageServer("No hemos podido actualizar el blog");
+                                    }
+                                    $stmt->closeCursor();
+                                    $stmt = null;
+                                } else {
+                                    $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido");
+
                                 }
+                            }
+                        } else {
+                            $Blog->setArchivo($lblog["list"][0]['archivo']);
+                            $stmt = blogModelo::actualizar_blog_modelo($this->conexion_db, $Blog);
+                            if ($stmt->execute()) {
                                 $this->conexion_db->commit();
                                 $insBeanCrud->setMessageServer("ok");
                                 $insBeanCrud->setBeanPagination(self::paginador_blog_controlador($this->conexion_db, 0, 20));
-
                             } else {
                                 $insBeanCrud->setMessageServer("No hemos podido actualizar el blog");
                             }
                             $stmt->closeCursor();
                             $stmt = null;
-                        } else {
-                            $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido");
-
                         }
                     }
+
                 } else {
-                    $Blog->setArchivo($lblog["list"][0]['archivo']);
-                    $stmt = blogModelo::actualizar_blog_modelo($this->conexion_db, $Blog);
-                    if ($stmt->execute()) {
-                        $this->conexion_db->commit();
-                        $insBeanCrud->setMessageServer("ok");
-                        $insBeanCrud->setBeanPagination(self::paginador_blog_controlador($this->conexion_db, 0, 20));
+                    $Blog->setFoto($lblog["list"][0]['foto']);
+                    if ($nombre != "") {
+                        if ($original['error'] > 0) {
+                            $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+                        } else {
+                            $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/blog/" . $destino . "/");
+                            if ($resultado != "") {
+                                $Blog->setArchivo($resultado);
+                                $stmt = blogModelo::actualizar_blog_modelo($this->conexion_db, $Blog);
+
+                                if ($stmt->execute()) {
+                                    switch ($Blog->getTipoArchivo()) {
+                                        case '1':
+                                            unlink('./adjuntos/blog/IMAGENES/' . $lblog["list"][0]['archivo']);
+                                            break;
+                                        case '2':
+                                            unlink('./adjuntos/blog/VIDEOS/' . $lblog["list"][0]['archivo']);
+                                            break;
+                                    }
+                                    $this->conexion_db->commit();
+                                    $insBeanCrud->setMessageServer("ok");
+                                    $insBeanCrud->setBeanPagination(self::paginador_blog_controlador($this->conexion_db, 0, 20));
+
+                                } else {
+                                    $insBeanCrud->setMessageServer("No hemos podido actualizar el blog");
+                                }
+                                $stmt->closeCursor();
+                                $stmt = null;
+                            } else {
+                                $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido");
+
+                            }
+                        }
                     } else {
-                        $insBeanCrud->setMessageServer("No hemos podido actualizar el blog");
+                        $Blog->setArchivo($lblog["list"][0]['archivo']);
+                        $stmt = blogModelo::actualizar_blog_modelo($this->conexion_db, $Blog);
+                        if ($stmt->execute()) {
+                            $this->conexion_db->commit();
+                            $insBeanCrud->setMessageServer("ok");
+                            $insBeanCrud->setBeanPagination(self::paginador_blog_controlador($this->conexion_db, 0, 20));
+                        } else {
+                            $insBeanCrud->setMessageServer("No hemos podido actualizar el blog");
+                        }
+                        $stmt->closeCursor();
+                        $stmt = null;
                     }
-                    $stmt->closeCursor();
-                    $stmt = null;
                 }
+
             }
 
         } catch (Exception $th) {

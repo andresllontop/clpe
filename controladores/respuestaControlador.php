@@ -375,17 +375,19 @@ class respuestaControlador extends respuestaModelo
 
                             foreach ($datos1 as $row1) {
                                 if ($row1['CONTADOR'] != null || $row1['CONTADOR'] != "") {
-                                    $stmt = $this->conexion_db->prepare("DELETE FROM `tarea` WHERE codigo_subtitulo=:Codigo and tipo=:Tipo");
+                                    $stmt = $this->conexion_db->prepare("DELETE FROM `tarea` WHERE codigo_subtitulo=:Codigo and tipo=:Tipo and cuenta=:Cuenta");
                                     $stmt->bindValue(":Codigo", $row1['CONTADOR']);
                                     $stmt->bindValue(":Tipo", $respuesta["list"][0]['tipo']);
+                                    $stmt->bindValue(":Cuenta", $respuesta["list"][0]['cuenta']);
 
                                 }
                             }
 
                         } else {
-                            $stmt = $this->conexion_db->prepare("DELETE FROM `tarea` WHERE codigo_subtitulo=:Codigo and tipo=:Tipo");
+                            $stmt = $this->conexion_db->prepare("DELETE FROM `tarea` WHERE codigo_subtitulo=:Codigo and tipo=:Tipo and cuenta=:Cuenta");
                             $stmt->bindValue(":Codigo", $respuesta["list"][0]['titulo']);
                             $stmt->bindValue(":Tipo", $respuesta["list"][0]['tipo']);
+                            $stmt->bindValue(":Cuenta", $respuesta["list"][0]['cuenta']);
                         }
 
                         if ($stmt->execute()) {

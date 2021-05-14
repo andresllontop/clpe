@@ -3,7 +3,7 @@ var beanPaginationTerminoCondicion;
 var terminoCondicionSelected;
 var beanRequestTerminoCondicion = new BeanRequest();
 document.addEventListener('DOMContentLoaded', function () {
-
+    document.body.style.background = "#f7f7f7 url(" + getHostFrontEnd() + "vistas/subprojects/publico/blog/img/pattern.png) repeat top left";
     beanRequestTerminoCondicion.entity_api = 'empresa';
     beanRequestTerminoCondicion.operation = 'obtener';
     beanRequestTerminoCondicion.type_request = 'GET';

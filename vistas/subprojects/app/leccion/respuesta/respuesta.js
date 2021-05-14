@@ -77,6 +77,7 @@ function processAjaxRespuesta() {
         processData: false,
         dataType: 'json'
     }).done(function (beanCrudResponse) {
+        console.log("holi " + respuestaSelected.tipo);
         $('#modalCargandoRespuesta').modal('hide');
         if (beanCrudResponse.messageServer !== null) {
             if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
@@ -210,7 +211,7 @@ border: 2px solid #7030a0;"> ${respuesta.test.cantidadpreguntas}</p></td>
     document.querySelector('#tbodyRespuesta').innerHTML += row;
     buildPagination(
         beanPagination.countFilter,
-        6,
+        parseInt(document.querySelector("#sizePageRespuesta").value),
         document.querySelector("#pageRespuesta"),
         $('#modalCargandoRespuesta'),
         $('#paginationRespuesta'));

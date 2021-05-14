@@ -97,6 +97,38 @@ class empresaModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+                case "conteo-simple":
+                    $stmt = $conexion->prepare("SELECT COUNT(idempresa) AS CONTADOR FROM `empresa`");
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $conexion->prepare("SELECT * FROM `empresa`");
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+                            foreach ($datos as $row) {
+
+                                $insEmpresa = new Empresa();
+                                $insEmpresa->setIdEmpresa($row['idempresa']);
+                                $insEmpresa->setTelefono($row['EmpresaTelefono']);
+                                $insEmpresa->setYoutube($row['youtube']);
+                                $insEmpresa->setNombre($row['EmpresaNombre']);
+                                $insEmpresa->setInstagram($row['instagram']);
+                                $insEmpresa->setEmail($row['EmpresaEmail']);
+                                $insEmpresa->setDireccion($row['EmpresaDireccion']);
+                                $insEmpresa->setLogo($row['EmpresaLogo']);
+                                $insEmpresa->setEnlace($row['Enlace']);
+                                $insEmpresa->setTelefonoSegundo($row['EmpresaTelefono2']);
+                                $insEmpresa->setFacebook($row['facebook']);
+                                $insEmpresa->setFrase($row['EmpresaFrase']);
+                                $insBeanPagination->setList($insEmpresa->__toString());
+                            }
+                        }
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 default:
                     # code...
                     break;

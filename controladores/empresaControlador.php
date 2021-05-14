@@ -216,5 +216,61 @@ class empresaControlador extends empresaModelo
         return $insBeanCrud->__toString();
 
     }
+    public function datos_empresa_curso_controlador($idcurso, $codigo)
+    {
+
+        $insBeanCrud = new BeanCrud();
+        try {
+            $idcurso = mainModel::limpiar_cadena($idcurso);
+            $codigo = mainModel::limpiar_cadena($codigo);
+            $stmt = $this->conexion_db->prepare("SELECT COUNT(idcurso) AS CONTADOR FROM `curso` WHERE idcurso=:IDcurso");
+            $stmt->bindValue(":IDcurso", $idcurso, PDO::PARAM_INT);
+            $stmt->execute();
+            $datos = $stmt->fetchAll();
+            foreach ($datos as $row) {
+                if ($row['CONTADOR'] > 0) {
+                    $insBeanCrud->setMessageServer("ok");
+                    $insBeanPagination = new BeanPagination();
+
+                    $insBeanPagination->setList(empresaModelo::datos_empresa_modelo($this->conexion_db, "conteo-simple", $codigo)['list'][0]);
+
+                    $stmt = $this->conexion_db->prepare("SELECT * FROM `curso` WHERE idcurso=:IDcurso");
+                    $stmt->bindValue(":IDcurso", $idcurso, PDO::PARAM_INT);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insCurso = new Curso();
+                        $insCurso->setIdCurso($row['idcurso']);
+                        $insCurso->setTitulo($row['titulo']);
+                        $insCurso->setPrecio($row['precio']);
+                        //TIPO=1 PAGADO ; TIPO=2 MEDIANTE ZOOM;
+                        $insBeanPagination->setList($insCurso->__toString());
+                    }
+
+                    $stmt = $this->conexion_db->prepare("SELECT SUM(contador) AS CONTADOR FROM `visita`");
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                    }
+                    $insBeanCrud->setBeanPagination($insBeanPagination->__toString());
+                }
+            }
+
+            $stmt->closeCursor();
+            $stmt = null;
+
+        } catch (Exception $th) {
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            $this->conexion_db = null;
+        }
+        return $insBeanCrud->__toString();
+
+    }
 
 }

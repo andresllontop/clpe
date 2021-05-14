@@ -1,0 +1,9 @@
+INSERT INTO `tarea`(tipo,fecha,codigo_subtitulo,cuenta,estado) 
+VALUES (1,"2020-11-24 21:04:08","L01.N01.01.11","AC7615519165",0),
+(1,"2020-12-01 15:10:43","L01.N01.02.13","AC7615519165",0),
+ (1,"2021-01-26 22:02:05","L01.N01.03.09","AC7615519165",0),
+ (1,"2021-01-21 23:10:21","L01.N01.04.05","AC7615519165",0)
+;
+
+SELECT * FROM `respuesta` WHERE codigo_cuenta="AC7615519165"
+SELECT * FROM `tarea` WHERE cuenta="AC7615519165" and tipo=1

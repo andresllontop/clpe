@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     $("#txtDescripcionBlog").Editor();
-    // $("#txtResumenBlog").Editor();
+    $("#txtDescripcionAutorBlog").Editor();
 
     $("#txtTipoArchivoBlog").change(function () {
         tipo($(this).val());
@@ -64,7 +64,9 @@ function processAjaxBlog() {
         json = {
             titulo: document.querySelector("#txtTituloBlog").value,
             resumen: document.querySelector("#txtResumenBlog").value,
+            autor: document.querySelector("#txtAutorBlog").value,
             descripcion: $("#txtDescripcionBlog").Editor("getText"),
+            descripcionAutor: $("#txtDescripcionAutorBlog").Editor("getText"),
             archivo: 0,
             tipo_archivo: parseInt(document.querySelector("#txtTipoArchivoBlog").value),
             comentario: ""
@@ -94,7 +96,10 @@ function processAjaxBlog() {
                     form_data.append("txtVideoBlog", dataFoto);
                 }
             }
-
+            if (document.querySelector("#txtImagenAutorBlog").files.length !== 0) {
+                let dataFotoAutor = $("#txtImagenAutorBlog").prop("files")[0];
+                form_data.append("txtImagenAutorBlog", dataFotoAutor);
+            }
             form_data.append("class", JSON.stringify(json));
             break;
         case 'add':
@@ -105,7 +110,8 @@ function processAjaxBlog() {
                 let data = $("#txtVideoBlog").prop("files")[0];
                 form_data.append("txtVideoBlog", data);
             }
-
+            let dataFotoAutor = $("#txtImagenAutorBlog").prop("files")[0];
+            form_data.append("txtImagenAutorBlog", dataFotoAutor);
             form_data.append("class", JSON.stringify(json));
             break;
 
@@ -165,11 +171,21 @@ function addBlog(blog = undefined) {
     document.querySelector('#txtTituloBlog').value = (blog == undefined) ? '' : blog.titulo;
     document.querySelector('#txtTipoArchivoBlog').value = (blog == undefined) ? '0' : blog.tipoArchivo;
     document.querySelector('#txtResumenBlog').value = (blog == undefined) ? '' : blog.resumen;
+    document.querySelector('#txtAutorBlog').value = (blog == undefined) ? '' : blog.autor == undefined || blog.autor == null ? "" : blog.autor;
 
 
     $("#txtDescripcionBlog").Editor("setText", (blog == undefined) ? '<p style="color:black"></p>' : blog.descripcion);
     $("#txtDescripcionBlog").Editor("getText");
+    $("#txtDescripcionAutorBlog").Editor("setText", (blog == undefined) ? '<p style="color:black"></p>' : blog.descripcionAutor);
+    $("#txtDescripcionAutorBlog").Editor("getText");
     if (blog != undefined) {
+        if (blogSelected.foto == null) {
+            document.querySelector("#imagenAutorPreview").innerHTML = ``;
+        } else {
+            document.querySelector("#imagenAutorPreview").innerHTML = `<img width='244' alt='user-picture' class='img-responsive text-center' src='${getHostFrontEnd() + 'adjuntos/blog/IMAGENES/' + blogSelected.foto}' />`;
+        }
+
+
         tipo(document.querySelector('#txtTipoArchivoBlog').value);
         switch (parseInt(document.querySelector('#txtTipoArchivoBlog').value)) {
             case 1:
@@ -184,6 +200,7 @@ function addBlog(blog = undefined) {
         }
     } else {
         tipo(1);
+        document.querySelector("#imagenAutorPreview").innerHTML = "";
     }
 
     //$("#txtResumenBlog").Editor("setText", (blog == undefined) ? '<p /style="color:black"></p>' : blog.resumen);
@@ -316,7 +333,7 @@ function tipo(params) {
     <span class="highlight"></span>
     <span class="bar"></span>
     <label>Selecciona Imagen</label>
-    <small>Tamaño Máximo Permitido: 1700 KB</small>
+    <small>Tamaño Máximo Permitido: 4 MB</small>
     <br>
     <small>Formatos Permitido:JPG, PNG, JPEG</small>`);
             addViewArchivosPrevius();
@@ -356,6 +373,9 @@ function addViewArchivosPrevius() {
 
     $("#txtImagenBlog").change(function () {
         filePreview(this, "#imagePreview");
+    });
+    $("#txtImagenAutorBlog").change(function () {
+        filePreview(this, "#imagenAutorPreview");
     });
     $("#txtVideoBlog").change(function () {
         videoPreview(this, "#videoPreview");
@@ -427,7 +447,17 @@ var validateFormBlog = () => {
     if (document.querySelector("#txtResumenBlog").value == "") {
         swal({
             title: "Vacío",
-            text: "Selecciona Resumen",
+            text: "Escribe Resumen",
+            type: "warning",
+            timer: 1200,
+            showConfirmButton: false
+        });
+        return false;
+    }
+    if (document.querySelector("#txtAutorBlog").value == "") {
+        swal({
+            title: "Vacío",
+            text: "Escribe el nombre del Autor",
             type: "warning",
             timer: 1200,
             showConfirmButton: false
@@ -437,7 +467,17 @@ var validateFormBlog = () => {
     if ($("#txtDescripcionBlog").Editor("getText") == "") {
         swal({
             title: "Vacío",
-            text: "Selecciona Descripción",
+            text: "Ingrese Descripción",
+            type: "warning",
+            timer: 1200,
+            showConfirmButton: false
+        });
+        return false;
+    }
+    if ($("#txtDescripcionAutorBlog").Editor("getText") == "") {
+        swal({
+            title: "Vacío",
+            text: "Ingrese Descripción del Autor",
             type: "warning",
             timer: 1200,
             showConfirmButton: false
@@ -482,7 +522,7 @@ var validateFormBlog = () => {
                 if (document.querySelector("#txtImagenBlog").files[0].size > (4 * 1024 * 1024)) {
                     swal({
                         title: "Tamaño excedido",
-                        text: "el tamaño del archivo tiene que ser menor a 900 KB",
+                        text: "el tamaño del archivo tiene que ser menor a 4 MB",
                         type: "warning",
                         timer: 1200,
                         showConfirmButton: false
@@ -527,7 +567,37 @@ var validateFormBlog = () => {
                 break;
 
         }
-
+        if (document.querySelector("#txtImagenAutorBlog").files.length == 0) {
+            swal({
+                title: "Vacío",
+                text: "Ingrese Imagen",
+                type: "warning",
+                timer: 1200,
+                showConfirmButton: false
+            });
+            return false;
+        }
+        if (!(document.querySelector("#txtImagenAutorBlog").files[0].type == "image/png" || document.querySelector("#txtImagenAutorBlog").files[0].type == "image/jpg" || document.querySelector("#txtImagenAutorBlog").files[0].type == "image/jpeg")) {
+            swal({
+                title: "Formato Incorrecto",
+                text: "Ingrese formato png, jpeg y jpg",
+                type: "warning",
+                timer: 1200,
+                showConfirmButton: false
+            });
+            return false;
+        }
+        //menor a   4 MB
+        if (document.querySelector("#txtImagenAutorBlog").files[0].size > (4 * 1024 * 1024)) {
+            swal({
+                title: "Tamaño excedido",
+                text: "el tamaño del archivo tiene que ser menor a 4 MB",
+                type: "warning",
+                timer: 1200,
+                showConfirmButton: false
+            });
+            return false;
+        }
     } else {
 
         switch (parseInt(document.querySelector("#txtTipoArchivoBlog").value)) {
@@ -554,10 +624,10 @@ var validateFormBlog = () => {
                         return false;
                     }
                     //menor a   4 mb
-                    if (document.querySelector("#txtImagenBlog").files[0].size > (1700 * 1024)) {
+                    if (document.querySelector("#txtImagenBlog").files[0].size > (4 * 1024 * 1024)) {
                         swal({
                             title: "Tamaño excedido",
-                            text: "el tamaño del archivo tiene que ser menor a 1700 KB",
+                            text: "el tamaño del archivo tiene que ser menor a 4 MB",
                             type: "warning",
                             timer: 1200,
                             showConfirmButton: false
@@ -594,7 +664,7 @@ var validateFormBlog = () => {
                     if (document.querySelector("#txtVideoBlog").files[0].size > (17 * 1024 * 1024)) {
                         swal({
                             title: "Tamaño excedido",
-                            text: "el tamaño del archivo tiene que ser menor a 5120 KB",
+                            text: "el tamaño del archivo tiene que ser menor a 17 MB",
                             type: "warning",
                             timer: 1200,
                             showConfirmButton: false
@@ -606,7 +676,39 @@ var validateFormBlog = () => {
                 break;
 
         }
-
+        if (document.querySelector("#txtImagenAutorBlog").files.length != 0) {
+            if (document.querySelector("#txtImagenAutorBlog").files.length == 0) {
+                swal({
+                    title: "Vacío",
+                    text: "Ingrese Imagen",
+                    type: "warning",
+                    timer: 1200,
+                    showConfirmButton: false
+                });
+                return false;
+            }
+            if (!(document.querySelector("#txtImagenAutorBlog").files[0].type == "image/png" || document.querySelector("#txtImagenAutorBlog").files[0].type == "image/jpg" || document.querySelector("#txtImagenAutorBlog").files[0].type == "image/jpeg")) {
+                swal({
+                    title: "Formato Incorrecto",
+                    text: "Ingrese formato png, jpeg y jpg",
+                    type: "warning",
+                    timer: 1200,
+                    showConfirmButton: false
+                });
+                return false;
+            }
+            //menor a   4 mb
+            if (document.querySelector("#txtImagenAutorBlog").files[0].size > (4 * 1024 * 1024)) {
+                swal({
+                    title: "Tamaño excedido",
+                    text: "el tamaño del archivo tiene que ser menor a 4 MB",
+                    type: "warning",
+                    timer: 1200,
+                    showConfirmButton: false
+                });
+                return false;
+            }
+        }
 
 
     }

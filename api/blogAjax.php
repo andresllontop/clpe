@@ -68,6 +68,8 @@ if (!empty($RESULTADO_token)) {
                     $insBlogClass->setArchivo($personData->archivo);
                     $insBlogClass->setTipoArchivo($personData->tipo_archivo);
                     $insBlogClass->setComentario($personData->comentario);
+                    $insBlogClass->setAutor($personData->autor);
+                    $insBlogClass->setDescripcionAutor($personData->descripcionAutor);
                     header("HTTP/1.1 200");
                     header('Content-Type: application/json; charset=utf-8');
                     echo $insblog->agregar_blog_controlador($insBlogClass);
@@ -80,8 +82,10 @@ if (!empty($RESULTADO_token)) {
                     $insBlogClass->setResumen($personData->resumen);
                     $insBlogClass->setDescripcion($personData->descripcion);
                     $insBlogClass->setArchivo($personData->archivo);
+                    $insBlogClass->setAutor($personData->autor);
                     $insBlogClass->setTipoArchivo($personData->tipo_archivo);
                     $insBlogClass->setComentario($personData->comentario);
+                    $insBlogClass->setDescripcionAutor($personData->descripcionAutor);
                     header("HTTP/1.1 200");
                     header('Content-Type: application/json; charset=utf-8');
                     echo $insblog->actualizar_blog_controlador($insBlogClass);
