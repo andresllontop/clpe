@@ -16,9 +16,9 @@ define('VISA_DEV_URL_AUTHORIZATION', 'https://apisandbox.vnforappstest.com/api.a
 define('VISA_DEV_URL_TOKENIZATION', 'https://apisandbox.vnforappstest.com/api.ecommerce/v2/ecommerce/token/card/' . VISA_DEV_MERCHANT_ID . '/');
 
 // Producción Visa
-define('VISA_PRD_MERCHANT_ID', '650189205');
-define('VISA_PRD_USER', 'victormejia.465@gmail.com');
-define('VISA_PRD_PWD', '$5@?T@xY');
+define('VISA_PRD_MERCHANT_ID', '*');
+define('VISA_PRD_USER', '*');
+define('VISA_PRD_PWD', '*');
 define('VISA_PRD_URL_SECURITY', 'https://apiprod.vnforapps.com/api.security/v1/security');
 define('VISA_PRD_URL_SESSION', 'https://apiprod.vnforapps.com/api.ecommerce/v2/ecommerce/token/session/' . VISA_PRD_MERCHANT_ID);
 define('VISA_PRD_URL_JS', 'https://static-content.vnforapps.com/elements/v1/payform.min.js');
