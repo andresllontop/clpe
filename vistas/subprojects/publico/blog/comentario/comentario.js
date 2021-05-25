@@ -78,14 +78,31 @@ function listaBlog(beanPagination) {
     $("body").prepend('<div id="fb-root"></div>');
 
     */
+    let $fragmentMeta = "";
+    $fragmentMeta = `
+    <meta property="og:locale" content="en_ES">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="${window.location.href}">
+    `;
     let $meta;
 
     beanPagination.list.forEach((blog) => {
+        $fragmentMeta += `
+        <meta property="og:title" content="${blog.titulo}">
+        <meta property="og:description" content="${blog.resumen}">
+        `;
 
-
-
+        ARTICLE_TITLE = blog.titulo;
+        ARTICLE_DESC = blog.resumen;
+        ARTICLE_URL = window.location.href;
+        MAIN_IMAGE_URL = getHostFrontEnd() + "adjuntos/blog/IMAGENES/" + blog.foto;
         document.querySelector("#txtTituloComentario").innerHTML = blog.titulo;
         if (parseInt(blog.tipoArchivo) === 1) {
+
+            $fragmentMeta += `
+            <meta property="og:image" content="${getHostFrontEnd() + "adjuntos/blog/IMAGENES/" + blog.archivo}">
+            `;
+
             $meta = document.createElement("div");
             $meta.innerHTML = ` <span class="image anim fadeIn"><img src="${getHostFrontEnd()}adjuntos/blog/IMAGENES/${blog.archivo}"  alt="${blog.archivo}"/> </span>`;
 
@@ -112,6 +129,7 @@ function listaBlog(beanPagination) {
         $meta.setAttribute("class", "anim fadeIn");
         $meta.innerHTML = blog.descripcion;
         document.querySelector("#txtBlogComentario").appendChild($meta);
+        document.querySelectorAll("head > meta")[6].insertAdjacentHTML('afterend', $fragmentMeta);
 
     });
 

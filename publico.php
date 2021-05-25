@@ -19,6 +19,7 @@
     <meta name="copyright" content="<?php echo COMPANY; ?>">
     <meta name="keywords" content="CLPE5,CLUB DE LECTURA PARA EMPRENDEDORES,aplicacion club de lectura
               ">
+
     <!-- /meta tags -->
     <title><?php echo COMPANY; ?></title>
     <link rel="Shortcut Icon" type="image/x-icon" href="<?php echo SERVERURL; ?>adjuntos/logos.png" />
@@ -35,7 +36,7 @@
     <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/styleSocial.css" rel="stylesheet" />
 
      <!-- Bootstrap core CSS -->
-     <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/bootstrap.min.css?v=0.54" rel="stylesheet" />
+     <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/bootstrap.min.css?v=0.55" rel="stylesheet" />
 
     <!-- Fontawesome CSS styles -->
     <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/font-awesome.min.css" rel="stylesheet" />
@@ -49,10 +50,10 @@
     <!-- Lightbox CSS Styles -->
     <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/lightbox.css" rel="stylesheet" />
      <!-- Masterslider CSS styles -->
-     <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/masterslider/masterslider.css?v=0.54" rel="stylesheet" />
-    <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/masterslider/skins/black-1/style.css?v=0.54" rel="stylesheet" />
+     <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/masterslider/masterslider.css?v=0.55" rel="stylesheet" />
+    <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/masterslider/skins/black-1/style.css?v=0.55" rel="stylesheet" />
     <!-- Primary CSS styles -->
-    <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/style.css?v=0.54" rel="stylesheet" />
+    <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/style.css?v=0.55" rel="stylesheet" />
     <?php
 
 $beanResource = $routes->getResourceForContainerApp();
@@ -181,50 +182,50 @@ if ($array_resource != "") {
   logged_out_greeting="Hola soy el administrador del CLPE ¿En que puedo ayudarte?">
       </div>
 
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery-1.11.0.min.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery-1.11.0.min.js?v=0.55"></script>
 
 
     <!-- Waypoints core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/waypoints.min.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/waypoints.min.js?v=0.55"></script>
     <!-- Underscore core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/underscore-min.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/underscore-min.js?v=0.55"></script>
 
     <!-- jQuery color core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.animation.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.animation.js?v=0.55"></script>
 
     <!-- Stellar Matricula core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.stellar.min.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.stellar.min.js?v=0.55"></script>
 
     <!-- Nivo Matricula Slider JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.nivo.slider.pack.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.nivo.slider.pack.js?v=0.55"></script>
     <!-- Video core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.easing.1.3.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.easing.1.3.js?v=0.55"></script>
     <!-- Video core JavaScript -->
 
 
     <!-- REDES SOCIALES core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/functions.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/functions.js?v=0.55"></script>
     <!-- Everything else -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/custom.js?v=0.54"></script>
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/main.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/custom.js?v=0.55"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/main.js?v=0.55"></script>
     <!-- scrip API -->
     <!-- Bootstrap core JavaScript -->
-    <script language="javascript" src="<?php echo SERVERURL; ?>vistas/publico/js/bootstrap.min.js?v=0.54"></script>
-    <script src="<?php echo SERVERURL; ?>vistas/js/sweet-alert.min.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo SERVERURL; ?>vistas/publico/js/bootstrap.min.js?v=0.55"></script>
+    <script src="<?php echo SERVERURL; ?>vistas/js/sweet-alert.min.js?v=0.55"></script>
 
-    <script type="text/javascript"  src="<?php echo (SERVERURL); ?>plugins/sticky/stickybits.min.js?v=0.54"></script>
+    <script type="text/javascript"  src="<?php echo (SERVERURL); ?>plugins/sticky/stickybits.min.js?v=0.55"></script>
 
     <!-- scrip EDIT -->
-    <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions.js?v=0.54"></script>
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/configuration_api.js?v=0.54"></script>
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_operational.js?v=0.54"></script>
+    <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions.js?v=0.55"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/configuration_api.js?v=0.55"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_operational.js?v=0.55"></script>
     <script type="text/javascript"
     src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_alerts.js?v=0.39"></script>
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/init_parameters.js?v=0.54"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/init_parameters.js?v=0.55"></script>
     <!--Scripts -->
-    <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/session/js.cookie.js?v=0.54"></script>
+    <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/session/js.cookie.js?v=0.55"></script>
     <script type="text/javascript"
-        src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.login.js?v=0.54"></script>
+        src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.login.js?v=0.55"></script>
 
     <!--Scripts CLPE-->
     <?php

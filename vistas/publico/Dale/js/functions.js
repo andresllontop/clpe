@@ -1,14 +1,20 @@
 /*
 Created by Alejandro Palacios https://github.com/AlexSoicalap
 */
+/*Define some constants */
+var ARTICLE_TITLE = document.title;
+var ARTICLE_DESC = document.title;
+var ARTICLE_URL = encodeURIComponent(window.location.href);
+var MAIN_IMAGE_URL = encodeURIComponent($('meta[property="og:image"]').attr('content'));
 $(function () {
-    /*Define some constants */
-    const ARTICLE_TITLE = document.title;
-    const ARTICLE_URL = encodeURIComponent(window.location.href);
-    const MAIN_IMAGE_URL = encodeURIComponent($('meta[property="og:image"]').attr('content'));
+
+    let winTop = (screen.height / 2) - (350 / 2);
+    let winLeft = (screen.width / 2) - (520 / 2);
+
+
 
     $('.share-fb').click(function () {
-        open_window('http://www.facebook.com/sharer/sharer.php?u=' + ARTICLE_URL, 'facebook_share');
+        window.open('https://www.facebook.com/sharer.php?s=100&p[title]=' + ARTICLE_TITLE + '&p[summary]=' + ARTICLE_DESC + '&p[url]=' + ARTICLE_URL + '&p[images][0]=' + MAIN_IMAGE_URL, 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=520,height=350');
     });
 
     $('.share-twitter').click(function () {

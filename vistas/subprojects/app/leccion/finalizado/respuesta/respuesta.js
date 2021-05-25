@@ -77,6 +77,7 @@ function processAjaxRespuesta() {
         processData: false,
         dataType: 'json'
     }).done(function (beanCrudResponse) {
+
         $('#modalCargandoRespuesta').modal('hide');
         if (beanCrudResponse.messageServer !== null) {
             if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {

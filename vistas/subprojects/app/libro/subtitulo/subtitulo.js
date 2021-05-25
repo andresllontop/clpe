@@ -246,7 +246,7 @@ function listaSubtitulo(beanPagination) {
         addEventsButtonsSubtituloRegreso();
         destroyPagination($('#paginationSubtitulo'));
         row += `<tr>
-        <td class="text-center" colspan="5">NO HAY SUBTITULOS</td>
+        <td class="text-center" colspan="8">NO HAY SUBTITULOS</td>
         </tr>`;
 
         document.querySelector('#tbodySubtitulo').innerHTML += row;

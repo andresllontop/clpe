@@ -60,7 +60,7 @@ if ($array_styles != "") {
         echo '
                 <link
                 rel="stylesheet"
-                href="' . SERVERURL . $path_style . '"
+                href="' . $path_style . '"
               />
 
             ';
@@ -155,7 +155,7 @@ if ($array_resource != "") {
 $array_scripts = $beanResource->path_scripts;
 if ($array_scripts !=
     "") {foreach ($array_scripts as $path_script) {echo '
-    <script type="text/javascript" src="' . SERVERURL . $path_script . '"></script>
+    <script type="text/javascript" src="' . $path_script . '"></script>
     ';}}
 ?>
     <!--Scripts CLPE-->

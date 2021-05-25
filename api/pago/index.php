@@ -16,50 +16,62 @@ try {
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'POST':
                     if ($accion == "charge") {
-
-                        require_once './controladores/empresaControlador.php';
+                        require_once './classes/principal/curso.php';
+                        require_once './controladores/cursoControlador.php';
                         require_once './core/functions.php';
-                        $insempresa = new empresaControlador();
+                        $inscurso = new cursoControlador();
 
                         $compraData = json_decode($_POST['class']);
-                        $empresa = $insempresa->datos_empresa_controlador("conteo-publico", 0)['beanPagination']['list']['0'];
+
+                        $insCursoClass = new Curso();
+                        $insCursoClass->setIdCurso($compraData->curso);
+
+                        $curso = $inscurso->datos_curso_controlador("unico", $insCursoClass)['beanPagination'];
+
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        $respuestaValidar = json_decode(ValidaUsuario($compraData));
-                        if ($respuestaValidar->messageServer == "ok") {
-                            $authorization = generateAuthorization($empresa['precio'], $compraData->purchase, $compraData->transactionToken, generateToken());
+                        if ($curso['countFilter'] > 0) {
+                            $curso = $curso['list']['0'];
+                            $respuestaValidar = json_decode(ValidaUsuario($compraData));
+                            if ($respuestaValidar->messageServer == "ok") {
+                                $authorization = generateAuthorization($curso['precio'], $compraData->purchase, $compraData->transactionToken, generateToken());
+                                // print_r($authorization);
+                                if (isset($authorization->errorCode)) {
+                                    $respuestaValidar->messageServer = 'Pago denegado: ' . $authorization->data->ACTION_DESCRIPTION . ' -- Fecha :' . date('Y-m-d H:i:s') . ' -- N° Pedido :' . $authorization->data->TRACE_NUMBER;
+                                    echo (json_encode($respuestaValidar));
+                                } else {
+                                    if (isset($authorization->dataMap)) {
+                                        if ($authorization->dataMap->ACTION_CODE == "000") {
+                                            CreateUsuario($compraData, json_decode(json_encode(array(
+                                                "nombre_banco" => $authorization->dataMap->BRAND,
+                                                //"comision" => (($authorization->dataMap->AMOUNT) * 26.05) / 100,
+                                                "comision" => 0,
+                                                "moneda" => $authorization->order->currency,
+                                                "precio" => $authorization->dataMap->AMOUNT,
+                                                "tipo" => 1,
+                                                "requestNiubiz" => $authorization,
+                                                "fecha" => date('Y-m-d H:i:s'),
+                                            )
+                                            )));
 
-                            if (isset($authorization->errorCode)) {
-                                $respuestaValidar->messageServer = 'Pago denegado: ' . $authorization->data->ACTION_DESCRIPTION . ' -- Fecha :' . date('Y-m-d H:i:s', intval(($authorization->data->TRANSACTION_DATE) / 1000)) . ' -- N° Pedido :' . $authorization->data->TRACE_NUMBER;
-                                echo (json_encode($respuestaValidar));
-                            } else {
-                                if (isset($authorization->dataMap)) {
-                                    if ($authorization->dataMap->ACTION_CODE == "000") {
-                                        CreateUsuario($compraData, json_decode(json_encode(array(
-                                            "nombre_banco" => $authorization->dataMap->BRAND,
-                                            //"comision" => (($authorization->dataMap->AMOUNT) * 26.05) / 100,
-                                            "comision" => 0,
-                                            "moneda" => $authorization->order->currency,
-                                            "precio" => $authorization->dataMap->AMOUNT,
-                                            "tipo" => 1,
-                                            "requestNiubiz" => $authorization,
-                                            "fecha" => date('Y-m-d H:i:s', intval(($authorization->dataMap->TRANSACTION_DATE) / 1000)),
-                                        )
-                                        )));
+                                        }
+                                    } else if (isset($authorization->data)) {
 
-                                    }
-                                } else if (isset($authorization->data)) {
-
-                                    if ($authorization->data->ACTION_CODE != "000") {
-                                        $respuestaValidar->messageServer = 'Pago denegado: ' . $authorization->data->ACTION_DESCRIPTION . ' -- Fecha :' . date('Y-m-d H:i:s', intval(($authorization->data->TRANSACTION_DATE) / 1000)) . ' -- N° Pedido :' . $authorization->data->TRACE_NUMBER;
-                                        echo (json_encode($respuestaValidar));
+                                        if ($authorization->data->ACTION_CODE != "000") {
+                                            $respuestaValidar->messageServer = 'Pago denegado: ' . $authorization->data->ACTION_DESCRIPTION . ' -- Fecha :' . date('Y-m-d H:i:s') . ' -- N° Pedido :' . $authorization->data->TRACE_NUMBER;
+                                            echo (json_encode($respuestaValidar));
+                                        }
                                     }
                                 }
+
+                            } else {
+                                echo (json_encode($respuestaValidar));
+
                             }
 
                         } else {
+                            $respuestaValidar->messageServer = 'No se encuentra el Curso seleccionado ';
                             echo (json_encode($respuestaValidar));
-
                         }
 
                     } elseif ($accion == "clasico") {

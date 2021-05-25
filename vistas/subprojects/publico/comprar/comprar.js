@@ -638,6 +638,7 @@ function payNiubiz() {
         if (window.channel == "web") {
             json.transactionToken = data.transactionToken;
             json.amount = window.amount;
+            json.curso = comprarSelected.idcurso;
             json.purchase = window.purchase;
             form_data.append("class", JSON.stringify(json));
             processAjaxRegisterCompra(form_data, json);

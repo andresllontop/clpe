@@ -28,6 +28,7 @@ function generateSesion($amount, $token, $channel)
             'clientIp' => $_SERVER['REMOTE_ADDR'],
             'merchantDefineData' => array(
                 'MDD4' => 'integraciones.visanet@necomplus.com',
+                'MDD21' => '0',
                 'MDD32' => 'integraciones.visanet@necomplus.com',
                 'MDD75' => 'Registrado',
                 'MDD77' => '63',
@@ -37,8 +38,14 @@ function generateSesion($amount, $token, $channel)
     );
     $json = json_encode($session);
     $response = json_decode(postRequest(VISA_URL_SESSION, $json, $token));
-    return array(
-        'sessionKey' => $response->sessionKey, 'expirationTime' => $response->expirationTime);
+    if (isset($response->sessionKey)) {
+        return array(
+            'sessionKey' => $response->sessionKey, 'expirationTime' => $response->expirationTime);
+    } else {
+        return array(
+            'sessionMessage' => $response->errorMessage);
+    }
+
 }
 
 function generateAuthorization($amount, $purchaseNumber, $transactionToken, $token)

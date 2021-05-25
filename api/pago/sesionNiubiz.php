@@ -23,18 +23,23 @@ try {
 
                             $token = generateToken();
                             $sesion = generateSesion($amount, $token, $channel);
-                            $purchaseNumber = generatePurchaseNumber();
-                            header("HTTP/1.1 200");
-                            header('Content-Type: application/json; charset=utf-8');
-                            $data = array(
-                                "sesionKey" => $sesion['sessionKey'],
-                                "merchantId" => VISA_MERCHANT_ID,
-                                "purchaseNumber" => $purchaseNumber,
-                                "amount" => $amount,
-                                "channel" => $channel,
-                                "expirationTime" => $sesion['expirationTime'],
-                            );
-
+                            if (isset($sesion['sessionMessage'])) {
+                                $data = array(
+                                    "sessionMessage" => $sesion['sessionMessage'],
+                                );
+                            } else {
+                                $purchaseNumber = generatePurchaseNumber();
+                                header("HTTP/1.1 200");
+                                header('Content-Type: application/json; charset=utf-8');
+                                $data = array(
+                                    "sesionKey" => $sesion['sessionKey'],
+                                    "merchantId" => VISA_MERCHANT_ID,
+                                    "purchaseNumber" => $purchaseNumber,
+                                    "amount" => $amount,
+                                    "channel" => $channel,
+                                    "expirationTime" => $sesion['expirationTime'],
+                                );
+                            }
                             echo json_encode($data);
                         } else {
                             header("HTTP/1.1 500");

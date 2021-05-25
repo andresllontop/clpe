@@ -196,7 +196,7 @@ function listaCapitulo(beanPagination) {
         addEventsButtonsCapituloRegreso();
         destroyPagination($('#paginationCapitulo'));
         row += `<tr>
-        <td class="text-center" colspan="5">NO HAY CAPITULOS</td>
+        <td class="text-center" colspan="7">NO HAY CAPITULOS</td>
         </tr>`;
 
         document.querySelector('#tbodyCapitulo').innerHTML += row;
