@@ -566,7 +566,7 @@ class leccionesModelo extends mainModel
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT * FROM `certificado`");
+                            $stmt = $conexion->prepare("SELECT * FROM `certificado` WHERE cuenta=:Cuenta ");
                             $stmt->bindValue(":Cuenta", $Leccion->getCuenta(), PDO::PARAM_STR);
                             $stmt->execute();
                             $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
