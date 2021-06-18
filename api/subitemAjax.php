@@ -105,6 +105,7 @@ if (!empty($RESULTADO_token)) {
                 } else if ($accion == "paginate") {
                     header("HTTP/1.1 200");
                     header('Content-Type: application/json; charset=utf-8');
+
                     echo json_encode($inssubitem->bean_paginador_subitem_controlador($_GET['pagina'], $_GET['registros'], $_GET['tipo']));
                 } else if ($accion == "obtener") {
                     $insSubItemClass = new SubItem();

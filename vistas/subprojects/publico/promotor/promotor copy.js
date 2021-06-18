@@ -25,8 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
             "?filtro=0&pagina=1&registros=10", fetOptions),
         fetch(getHostAPI() + "video/promotores/ubicacion" +
             "?tipo=3", fetOptions),
-        fetch(getHostAPI() + "subitems/obtener" +
-            "?tipo=6", fetOptions),
         fetch(getHostAPI() + "empresa/obtener" +
             "?filtro=&pagina=1&registros=1", fetOptions)
     ])
@@ -42,16 +40,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 listaVideoPromotor(beanPaginationVideo);
             }
             if (json[2].beanPagination !== null) {
-                beanPaginationFooterPublico = json[2].beanPagination.list[0];
-                document.querySelector("#imgSlug").setAttribute("src", getHostFrontEnd() + "adjuntos/slider/" + json[2].beanPagination.list[0].imagen);
-            }
-            if (json[3].beanPagination !== null) {
                 beanPaginationFooterPublico = json[2].beanPagination;
                 listaFooterPublico(beanPaginationFooterPublico);
             }
-
-
-
 
         })
         .catch(err => {
@@ -71,41 +62,33 @@ function listaPromotor(beanPagination) {
 
     beanPagination.list.forEach((promotor) => {
 
-
         row += ` 
-      <div class="col-sm-6 col-xs-12">
-      <div class=" form-row flex-container">
-        <div class="col-sm-6 col-xs-12">
-        <img class="w-100 h-100" style="z-index:1;" src="${getHostFrontEnd() + "adjuntos/team/" + promotor.foto}" />
-          
-        </div>
-        <div class="col-sm-6 col-xs-12 text-truncate">
-        <h5 class="text-center f-weight-700" style="font-size: 22px;">${promotor.nombre + " " + promotor.apellido}</h5>
-        ${promotor.descripcion}
-
-          
-        </div>
-        </div>
-        <div class="col-sm-6 col-xs-6">
-        <ul class="social-media pt-2">
+      <div class="col-sm-6  col-xs-12 member-wrapper">
+      <div class="ms-slide mx-10 mx-xs-0" style="width:auto;">
+        <span>
+          <img style="z-index:1;" src="${getHostFrontEnd() + "adjuntos/team/" + promotor.foto}" />
+        </span>
+        <div class="btn-purple mr-3 ml-3 mb-3" style="margin-top:-100px;padding-top:70px;border-radius: 24px;-webkit-box-shadow: 0 6px 7px #777777b5;
+        -moz-box-shadow: 0 6px 7px #777777b5;
+        box-shadow: 0 6px 7px #777777b5;
+       ">
+          <h4 class="text-center f-weight-700" style="font-size: 22px;">${promotor.nombre + " " + promotor.apellido}</h4>
+          <div style="font-size:15px;line-height: 23px;text-align: justify;"> ${promotor.descripcion}
+          <ul class="social-media pt-2">
             <li><a class="youtube" href="${promotor.youtube}" target="_blank"><i
-        class="fa fa-youtube"></i></a></li>
-        <li>
-
+                  class="fa fa-youtube"></i></a></li>
+            <li>
+            <li>
+              <div class="w-auto my-auto">
+              <button  idpromotor="${promotor.idpromotor}" class="btn btn-warning ver-promotor " type="button"> Leer más... </button>
+              </div>
+            </li>
             <li><a href="${promotor.email}" class="facebook" target="blank"><i
-            class="fa fa-facebook "></i></a></li>
-        </ul>
+                  class="fa fa-facebook "></i></a></li>
+          </ul>
+          </div>
         </div>
-        <div class="col-sm-6 col-xs-6">
-        <ul class="social-media pt-2">
-        <li>
-          <div class="w-auto my-auto">
-          <button  idpromotor="${promotor.idpromotor}" class="btn ver-promotor text-white" style="background-image: -webkit-linear-gradient(0deg, #b21aff 0%, #b1032b 100%);"type="button"> Leer más... </button>
-         </div>
-       </li>
-       
-      </ul>
-        </div>
+      </div>
     </div>
       `;
 

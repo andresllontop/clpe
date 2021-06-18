@@ -78,6 +78,14 @@ function processAjaxCliente() {
             };
             form_data.append("class", JSON.stringify(json));
             break;
+        case 'updateestadocliente':
+            form_data = new FormData();
+            json = {
+                idcliente: clienteSelected.idcliente,
+                estado: clienteSelected.estado
+            };
+            form_data.append("class", JSON.stringify(json));
+            break;
 
         case 'add':
 
@@ -109,7 +117,7 @@ function processAjaxCliente() {
 
         data: form_data,
         cache: false,
-        contentType: ((beanRequestCliente.operation == 'update' || beanRequestCliente.operation == 'updateestado' || beanRequestCliente.operation == 'add') ? false : 'application/json; charset=UTF-8'),
+        contentType: ((beanRequestCliente.operation == 'update' || beanRequestCliente.operation == 'updateestadocliente' || beanRequestCliente.operation == 'updateestado' || beanRequestCliente.operation == 'add') ? false : 'application/json; charset=UTF-8'),
         processData: false,
         dataType: 'json',
     }).done(function (beanCrudResponse) {
@@ -207,6 +215,9 @@ function listaCliente(beanPagination) {
 <td class="text-center px-1" >${cliente.apellido}</td>
 <td class="text-center px-1" >${cliente.telefono}</td>
 <td class="text-center px-1" >${cliente.cuenta.email}</td>
+<td class="text-center px-1">
+<button class="btn ${cliente.estado == 1 ? "btn-warning" : "btn-danger"} editar-estado-visto-cliente" ><i class="zmdi ${cliente.estado == 1 ? "zmdi-check-all" : "zmdi-minus"}"></i> </button>
+</td>
 <td class="text-center d-none" >${cliente.cuenta.usuario}</td>
 <td class="text-center px-1"><img src="${getHostFrontEnd()}${(cliente.cuenta.foto == "" || cliente.cuenta.foto == null) ? "vistas/assets/img/userclpe.png" : "adjuntos/clientes/" + cliente.cuenta.foto}" alt="user-picture" class="img-responsive" style="width:50px;height:50px;border-radius:50%;"></td>
 <td class="text-center d-none" >${cliente.cuenta.precio}</td>
@@ -251,6 +262,28 @@ function addEventsButtonsAdmin() {
                 clienteSelected.cuenta.estado = 1;
                 beanRequestCliente.type_request = 'POST';
                 beanRequestCliente.operation = 'updateestado';
+                $('#modalCargandoCliente').modal('show');
+            } else {
+                showAlertTopEnd("info", "Vacío!", "No se encontró el alumno para poder editar");
+            }
+        };
+    });
+    document.querySelectorAll('.editar-estado-visto-cliente').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            clienteSelected = findByCliente(
+                btn.parentElement.parentElement.getAttribute('idcliente')
+            );
+
+            if (clienteSelected != undefined) {
+                if ((btn.firstElementChild.classList.value).includes("minus")) {
+                    clienteSelected.estado = 1;
+                } else {
+                    clienteSelected.estado = 0;
+                }
+
+                beanRequestCliente.type_request = 'POST';
+                beanRequestCliente.operation = 'updateestadocliente';
                 $('#modalCargandoCliente').modal('show');
             } else {
                 showAlertTopEnd("info", "Vacío!", "No se encontró el alumno para poder editar");

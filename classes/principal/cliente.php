@@ -12,6 +12,7 @@ class Cliente
     private $tarea;
     private $vendedor;
     private $tipomedio;
+    private $estado = 0;
 
     public function setIdCliente($idcliente)
     {
@@ -97,12 +98,20 @@ class Cliente
     {
         return $this->tipomedio;
     }
-
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+    }
+    public function getEstado()
+    {
+        return $this->estado;
+    }
     public function __toString()
     {
         return
         array("nombre" => $this->nombre,
             "apellido" => $this->apellido,
+            "estado" => $this->estado,
             "cuenta" => $this->cuenta,
             "tipomedio" => $this->tipomedio,
             "vendedor" => $this->vendedor,

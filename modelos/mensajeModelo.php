@@ -137,6 +137,13 @@ class mensajeModelo extends mainModel
                         $insBeanPagination->setList(array("countAlumnoActivo" => $row['CONTADOR']));
 
                     }
+                    $stmt = $conexion->prepare("SELECT COUNT(id) AS CONTADOR FROM `administrador` WHERE Estado=0 or (Estado IS NULL)");
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setList(array("countAlumnoEstadoActivo" => $row['CONTADOR']));
+
+                    }
                     $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR FROM `tarea` WHERE tipo=0 and estado=0");
                     $stmt->execute();
                     $datos = $stmt->fetchAll();

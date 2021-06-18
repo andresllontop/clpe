@@ -94,6 +94,16 @@ if (!empty($RESULTADO_token)) {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo $inscliente->actualizar_cuenta_estado_controlador($insCuentaClass);
+                    } else if ($accion == "updateestadocliente") {
+
+                        $personData = json_decode($_POST['class']);
+                        $insClienteClass = new Cliente();
+                        $insClienteClass->setIdCliente($personData->idcliente);
+                        $insClienteClass->setEstado($personData->estado);
+
+                        header("HTTP/1.1 200");
+                        header('Content-Type: application/json; charset=utf-8');
+                        echo $inscliente->actualizar_cliente_estado_controlador($insClienteClass);
                     } else {
                         header("HTTP/1.1 500");
                     }

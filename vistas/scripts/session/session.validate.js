@@ -139,10 +139,15 @@ function createHTML_CLPE(typeProfile) {
               </a>
                 <ul class="list-unstyled dt-side-nav__sub-menu">
                   <li class="dt-side-nav__item">
-                    <a href="${contextPah}app/nosotros/promotores" class="dt-side-nav__link"> &nbsp;&nbsp; &nbsp;&nbsp;<i
-                        class="zmdi zmdi-accounts-list-alt zmdi-hc-fw"></i>&nbsp;&nbsp;
-                      Nuestro Equipo</a>
+                    <a href="${contextPah}app/nosotros/noticia" class="dt-side-nav__link"> &nbsp;&nbsp; &nbsp;&nbsp;<i
+                        class="zmdi zmdi-collection-image-o zmdi-hc-fw"></i>&nbsp;&nbsp;
+                      Nueva Imagen</a>
                   </li>
+                  <li class="dt-side-nav__item">
+                  <a href="${contextPah}app/nosotros/promotores" class="dt-side-nav__link"> &nbsp;&nbsp; &nbsp;&nbsp;<i
+                      class="zmdi zmdi-accounts-list-alt zmdi-hc-fw"></i>&nbsp;&nbsp;
+                    Nuestro Equipo</a>
+                </li>
                   <li class="dt-side-nav__item">
                     <a href="${contextPah}app/nosotros/videos" class="dt-side-nav__link">&nbsp;&nbsp; &nbsp;&nbsp;<i
                         class="zmdi zmdi-collection-video zmdi-hc-fw"></i>&nbsp;&nbsp; Videos</a>

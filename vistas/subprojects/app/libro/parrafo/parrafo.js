@@ -211,7 +211,7 @@ function listaParrafo(beanPagination) {
         addEventsButtonsParrafoRegreso();
         destroyPagination($('#paginationParrafo'));
         row += `<tr>
-        <td class="text-center" colspan="5">NO HAY PARRAFOS</td>
+        <td class="text-center" colspan="6">NO HAY PARRAFOS</td>
         </tr>`;
 
         document.querySelector('#tbodyParrafo').innerHTML += row;

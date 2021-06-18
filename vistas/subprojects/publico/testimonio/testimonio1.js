@@ -110,34 +110,30 @@ function processAjaxTestimonio() {
 }
 
 function listaTestimonio(beanPagination) {
-  let row = "", contador = 0;
+  let row = "";
   if (beanPagination.list.length == 0) {
     addClass(document.querySelector("#cargarTestimonio"), "d-none");
     contadorTestimonio = 0;
     return;
   }
   beanPagination.list.forEach((testimonio) => {
-    if (contador % 3 == 0) {
-      row += `  <hr style="border-color: #c100c1;border-width: 3px;width: 98%;">`;
-    }
-    contador++;
-    row += ` 
-                <div class="col-sm-4 ver-testimonio aula-cursor-mano" idtestimonio="${testimonio.idtestimonio}">
-                    <div style="position:relative;">
-                    <img class="w-100 col-6"
+
+    row += `
+<li class="event">
+                <input type="radio" name="tl-group" />
+                <label></label>
+                <div class="thumb ver-testimonio aula-cursor-mano" idtestimonio="${testimonio.idtestimonio}"><img style="border-radius: 50%" class="w-100 h-100"
                         src="${getHostFrontEnd()}adjuntos/testimonio/${testimonio.imagen}"
-                        alt="${testimonio.titulo}"><span style="position: absolute;right: 50%;top: 50%;" class="ver-testimonio" idtestimonio="${testimonio.idtestimonio}"><i class="zmdi zmdi-youtube-play text-danger zmdi-hc-2x" ></i></span>
-                    </div>
-                    <div class="user-ver aula-cursor-mano text-truncate">
+                        alt="${testimonio.titulo}"><span class="ver-testimonio" idtestimonio="${testimonio.idtestimonio}"><i class="zmdi zmdi-youtube-play" ></i></span></div>
+                <div class="content-perspective">
+                    <div class="content user-ver aula-cursor-mano">
                         <div class="content-inner">
-                            <h5 class="text-purple">${testimonio.titulo}</h5>
+                            <h3>${testimonio.titulo}</h3>
                             <p>${testimonio.descripcion}</p>
                         </div>
                     </div>
-
                 </div>
-                
-            `;
+            </li>`;
 
   });
 

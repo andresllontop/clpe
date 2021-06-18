@@ -357,6 +357,14 @@ class clienteModelo extends mainModel
         return $sql;
 
     }
+    protected function actualizar_cliente_estado_modelo($conexion, $cliente)
+    {
+        $sql = $conexion->prepare("UPDATE `administrador` SET Estado=? WHERE id=?");
+        $sql->bindValue(1, $cliente->getEstado(), PDO::PARAM_STR);
+        $sql->bindValue(2, $cliente->getIdCliente(), PDO::PARAM_INT);
+        return $sql;
+
+    }
     protected function actualizar_cuenta_modelo($conexion, $cuenta)
     {
 

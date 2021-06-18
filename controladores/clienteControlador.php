@@ -792,6 +792,7 @@ class clienteControlador extends clienteModelo
                         $insCliente->setApellido($row['AdminApellido']);
                         $insCliente->setOcupacion($row['AdminOcupacion']);
                         $insCliente->setPais($row['pais']);
+                        $insCliente->setEstado($row['Estado']);
                         $insCliente->setTipoMedio($row['tipo_medio']);
                         $insCliente->setVendedor($row['codigo_vendedor']);
                         $insCliente->setCuenta($insCuenta->__toString());
@@ -1239,7 +1240,52 @@ class clienteControlador extends clienteModelo
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 5, $cuentaunico["list"][0]['cuenta']['estado'], ""));
+                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $cuentaunico["list"][0]['cuenta']['estado'], ""));
+                } else {
+                    $insBeanCrud->setMessageServer("No hemos podido cambiar de estado al Usuario");
+                }
+
+            }
+
+        } catch (Exception $th) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            if (isset($stmt)) {
+                $stmt->closeCursor();
+                $stmt = null;
+            }
+            $this->conexion_db = null;
+        }
+        return json_encode($insBeanCrud->__toString());
+    }
+    public function actualizar_cliente_estado_controlador($Cliente)
+    {
+        $insBeanCrud = new BeanCrud();
+        try {
+            $this->conexion_db->beginTransaction();
+            $Cliente->setIdCliente(mainModel::limpiar_cadena($Cliente->getIdCliente()));
+            $Cliente->setEstado(mainModel::limpiar_cadena($Cliente->getEstado()));
+
+            $lista = clienteModelo::datos_cliente_modelo($this->conexion_db, "unico", $Cliente);
+            if ($lista["countFilter"] == 0) {
+                $insBeanCrud->setMessageServer("no se encuentra el alumno");
+            } else {
+
+                $stmt = clienteModelo::actualizar_cliente_estado_modelo($this->conexion_db, $Cliente);
+                if ($stmt->execute()) {
+                    $this->conexion_db->commit();
+                    $insBeanCrud->setMessageServer("ok");
+                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $lista["list"][0]['cuenta']['estado'], ""));
                 } else {
                     $insBeanCrud->setMessageServer("No hemos podido cambiar de estado al Usuario");
                 }

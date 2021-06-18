@@ -77,6 +77,8 @@ function listaMensaje(beanPagination) {
             document.querySelector('#countAlumno').innerHTML = mensaje.countAlumno;
         } else if (mensaje.countAlumnoActivo) {
             document.querySelector('#countAlumnoActivo').innerHTML = mensaje.countAlumnoActivo;
+        } else if (mensaje.countAlumnoEstadoActivo) {
+            document.querySelector('#countAlumnoEstadoActivo').innerHTML = mensaje.countAlumnoEstadoActivo;
         } else {
             document.querySelector('#countTarea').innerHTML = mensaje.countTarea;
         }

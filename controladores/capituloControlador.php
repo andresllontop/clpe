@@ -172,7 +172,7 @@ class capituloControlador extends capituloModelo
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     if ($capitulo["list"][0]['imagen'] != "" || $capitulo["list"][0]['imagen'] != null) {
-                        unlink('./adjuntos/libros/' . $capitulo["list"][0]['imagen']);
+                        unlink('./adjuntos/libros/capitulos/' . $capitulo["list"][0]['imagen']);
                     }
                     $insBeanCrud->setMessageServer("ok");
                     $insBeanCrud->setBeanPagination(self::paginador_capitulo_controlador($this->conexion_db, 0, 20, $capitulo["list"][0]['libro']['codigo']));
@@ -232,7 +232,7 @@ class capituloControlador extends capituloModelo
                             if ($stmt->execute()) {
                                 $this->conexion_db->commit();
                                 if ($capitulo["list"][0]['imagen'] != "" || $capitulo["list"][0]['imagen'] != null) {
-                                    unlink('./adjuntos/libros/' . $capitulo["list"][0]['imagen']);
+                                    unlink('./adjuntos/libros/capitulos/' . $capitulo["list"][0]['imagen']);
                                 }
 
                                 $insBeanCrud->setMessageServer("ok");

@@ -85,8 +85,7 @@ function listaCurso(beanPagination) {
     if (curso.precio == undefined) {
       if (curso.tipo == 1) {
 
-        row1 += `<li class="ms-layer" style="left:7px; top:215px;" data-effect="top(100)" data-duration="3500"
-        data-delay="0" data-ease="easeOutExpo"><i class="fa-check fa"></i>${curso.detalle}</li>`;
+        row1 += curso.detalle;
 
       } else if (curso.tipo == 2) {
         contadorDism += 2;
