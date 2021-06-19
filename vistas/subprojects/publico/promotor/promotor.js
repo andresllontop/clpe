@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelector("#imgSlug").setAttribute("src", getHostFrontEnd() + "adjuntos/slider/" + json[2].beanPagination.list[0].imagen);
             }
             if (json[3].beanPagination !== null) {
-                beanPaginationFooterPublico = json[2].beanPagination;
+                beanPaginationFooterPublico = json[3].beanPagination;
                 listaFooterPublico(beanPaginationFooterPublico);
             }
 

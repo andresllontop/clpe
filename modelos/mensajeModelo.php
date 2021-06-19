@@ -137,7 +137,7 @@ class mensajeModelo extends mainModel
                         $insBeanPagination->setList(array("countAlumnoActivo" => $row['CONTADOR']));
 
                     }
-                    $stmt = $conexion->prepare("SELECT COUNT(id) AS CONTADOR FROM `administrador` WHERE Estado=0 or (Estado IS NULL)");
+                    $stmt = $conexion->prepare("SELECT COUNT(id) AS CONTADOR FROM `administrador` AS admi INNER JOIN `cuenta` AS cuen ON cuen.CuentaCodigo=admi.Cuenta_Codigo WHERE cuen.estado=1 and cuen.tipo=2 and (admi.Estado=0 or (admi.Estado IS NULL))");
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
