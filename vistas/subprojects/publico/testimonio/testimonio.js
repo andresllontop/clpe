@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
   beanRequestTestimonio.entity_api = 'testimonios';
   beanRequestTestimonio.operation = 'paginate';
   beanRequestTestimonio.type_request = 'GET';
-
+  document.body.style.background = "#f7f7f7 url(" + getHostFrontEnd() + "vistas/subprojects/publico/blog/img/pattern.png) repeat top left";
 
   document.querySelector("#cargarTestimonio").onclick = (btn) => {
     if (contadorTestimonio == 0) {

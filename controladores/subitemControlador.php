@@ -97,7 +97,7 @@ class subitemControlador extends subitemModelo
         }
         return $insBeanCrud->__toString();
     }
-    public function paginador_subitem_controlador($conexion, $inicio, $registros, $codigo, $curso)
+    public function paginador_subitem_controlador($conexion, $inicio, $registros, $codigo, $curso = -1)
     {
         $insBeanPagination = new BeanPagination();
         try {
@@ -322,7 +322,7 @@ class subitemControlador extends subitemModelo
                                 $insBeanCrud->setMessageServer("ok");
 
                                 if ($Subitem->getCurso() == "") {
-                                    $insBeanCrud->setBeanPagination(self::paginador_subitem_controlador($this->conexion_db, 0, 5, $Subitem->getTipo(), -1));
+                                    $insBeanCrud->setBeanPagination(self::paginador_subitem_controlador($this->conexion_db, 0, 20, $Subitem->getTipo(), -1));
                                 } else {
                                     $insBeanCrud->setBeanPagination(subitemModelo::datos_subitem_modelo($this->conexion_db, "curso", $Subitem));
                                 }
@@ -342,7 +342,7 @@ class subitemControlador extends subitemModelo
                         $insBeanCrud->setMessageServer("ok");
 
                         if ($Subitem->getCurso() == "") {
-                            $insBeanCrud->setBeanPagination(self::paginador_subitem_controlador($this->conexion_db, 0, 20, $Subitem->getTipo()));
+                            $insBeanCrud->setBeanPagination(self::paginador_subitem_controlador($this->conexion_db, 0, 20, $Subitem->getTipo(), -1));
                         } else {
                             $insBeanCrud->setBeanPagination(subitemModelo::datos_subitem_modelo($this->conexion_db, "curso", $Subitem));
                         }

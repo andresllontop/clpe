@@ -79,7 +79,7 @@ function listaPublicidad(beanPagination) {
     });
 
     document.querySelector('#carousel-5').innerHTML = row;
-    carrosel();
+    //carrosel();
 }
 
 function carrosel() {
@@ -87,8 +87,9 @@ function carrosel() {
         autoPlay: true,
         singleItem: true,
         transitionStyle: "goDown",
-        slideSpeed: 400,
+        slideSpeed: 40000,
         touchDrag: false,
         mouseDrag: false
-    }, console.log("hola"));
+    });
+
 }

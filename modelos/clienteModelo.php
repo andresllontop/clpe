@@ -33,8 +33,8 @@ class clienteModelo extends mainModel
     protected function agregar_cliente_modelo($conexion, $cliente)
     {
 
-        $sql = $conexion->prepare("INSERT INTO `administrador`(AdminNombre,AdminApellido,AdminTelefono,Cuenta_Codigo,AdminOcupacion,pais,codigo_vendedor,tipo_medio)
-         VALUES(?,?,?,?,?,?,?,?)");
+        $sql = $conexion->prepare("INSERT INTO `administrador`(AdminNombre,AdminApellido,AdminTelefono,Cuenta_Codigo,AdminOcupacion,pais,codigo_vendedor,tipo_medio,fecha)
+         VALUES(?,?,?,?,?,?,?,?,?)");
         $sql->bindValue(1, $cliente->getNombre(), PDO::PARAM_STR);
         $sql->bindValue(2, $cliente->getApellido(), PDO::PARAM_STR);
         $sql->bindValue(3, $cliente->getTelefono(), PDO::PARAM_STR);
@@ -43,6 +43,7 @@ class clienteModelo extends mainModel
         $sql->bindValue(6, $cliente->getPais(), PDO::PARAM_STR);
         $sql->bindValue(7, $cliente->getVendedor(), PDO::PARAM_STR);
         $sql->bindValue(8, $cliente->getTipoMedio(), PDO::PARAM_INT);
+        $sql->bindValue(9, $cliente->getFecha());
         return $sql;
 
     }

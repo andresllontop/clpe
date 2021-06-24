@@ -340,12 +340,13 @@ function listaCliente(beanPagination) {
     beanPagination.list.forEach((cliente) => {
 
         row += `<tr  idcliente="${cliente.idcliente}">
+<td class="text-center" >${cliente.fecha == null ? '' : cliente.fecha}</td>
 <td class="text-center" >${cliente.nombre}</td>
 <td class="text-center" >${cliente.apellido}</td>
 <td class="text-center" >${cliente.telefono}</td>
 <td class="text-center" >${cliente.cuenta.email}</td>
 <td class="text-center" >${TipoMedioComunicacion(cliente.tipomedio)}</td>
-<td class="text-center " >${cliente.vendedor == null ? "" : cliente.vendedor}</td>
+<td class="text-center d-none" >${cliente.vendedor == null ? "" : cliente.vendedor}</td>
 <td class="text-center d-none" >${cliente.cuenta.usuario}</td>
 <td class="text-center d-none"><img src="${getHostFrontEnd()}${(cliente.cuenta.foto == "" || cliente.cuenta.foto == null) ? "vistas/assets/img/userclpe.png" : "adjuntos/clientes/" + cliente.cuenta.foto}" class="img-responsive center-box" style="width:50px;height:60px;"></td>
 <td class="text-center d-none" >${cliente.cuenta.precio}</td>

@@ -50,7 +50,9 @@ function processAjaxHistoria() {
             telefono: (historiaSelected == undefined ? "" : historiaSelected.telefono),
             telefonoSegundo: (historiaSelected == undefined ? "" : historiaSelected.telefonoSegundo),
             vision: (historiaSelected == undefined ? "" : historiaSelected.vision),
-            youtube: (historiaSelected == undefined ? "" : historiaSelected.youtube)
+            youtube: (historiaSelected == undefined ? "" : historiaSelected.youtube),
+            instagram: (historiaSelected == undefined ? "" : historiaSelected.instagram),
+            frase: (historiaSelected == undefined ? "" : historiaSelected.frase),
         };
         form_data.append("class", JSON.stringify(json));
 

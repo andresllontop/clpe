@@ -20,6 +20,7 @@ class clienteControlador extends clienteModelo
             $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
             $Cliente->setVendedor(mainModel::limpiar_cadena($Cliente->getVendedor()));
             $Cliente->setTipoMedio(mainModel::limpiar_cadena($Cliente->getTipoMedio()));
+            $Cliente->setFecha(date('Y-m-d H:i:s'));
             $insCuenta = new Cuenta();
             $insCuenta->setPrecio(0);
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
@@ -228,6 +229,7 @@ class clienteControlador extends clienteModelo
             $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
             $Cliente->setVendedor(mainModel::limpiar_cadena($Cliente->getVendedor()));
             $Cliente->setTipoMedio(mainModel::limpiar_cadena($Cliente->getTipoMedio()));
+            $Cliente->setFecha(date('Y-m-d H:i:s'));
             $insCuenta = new Cuenta();
             $insCuenta->setPrecio(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
@@ -346,6 +348,7 @@ class clienteControlador extends clienteModelo
             $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
             $Cliente->setVendedor(mainModel::limpiar_cadena($Cliente->getVendedor()));
             $Cliente->setTipoMedio(mainModel::limpiar_cadena($Cliente->getTipoMedio()));
+            $Cliente->setFecha(date('Y-m-d H:i:s'));
             $insCuenta = new Cuenta();
             $insCuenta->setPrecio(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
@@ -461,6 +464,7 @@ class clienteControlador extends clienteModelo
             $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
             $Cliente->setVendedor(mainModel::limpiar_cadena($Cliente->getVendedor()));
             $Cliente->setTipoMedio(mainModel::limpiar_cadena($Cliente->getTipoMedio()));
+            $Cliente->setFecha(date('Y-m-d H:i:s'));
             $insCuenta = new Cuenta();
             $insCuenta->setPrecio(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
@@ -791,6 +795,7 @@ class clienteControlador extends clienteModelo
                         $insCliente->setTelefono($row['AdminTelefono']);
                         $insCliente->setApellido($row['AdminApellido']);
                         $insCliente->setOcupacion($row['AdminOcupacion']);
+                        $insCliente->setFecha($row['fecha']);
                         $insCliente->setPais($row['pais']);
                         $insCliente->setEstado($row['Estado']);
                         $insCliente->setTipoMedio($row['tipo_medio']);
