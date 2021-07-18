@@ -169,6 +169,10 @@ function createHTML_CLPE(typeProfile) {
                 <ul class="list-unstyled dt-side-nav__sub-menu">
 
                   <li class="dt-side-nav__item">
+                    <a href="${contextPah}app/testimonios/frase" class="dt-side-nav__link">&nbsp;&nbsp;&nbsp;&nbsp;<i
+                    class="zmdi zmdi-comment-edit zmdi-hc-fw"></i>&nbsp;&nbsp; Frase</a>
+                  </li>
+                  <li class="dt-side-nav__item">
                     <a href="${contextPah}app/testimonios" class="dt-side-nav__link">&nbsp;&nbsp;&nbsp;&nbsp;<i
                         class="zmdi zmdi-videocam-switch zmdi-hc-fw"></i>&nbsp;&nbsp; Videos y Comentarios</a>
                   </li>
@@ -212,6 +216,11 @@ function createHTML_CLPE(typeProfile) {
                       class="zmdi zmdi-case-check zmdi-hc-fw">
                     </i>&nbsp;&nbsp; Respuetsas</a>
                 </li>
+                <li class="dt-side-nav__item">
+                <a href="${contextPah}app/convocatoria/publicidad" class="dt-side-nav__link">&nbsp;&nbsp;&nbsp;&nbsp;<i
+                    class="zmdi zmdi-badge-check zmdi-hc-fw">
+                  </i>&nbsp;&nbsp; Publicidad</a>
+              </li>
                
               </ul>
             </li>

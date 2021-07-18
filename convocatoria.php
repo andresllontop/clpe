@@ -110,28 +110,41 @@ if ($array_resource != "") {
 
 
     <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery-1.11.0.min.js?v=0.51"></script>
-
-
+    <!-- Easing core JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.easing.1.3.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Master slider core JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/masterslider.min.js"></script>
+    <!-- Master slider staff core JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/masterslider.staff.carousel.dev.js"></script>
+    <!-- WOW core JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/wow.min.js"></script>
     <!-- Waypoints core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/waypoints.min.js?v=0.51"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/waypoints.min.js"></script>
     <!-- Underscore core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/underscore-min.js?v=0.51"></script>
-
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/underscore-min.js"></script>
+    
     <!-- jQuery color core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.animation.js?v=0.51"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.animation.js"></script>
+    <!-- Isotope core JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.isotope.min.js"></script>
+    <!-- Stellar core JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.stellar.min.js"></script>
+    
+    <!-- NiceScroll core Javascript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.nicescroll.min.js"></script>
+    <!-- Retina core JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/retina-1.1.0.min.js"></script>
+    <!-- Nivo Slider JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.nivo.slider.pack.js"></script>
+    <!-- OWL Carousel core JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/owl.carousel.min.js"></script>
+    
+    <!-- Lightbox core JavaScript -->
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/lightbox.min.js"></script>
 
-    <!-- Stellar Matricula core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.stellar.min.js?v=0.51"></script>
 
-    <!-- Nivo Matricula Slider JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.nivo.slider.pack.js?v=0.51"></script>
-    <!-- Video core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.easing.1.3.js?v=0.51"></script>
-    <!-- Video core JavaScript -->
-
-
-    <!-- REDES SOCIALES core JavaScript -->
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/functions.js?v=0.51"></script>
+   
     <!-- Everything else -->
     <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/custom.js?v=0.51"></script>
     <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/main.js?v=0.51"></script>
@@ -149,6 +162,7 @@ if ($array_resource != "") {
     <script type="text/javascript"
     src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_alerts.js?v=0.39"></script>
     <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/init_parameters.js?v=0.51"></script>
+
     <!--Scripts -->
     <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/session/js.cookie.js?v=0.51"></script>
     <script type="text/javascript"

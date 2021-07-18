@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 processAjaxRegister();
             }
         } catch (e) {
+            console.log(e);
             showAlertTopEnd(
                 'error', "Error al registrar datos",
                 ''

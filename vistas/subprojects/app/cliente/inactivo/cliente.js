@@ -340,7 +340,7 @@ function listaCliente(beanPagination) {
     beanPagination.list.forEach((cliente) => {
 
         row += `<tr  idcliente="${cliente.idcliente}">
-<td class="text-center" >${cliente.fecha == null ? '' : cliente.fecha}</td>
+<td class="text-center" >${cliente.fecha == null ? '' : cliente.fecha.split(" ")[0].split("-")[2] + '-' + cliente.fecha.split(" ")[0].split("-")[1] + '-' + cliente.fecha.split(" ")[0].split("-")[0]}</br>${cliente.fecha == null ? '' : cliente.fecha.split(" ")[1]}</td>
 <td class="text-center" >${cliente.nombre}</td>
 <td class="text-center" >${cliente.apellido}</td>
 <td class="text-center" >${cliente.telefono}</td>

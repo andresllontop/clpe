@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
   Promise.all([
     fetch(getHostAPI() + beanRequestTestimonio.entity_api + "/" + beanRequestTestimonio.operation +
       "?filtro=" + '&pagina=' + document.querySelector("#pageTestimonio").value.trim() + '&registros=4', fetOptions),
+    fetch(getHostAPI() + "subitems/obtener" +
+      "?tipo=7", fetOptions),
     fetch(getHostAPI() + "empresa/obtener" +
       "?filtro=&pagina=1&registros=1", fetOptions)
   ])
@@ -47,7 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
         listaTestimonio(beanPaginationTestimonioUnico);
       }
       if (json[1].beanPagination !== null) {
-        beanPaginationFooterPublico = json[1].beanPagination;
+        document.querySelector("#titleFraseTestimonio").innerHTML = json[1].beanPagination.list[0].detalle;
+      }
+      if (json[2].beanPagination !== null) {
+        beanPaginationFooterPublico = json[2].beanPagination;
         listaFooterPublico(beanPaginationFooterPublico);
       }
 
@@ -128,7 +133,7 @@ function listaTestimonio(beanPagination) {
                         src="${getHostFrontEnd()}adjuntos/testimonio/${testimonio.imagen}"
                         alt="${testimonio.titulo}"><span style="position: absolute;right: 50%;top: 50%;" class="ver-testimonio" idtestimonio="${testimonio.idtestimonio}"><i class="zmdi zmdi-youtube-play text-danger zmdi-hc-2x" ></i></span>
                     </div>
-                    <div class="user-ver aula-cursor-mano text-truncate">
+                    <div class="aula-cursor-mano text-truncate">
                         <div class="content-inner">
                             <h5 class="text-purple">${testimonio.titulo}</h5>
                             <p>${testimonio.descripcion}</p>
@@ -142,11 +147,6 @@ function listaTestimonio(beanPagination) {
   });
 
   document.querySelector('#tbodyTestimonio').innerHTML += row;
-  if (valorHover == undefined) {
-    setTimeout(function () { document.querySelector('input[type="radio"]').checked = true; }, 2000);
-
-    valorHover = 1;
-  }
 
   addEventsButtonsTestimonio();
 
@@ -176,15 +176,7 @@ function addEventsButtonsTestimonio() {
       }
     };
   });
-  document.querySelectorAll('.user-ver').forEach((btn) => {
-    //AGREGANDO EVENTO CLICK
-    btn.onclick = function () {
 
-      if (!btn.parentElement.parentElement.firstElementChild.checked) {
-        btn.parentElement.parentElement.firstElementChild.checked = true;
-      }
-    };
-  });
 }
 
 function findIndexTestimonio(idbusqueda) {

@@ -63,7 +63,7 @@ class testimonioModelo extends mainModel
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT * FROM `testimonio`");
+                            $stmt = $conexion->prepare("SELECT * FROM `testimonio` ORDER BY idtestimonio ASC");
                             $stmt->execute();
                             $datos = $stmt->fetchAll();
                             foreach ($datos as $row) {

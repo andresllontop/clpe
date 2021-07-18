@@ -84,8 +84,7 @@ class testimonioControlador extends testimonioModelo
             foreach ($datos as $row) {
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                 if ($row['CONTADOR'] > 0) {
-                    $stmt = $conexion->prepare("SELECT * FROM `testimonio`
-                    ORDER BY titulo ASC LIMIT ?,?");
+                    $stmt = $conexion->prepare("SELECT * FROM `testimonio` ORDER BY idtestimonio ASC LIMIT ?,?");
                     $stmt->bindParam(1, $inicio, PDO::PARAM_INT);
                     $stmt->bindParam(2, $registros, PDO::PARAM_INT);
                     $stmt->execute();

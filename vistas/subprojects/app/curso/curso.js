@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestCurso.operation = 'add';
         beanRequestCurso.type_request = 'POST';
         $("#imagePreview").html("");
-        $("#tituloModalManCurso").html("REGISTRAR BLOG");
+        $("#tituloModalManCurso").html("REGISTRAR CURSO");
         addCurso();
         $("#ventanaModalManCurso").modal("show");
 
@@ -259,7 +259,7 @@ function addEventsButtonsCurso() {
 
             if (cursoSelected != undefined) {
                 addCurso(cursoSelected);
-                $("#tituloModalManCurso").html("EDITAR BLOG");
+                $("#tituloModalManCurso").html("EDITAR CURSO");
                 $("#ventanaModalManCurso").modal("show");
                 beanRequestCurso.type_request = 'POST';
                 beanRequestCurso.operation = 'update';

@@ -12,7 +12,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "1.08";
+            $version_proyect = "1.28";
             /*
             $version_proyect = 1.0; -> antes del 02/09/2020
              */
@@ -96,6 +96,9 @@ class Routes
             array_push($list_pages, $resource);
             //TESTIMONIOS
             $resource = new BeanResource('app/testimonios', array($path_resource . 'app/testimonio/testimonio.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/testimonio/testimonio.js?v=' . $version_proyect, 'vistas/js/editor.js'), array('css/clpe.css?v=' . $version_proyect));
+            array_push($list_pages, $resource);
+            //TESTIMONIOS - FRASE
+            $resource = new BeanResource('app/testimonios/frase', array($path_resource . 'app/testimonio/frase/frase.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/testimonio/frase/frase.js?v=' . $version_proyect, 'vistas/js/editor.js'), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
             //RECURSOS
             $resource = new BeanResource('app/recursos', array($path_resource . 'app/recurso/recurso.html', $path_resource . 'app/recurso/detalle/detalle.html', $path_resource . 'app/recurso/subtitulo_filter.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/recurso/recurso.js?v=' . $version_proyect, $path_resource . 'app/recurso/detalle/detalle.js?v=' . $version_proyect, $path_resource . 'app/recurso/subtitulo_filter.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
@@ -217,6 +220,9 @@ class Routes
             //CURSOS
             $resource = new BeanResource('app/curso', array($path_resource . 'app/curso/curso.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/curso/curso.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
+            //SOCIAL
+            $resource = new BeanResource('app/convocatoria/publicidad', array($path_resource . 'app/convocatoria/social/social.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/convocatoria/social/social.js?v=' . $version_proyect, 'vistas/js/editor.js'), array('css/clpe.css?v=' . $version_proyect));
+            array_push($list_pages, $resource);
 
             /* ----MODULO DE PUBLICO---- */
             //AUTH
@@ -245,6 +251,7 @@ class Routes
             //BLOG DETALLE
             $resource = new BeanResource('blog/detalle/:', array($path_resource . 'publico/blog/comentario/comentario.html', $path_resource . 'auth/login/login.html', $path_resource . 'auth/register/register.html'), array($path_resource_server . 'publico/blog/comentario/comentario.js?v=' . $version_proyect, $path_resource_server . 'publico/blog/comentario/publicidad-detalle.js?v=' . $version_proyect, $path_resource_server . 'auth/login/login.js?v=' . $version_proyect, $path_resource_server . 'publico/footer/footer.js?v=' . $version_proyect, $path_resource_server . 'auth/register/register.js?v=' . $version_proyect, SERVERURL . 'vistas/publico/Dale/js/owl.carousel.min.js?v=' . $version_proyect, $path_resource_server . 'publico/footer/js/chat.js?v=' . $version_proyect), array(SERVERURL . 'css/clpe.css?v=' . $version_proyect, $path_resource_server . 'auth/login/login.css?v=' . $version_proyect, SERVERURL . 'vistas/publico/Dale/flag-icon-css/css/flag-icon.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
+
             //TESTIMONIOS
             $resource = new BeanResource('testimonios', array($path_resource . 'publico/testimonio/testimonio.html', $path_resource . 'auth/login/login.html', $path_resource . 'auth/register/register.html'), array($path_resource_server . 'publico/testimonio/testimonio.js?v=' . $version_proyect, $path_resource_server . 'auth/login/login.js?v=' . $version_proyect, $path_resource_server . 'publico/footer/footer.js?v=' . $version_proyect, $path_resource_server . 'auth/register/register.js?v=' . $version_proyect, $path_resource_server . 'publico/footer/js/chat.js?v=' . $version_proyect), array(SERVERURL . 'css/clpe.css?v=' . $version_proyect, $path_resource_server . 'auth/login/login.css?v=' . $version_proyect, SERVERURL . 'vistas/publico/Dale/flag-icon-css/css/flag-icon.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
@@ -326,7 +333,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "0.05";
+            $version_proyect = "1.28";
             /*
             $version_proyect = 1.0; -> antes del 02/09/2020
              */
@@ -353,21 +360,35 @@ class Routes
             //array_push($list_pages, $resource);
              */
             $list_pages = array();
-
+            //social
+            $resource = new BeanResource('public/social/:', array($path_resource . 'social/social.html'), array(SERVERURL . $path_resource . 'social/social.js?v=' . $version_proyect), array(SERVERURL . 'vistas/subprojects/publico/matricula/css/style.css?v=' . $version_proyect, SERVERURL . 'css/clpe.css?v=' . $version_proyect, SERVERURL . 'vistas/publico/Dale/flag-icon-css/css/flag-icon.css?v=' . $version_proyect));
+            array_push($list_pages, $resource);
             //REGISTER
-            $resource = new BeanResource('formulario', array($path_resource . 'registro/registro.html'), array(SERVERURL . $path_resource . 'registro/registro.js?v=' . $version_proyect), array(SERVERURL . 'css/clpe.css?v=' . $version_proyect, SERVERURL . $path_resource . 'registro/style.css?v=' . $version_proyect));
+            $resource = new BeanResource('public/formulario', array($path_resource . 'registro/registro.html'), array(SERVERURL . $path_resource . 'registro/registro.js?v=' . $version_proyect), array(SERVERURL . 'css/clpe.css?v=' . $version_proyect, SERVERURL . $path_resource . 'registro/style.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
 
             $exists = false;
 
             foreach ($list_pages as $_resource) {
-
-                if ($path == $_resource->path) {
-                    $exists = true;
-                    $path_resource = $_resource->path_resource;
-                    $path_scripts = $_resource->path_scripts;
-                    $path_style = $_resource->path_styles;
-                    break;
+                if (substr($_resource->path, -1) == ":") {
+                    // echo (substr($_resource->path, -1));
+                    //echo (substr($_resource->path, 0, -2));
+                    //    var_dump($routes->contiene_palabra($path, substr($_resource->path, 0, -2)));
+                    if ($routes->contiene_palabra($path, substr($_resource->path, 0, -2)) == 1) {
+                        $exists = true;
+                        $path_resource = $_resource->path_resource;
+                        $path_scripts = $_resource->path_scripts;
+                        $path_style = $_resource->path_styles;
+                        break;
+                    }
+                } else {
+                    if ($path == $_resource->path) {
+                        $exists = true;
+                        $path_resource = $_resource->path_resource;
+                        $path_scripts = $_resource->path_scripts;
+                        $path_style = $_resource->path_styles;
+                        break;
+                    }
                 }
 
             }
@@ -404,7 +425,7 @@ class Routes
             include 'app.php';
         } else if (strpos($routes->getResourceForContainerApp()->path, 'auth') !== false) {
             include 'auth.php';
-        } else if (strpos($routes->getResourceForContainerConvocatoriaApp()->path, 'formulario') !== false) {
+        } else if (strpos($routes->getResourceForContainerConvocatoriaApp()->path, 'public') !== false) {
             include 'convocatoria.php';
         } else {
             include 'publico.php';
@@ -421,7 +442,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "0.4";
+            $version_proyect = "1.28";
             /*
             $version_proyect = 1.0; -> antes del 27/07/2019
              */
@@ -482,7 +503,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "1.08";
+            $version_proyect = "1.28";
             /*
             $version_proyect = 1.0; -> antes del 01/09/2020
              */
@@ -676,6 +697,9 @@ class Routes
             array_push($list_pages, $resource);
             //conferencia
             $resource = new BeanResource('api/niubiz', array($path_resource . 'pago/sesionNiubiz.php'), array(), array());
+            array_push($list_pages, $resource);
+            //conferencia
+            $resource = new BeanResource('api/social', array($path_resource . 'socialAjax.php'), array(), array());
             array_push($list_pages, $resource);
 
             $exists = false;
