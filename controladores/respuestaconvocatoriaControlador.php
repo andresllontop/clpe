@@ -20,33 +20,60 @@ class respuestaconvocatoriaControlador extends respuestaconvocatoriaModelo
             $personaClass->setFecha(date("Y/m/d H:i:s"));
             $personaClass->setCantidad(count($BeanRespuestaConvocatoria));
             $personaClass->setCodigo($BeanRespuestaConvocatoria[0]->codigo);
+            $imagenValor = "";
+            $imagenBoolean = true;
+            if (isset($_FILES['txtpreguntaImagen'])) {
 
-            $stmt = respuestaconvocatoriaModelo::agregar_respuestaconvocatoria_modelo($this->conexion_db, $personaClass);
-            if ($stmt->execute()) {
-                $stmt = $this->conexion_db->prepare("SELECT max(idpersona_convocatoria) AS CONTADOR FROM `persona_convocatoria` ");
-                $stmt->execute();
-                $datos = $stmt->fetchAll();
-                foreach ($datos as $row) {
-                    if ($row['CONTADOR'] > 0) {
-                        $stmt = $this->conexion_db->prepare("INSERT INTO `respuesta_convocatoria`(pregunta,respuesta,idpersona_convocatoria) VALUES(?,?,?)");
-                        $valor = false;
-                        foreach ($BeanRespuestaConvocatoria as $lista) {
-                            $stmt->bindValue(1, $lista->pregunta, PDO::PARAM_STR);
-                            $stmt->bindValue(2, $lista->respuesta, PDO::PARAM_STR);
-                            $stmt->bindValue(3, $row['CONTADOR'], PDO::PARAM_INT);
-                            $valor = $stmt->execute();
-                        }
-                        if ($valor) {
-                            $this->conexion_db->commit();
-                            $insBeanCrud->setMessageServer("ok");
-                        }
+                $original = $_FILES['txtpreguntaImagen'];
+                $nombre = $original['name'];
+
+                if ($original['error'] > 0) {
+                    $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+                    $imagenBoolean = false;
+                } else {
+                    $resultado = mainModel::archivo(array("image/png", "image/jpg", "image/jpeg"), 1700, $original, $nombre, "./adjuntos/image/");
+                    if ($resultado != "") {
+                        $imagenValor = $resultado;
                     } else {
-                        $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la respuesta");
+                        $imagenBoolean = false;
                     }
                 }
+            }
+            if ($imagenBoolean) {
+                $stmt = respuestaconvocatoriaModelo::agregar_respuestaconvocatoria_modelo($this->conexion_db, $personaClass);
+                if ($stmt->execute()) {
+                    $stmt = $this->conexion_db->prepare("SELECT max(idpersona_convocatoria) AS CONTADOR FROM `persona_convocatoria` ");
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $this->conexion_db->prepare("INSERT INTO `respuesta_convocatoria`(pregunta,respuesta,idpersona_convocatoria,tipo) VALUES(?,?,?,?)");
+                            $valor = false;
+                            foreach ($BeanRespuestaConvocatoria as $lista) {
+                                $stmt->bindValue(1, $lista->pregunta, PDO::PARAM_STR);
+                                if ($lista->tipo == 1) {
+                                    $stmt->bindValue(2, $lista->respuesta, PDO::PARAM_STR);
+                                } else if ($lista->tipo == 2) {
+                                    $stmt->bindValue(2, $imagenValor, PDO::PARAM_STR);
+                                }
+                                $stmt->bindValue(3, $row['CONTADOR'], PDO::PARAM_INT);
+                                $stmt->bindValue(4, $lista->tipo, PDO::PARAM_INT);
+                                $valor = $stmt->execute();
+                            }
 
-            } else {
-                $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la respuesta");
+                            if ($valor) {
+                                $this->conexion_db->commit();
+                                $insBeanCrud->setMessageServer("ok");
+                            }
+                        } else {
+                            $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la respuesta");
+                        }
+                    }
+
+                } else {
+                    $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la respuesta");
+                }
+
             }
 
         } catch (Exception $th) {
@@ -160,20 +187,29 @@ class respuestaconvocatoriaControlador extends respuestaconvocatoriaModelo
             $RespuestaConvocatoria->setIdPersonaConvocatoria(mainModel::limpiar_cadena($RespuestaConvocatoria->getIdPersonaConvocatoria()));
 
             $lista = respuestaconvocatoriaModelo::datos_respuestaconvocatoria_modelo($this->conexion_db, "unico", $RespuestaConvocatoria);
-
-            $stmt = respuestaconvocatoriaModelo::eliminar_respuestaconvocatoria_modelo($this->conexion_db, $RespuestaConvocatoria->getIdPersonaConvocatoria());
-            if ($stmt->execute()) {
-                $stmt = respuestaconvocatoriaModelo::eliminar_personaconvocatoria_modelo($this->conexion_db, $RespuestaConvocatoria->getIdPersonaConvocatoria());
+            if ($lista['countFilter'] > 0) {
+                $listaRespuesta = respuestaconvocatoriaModelo::datos_respuestaconvocatoria_modelo($this->conexion_db, "unico-imagen", $RespuestaConvocatoria);
+                $stmt = respuestaconvocatoriaModelo::eliminar_respuestaconvocatoria_modelo($this->conexion_db, $RespuestaConvocatoria->getIdPersonaConvocatoria());
                 if ($stmt->execute()) {
-                    $this->conexion_db->commit();
-                    $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_respuestaconvocatoria_controlador($this->conexion_db, 0, 20));
+                    $stmt = respuestaconvocatoriaModelo::eliminar_personaconvocatoria_modelo($this->conexion_db, $RespuestaConvocatoria->getIdPersonaConvocatoria());
+                    if ($stmt->execute()) {
+                        $this->conexion_db->commit();
+                        if ($listaRespuesta['countFilter'] > 0) {
+                            if ($listaRespuesta["list"][0]['tipo'] == 2) {
+                                unlink('./adjuntos/image/' . $listaRespuesta["list"][0]['respuesta']);
+                            }
+                        }
+
+                        $insBeanCrud->setMessageServer("ok");
+                        $insBeanCrud->setBeanPagination(self::paginador_respuestaconvocatoria_controlador($this->conexion_db, 0, 20, ""));
+                    } else {
+                        $insBeanCrud->setMessageServer("No hemos podido eliminar el cuestionario");
+                    }
                 } else {
                     $insBeanCrud->setMessageServer("No hemos podido eliminar el cuestionario");
                 }
-            } else {
-                $insBeanCrud->setMessageServer("No hemos podido eliminar el cuestionario");
-            }
+
+            } else { $insBeanCrud->setMessageServer("No hemos encontrado las respuestas");}
 
         } catch (Exception $th) {
             if ($this->conexion_db->inTransaction()) {

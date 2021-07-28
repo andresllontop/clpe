@@ -118,6 +118,7 @@ if (!empty($RESULTADO_token)) {
                 if ($accion == "add") {
                     ObtenerClasesRespuestaConvocatoria();
                     $personData = json_decode($_POST['class']);
+
                     header("HTTP/1.1 200");
                     header('Content-Type: application/json; charset=utf-8');
                     $insconvocatoria = new respuestaconvocatoriaControlador();
@@ -134,9 +135,10 @@ if (!empty($RESULTADO_token)) {
                     $insconvocatoria = new convocatoriaControlador();
                     $Convocatoria = new Convocatoria();
                     $Convocatoria->setEstado(1);
+                    $Convocatoria->setIdConvocatoria($_GET['id']);
                     header("HTTP/1.1 200");
                     header('Content-Type: application/json; charset=utf-8');
-                    echo json_encode($insconvocatoria->datos_convocatoria_controlador("estado", $Convocatoria));
+                    echo json_encode($insconvocatoria->datos_convocatoria_controlador("unico-estado", $Convocatoria));
                 } else {
                     header("HTTP/1.1 500");
                 }

@@ -44,6 +44,9 @@ function processAjaxRespuesta() {
         case 'detallerespuesta':
             parameters_pagination = '?id=' + respuestaSelected.idpersonaconvocatoria;
             break;
+        case 'deleterespuesta':
+            parameters_pagination = '?id=' + respuestaSelected.idpersonaconvocatoria;
+            break;
 
         default:
 
@@ -98,11 +101,17 @@ function addRespuesta(beanPagination) {
 
     beanPagination.list.forEach((detalle) => {
         row += `<div class="col-12 col-sm-6 mx-auto">
-        <div class="group-material">
+        <div class="group-material">`;
+        if (detalle.tipo == 1) {
+            row += `
           <input type="text" class="material-control"value="${detalle.respuesta}" />
           <span class="highlight"></span>
           <span class="bar"></span>
-          <label>${detalle.pregunta}</label>
+          <label>${detalle.pregunta}</label>`;
+        } else if (detalle.tipo == 2) {
+            row += `<p>${detalle.pregunta}</p><img src="${getHostFrontEnd()}adjuntos/image/${detalle.respuesta}" alt="user-picture" class="img-responsive center-box" width="50%">`;
+        }
+        row += `
         </div>
       </div>`;
 

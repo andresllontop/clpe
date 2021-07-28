@@ -37,11 +37,12 @@ class convocatoriaControlador extends convocatoriaModelo
                             $datos = $stmt->fetchAll();
                             foreach ($datos as $row) {
                                 if ($row['CONTADOR'] > 0) {
-                                    $stmt = $this->conexion_db->prepare("INSERT INTO `detalle_convocatoria`(descripcion,idconvocatoria) VALUES(?,?)");
+                                    $stmt = $this->conexion_db->prepare("INSERT INTO `detalle_convocatoria`(descripcion,tipo,idconvocatoria) VALUES(?,?,?)");
                                     $valor = false;
                                     foreach ($BeanConvocatoria->getListDetalle() as $lista) {
                                         $stmt->bindValue(1, $lista->descripcion, PDO::PARAM_STR);
-                                        $stmt->bindValue(2, $row['CONTADOR'], PDO::PARAM_STR);
+                                        $stmt->bindValue(2, $lista->tipo, PDO::PARAM_INT);
+                                        $stmt->bindValue(3, $row['CONTADOR'], PDO::PARAM_STR);
                                         $valor = $stmt->execute();
                                     }
                                     if ($valor) {
@@ -247,11 +248,12 @@ class convocatoriaControlador extends convocatoriaModelo
                                 $stmt->bindValue(":IDconvocatoria", $Convocatoria->getIdConvocatoria(), PDO::PARAM_INT);
                                 if ($stmt->execute()) {
                                     $valor = false;
-                                    $stmt = $this->conexion_db->prepare("INSERT INTO `detalle_convocatoria`(descripcion,idconvocatoria) VALUES(?,?)");
+                                    $stmt = $this->conexion_db->prepare("INSERT INTO `detalle_convocatoria`(descripcion,tipo,idconvocatoria) VALUES(?,?,?)");
                                     $valor = false;
                                     foreach ($BeanConvocatoria->getListDetalle() as $lista) {
                                         $stmt->bindValue(1, $lista->descripcion, PDO::PARAM_STR);
-                                        $stmt->bindValue(2, $Convocatoria->getIdConvocatoria(), PDO::PARAM_INT);
+                                        $stmt->bindValue(2, $lista->tipo, PDO::PARAM_INT);
+                                        $stmt->bindValue(3, $Convocatoria->getIdConvocatoria(), PDO::PARAM_INT);
                                         $valor = $stmt->execute();
                                     }
                                     if ($valor) {
@@ -283,11 +285,12 @@ class convocatoriaControlador extends convocatoriaModelo
                         $stmt->bindValue(":IDconvocatoria", $Convocatoria->getIdConvocatoria(), PDO::PARAM_INT);
                         if ($stmt->execute()) {
                             $valor = false;
-                            $stmt = $this->conexion_db->prepare("INSERT INTO `detalle_convocatoria`(descripcion,idconvocatoria) VALUES(?,?)");
+                            $stmt = $this->conexion_db->prepare("INSERT INTO `detalle_convocatoria`(descripcion,tipo,idconvocatoria) VALUES(?,?,?)");
                             $valor = false;
                             foreach ($BeanConvocatoria->getListDetalle() as $lista) {
                                 $stmt->bindValue(1, $lista->descripcion, PDO::PARAM_STR);
-                                $stmt->bindValue(2, $Convocatoria->getIdConvocatoria(), PDO::PARAM_INT);
+                                $stmt->bindValue(2, $lista->tipo, PDO::PARAM_INT);
+                                $stmt->bindValue(3, $Convocatoria->getIdConvocatoria(), PDO::PARAM_INT);
                                 $valor = $stmt->execute();
                             }
                             if ($valor) {

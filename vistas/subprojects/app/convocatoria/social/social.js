@@ -279,6 +279,7 @@ function listaSocial(beanPagination) {
     beanPagination.list.forEach((social) => {
 
         row += `<tr  idsocial="${social.idsocial}">
+<td class="text-center">${getHostFrontEnd() + "public/social/" + social.idsocial} </td>
 <td class="text-center">${social.titulo}</td>
 <td class="text-center">${social.descripcion}</td>
 <td class="text-center">${social.fraseCurso}</td>

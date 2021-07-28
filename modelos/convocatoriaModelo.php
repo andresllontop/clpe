@@ -56,6 +56,40 @@ class convocatoriaModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+                case "unico-estado":
+                    $stmt = $conexion->prepare("SELECT COUNT(idconvocatoria) AS CONTADOR FROM `convocatoria` WHERE idconvocatoria=:IDconvocatoria AND estado=:Estado");
+                    $stmt->bindValue(":IDconvocatoria", $Convocatoria->getIdConvocatoria(), PDO::PARAM_INT);
+                    $stmt->bindValue(":Estado", $Convocatoria->getEstado(), PDO::PARAM_INT);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $conexion->prepare("SELECT convo.*,detalle.descripcion as detalle_descripcion,detalle.tipo as detalle_tipo FROM `detalle_convocatoria` AS detalle INNER JOIN `convocatoria` AS convo ON convo.idconvocatoria=detalle.idconvocatoria WHERE convo.idconvocatoria=:IDconvocatoria AND convo.estado=:Estado");
+                            $stmt->bindValue(":IDconvocatoria", $Convocatoria->getIdConvocatoria(), PDO::PARAM_INT);
+                            $stmt->bindValue(":Estado", $Convocatoria->getEstado(), PDO::PARAM_INT);
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+                            foreach ($datos as $row) {
+                                $insDetalleConvocatoria = new DetalleConvocatoria();
+                                $insDetalleConvocatoria->setDescripcion($row['detalle_descripcion']);
+                                $insDetalleConvocatoria->setTipo($row['detalle_tipo']);
+                                $insConvocatoria = new Convocatoria();
+                                $insConvocatoria->setIdConvocatoria($row['idconvocatoria']);
+                                $insConvocatoria->setDescripcion($row['descripcion']);
+                                $insConvocatoria->setEstado($row['estado']);
+                                $insConvocatoria->setCodigo($row['codigo']);
+                                $insConvocatoria->setImagen($row['imagen']);
+                                $insConvocatoria->setFecha($row['fecha']);
+                                $insConvocatoria->setCantidad($row['cantidad']);
+                                $insDetalleConvocatoria->setConvocatoria($insConvocatoria->__toString());
+                                $insBeanPagination->setList($insDetalleConvocatoria->__toString());
+                            }
+                        }
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 case "conteo":
                     $stmt = $conexion->prepare("SELECT COUNT(idconvocatoria) AS CONTADOR FROM `convocatoria` ");
                     $stmt->execute();
@@ -130,6 +164,7 @@ class convocatoriaModelo extends mainModel
                                 $insDetalleConvocatoria = new DetalleConvocatoria();
                                 $insDetalleConvocatoria->setIdDetalleConvocatoria($row['iddetalle_convocatoria']);
                                 $insDetalleConvocatoria->setDescripcion($row['descripcion']);
+                                $insDetalleConvocatoria->setTipo($row['tipo']);
                                 $insDetalleConvocatoria->setConvocatoria($row['idconvocatoria']);
                                 $insBeanPagination->setList($insDetalleConvocatoria->__toString());
                             }

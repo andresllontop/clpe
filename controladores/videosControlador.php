@@ -308,7 +308,10 @@ class videosControlador extends videosModelo
                     if ($stmt->execute()) {
                         if ($Video->getIdvideo() > 0) {
                             $listVideo = videosModelo::datos_videos_modelo($this->conexion_db, "unico", $Video);
-                            unlink('./adjuntos/videos/' . $listVideo["list"][0]['video']);
+                            if ($listVideo["list"][0]['video'] != "" || $listVideo["list"][0]['video'] != "ninguno") {
+                                unlink('./adjuntos/videos/' . $listVideo["list"][0]['video']);
+                            }
+
                         }
                         $this->conexion_db->commit();
                         $insBeanCrud->setMessageServer("ok");

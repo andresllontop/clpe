@@ -51,7 +51,7 @@ function addDetalle() {
 
     listDetalleConvocatoria.unshift(new Detalle_Convocatoria(
         contadorDetalleConvocatoria++,
-        "", 0)
+        "", 1)
 
     );
     toListConvocatoriaDetalle(listDetalleConvocatoria);
@@ -66,7 +66,7 @@ function addDetalleUpdate(bean) {
     bean.list.forEach(pregunta => {
         listDetalleConvocatoria.unshift(new Detalle_Convocatoria(
             contadorDetalleConvocatoria++,
-            pregunta.descripcion, 0)
+            pregunta.descripcion, parseInt(pregunta.tipo))
 
         );
     });
@@ -249,6 +249,7 @@ function listaConvocatoria(beanPagination) {
 
         row += `<tr  idconvocatoria="${convocatoria.idconvocatoria}">
 <td class="text-center">${contador++} </td>
+<td class="text-center">${getHostFrontEnd() + "public/formulario/" + convocatoria.idconvocatoria} </td>
 <td class="text-center">${convocatoria.codigo} </td>
 <td class="text-center">${(convocatoria.fecha).split(" ")[0].split("-")[2] + "/" + (convocatoria.fecha).split(" ")[0].split("-")[1] + "/" + (convocatoria.fecha).split(" ")[0].split("-")[0] + "<br>" + (convocatoria.fecha).split(" ")[1]
             } </td>
@@ -467,10 +468,23 @@ function toListConvocatoriaDetalle(beanPagination) {
         row += `<div class="col-9 col-sm-9">
         <div class="row">
           <div class="col-12">
-            <label >Pregunta N${contador}</label>
-            <div class="group-material">
-              <textarea class="material-control w-100 descripcion-detalle-Convocatoria"  required="" iddetalle="${detalle.iddetalleConvocatoria}"rows="2">${detalle.descripcion}</textarea>
-            </div>
+            <label >Pregunta N${contador}</label> `;
+        row += `<div class="group-material">
+            <span class="all-tittles">Tipo de Archivo</span>
+            <select iddetalle="${detalle.iddetalleConvocatoria}" class="tooltips-general material-control tipo-detalle-convocatoria" data-toggle="tooltip" data-placement="top" title="Selecciona una opcion de archivo">
+              <option value="0" disabled="" >Selecciona Una Opcion</option>
+              <option value="1"${detalle.tipo == 1 ? "selected" : ""} >Texto</option>
+              <option value="2" ${detalle.tipo == 2 ? "selected" : ""}>Imagen</option>
+              <!-- <option value="3">PDF</option> -->
+            </select>
+          </div>
+          <div class="group-material">
+          <textarea class="material-control w-100 descripcion-detalle-Convocatoria"  required="" iddetalle="${detalle.iddetalleConvocatoria}"rows="2">${detalle.descripcion}</textarea>
+          </div>
+  `;
+
+
+        row += `
           </div>
         </div>
       </div>
@@ -490,8 +504,6 @@ function toListConvocatoriaDetalle(beanPagination) {
 }
 
 var addEventsDetalleCompra = () => {
-
-
     /* inputs teclado*/
     document.querySelectorAll('.descripcion-detalle-Convocatoria').forEach((btn) => {
         btn.onkeyup = () => {
@@ -501,12 +513,41 @@ var addEventsDetalleCompra = () => {
                 )
             );
             if (detalleSelected == undefined) return false;
+
             eliminarDetalle(detalleSelected.iddetalleConvocatoria);
             listDetalleConvocatoria.push(
                 new Detalle_Convocatoria(
                     detalleSelected.iddetalleConvocatoria,
                     btn.value,
-                    0
+                    detalleSelected.tipo
+                )
+            );
+        };
+    });
+    /* inputs teclado*/
+    document.querySelectorAll('.tipo-detalle-convocatoria').forEach((btn) => {
+        btn.onchange = () => {
+
+            detalleSelected = findByDetalle(
+                btn.getAttribute(
+                    'iddetalle'
+                )
+            );
+            if (detalleSelected == undefined) return false;
+            if (btn.value == 2) {
+                let dataSelected = findByDetalleTipo(btn.value);
+                if (dataSelected != undefined) {
+                    showAlertTopEnd("info", "Ya agregaste un tipo de archivo imagen a las preguntas", "");
+                    btn.value = 1;
+                    return false;
+                };
+            }
+            eliminarDetalle(detalleSelected.iddetalleConvocatoria);
+            listDetalleConvocatoria.push(
+                new Detalle_Convocatoria(
+                    detalleSelected.iddetalleConvocatoria,
+                    detalleSelected.descripcion,
+                    btn.value
                 )
             );
         };
@@ -533,6 +574,17 @@ var findByDetalle = (iddetalleConvocatoria) => {
     return listDetalleConvocatoria.find(
         (detalle) => {
             if (parseInt(iddetalleConvocatoria) == parseInt(detalle.iddetalleConvocatoria)) {
+                return detalle;
+            }
+
+
+        }
+    );
+};
+var findByDetalleTipo = (tipo) => {
+    return listDetalleConvocatoria.find(
+        (detalle) => {
+            if (parseInt(tipo) == parseInt(detalle.tipo)) {
                 return detalle;
             }
 

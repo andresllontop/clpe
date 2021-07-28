@@ -6,6 +6,7 @@ class RespuestaConvocatoria
     private $respuesta;
     private $pregunta;
     private $persona;
+    private $tipo;
 
     public function setIdRespuestaConvocatoria($idrespuestaconvocatoria)
     {
@@ -41,12 +42,20 @@ class RespuestaConvocatoria
     {
         return $this->respuesta;
     }
-
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+    }
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
     public function __toString()
     {
         return
         array("pregunta" => $this->pregunta,
             "persona" => $this->persona,
+            "tipo" => $this->tipo,
             "respuesta" => $this->respuesta,
             "idrespuestaconvocatoria" => $this->idrespuestaconvocatoria,
         );

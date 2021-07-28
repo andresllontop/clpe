@@ -95,6 +95,32 @@ class respuestaconvocatoriaModelo extends mainModel
                                 $insConvocatoria = new RespuestaConvocatoria();
                                 $insConvocatoria->setIdRespuestaConvocatoria($row['idrespuesta_convocatoria']);
                                 $insConvocatoria->setPregunta($row['pregunta']);
+                                $insConvocatoria->setTipo($row['tipo']);
+                                $insConvocatoria->setRespuesta($row['respuesta']);
+                                $insBeanPagination->setList($insConvocatoria->__toString());
+                            }
+                        }
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
+                case "unico-imagen":
+                    $stmt = $conexion->prepare("SELECT COUNT(idrespuesta_convocatoria) AS CONTADOR FROM `respuesta_convocatoria` WHERE idpersona_convocatoria=:ID AND tipo=2");
+                    $stmt->bindValue(":ID", $Convocatoria->getIdPersonaConvocatoria(), PDO::PARAM_INT);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $conexion->prepare("SELECT * FROM `respuesta_convocatoria` WHERE idpersona_convocatoria=:ID AND tipo=2");
+                            $stmt->bindValue(":ID", $Convocatoria->getIdPersonaConvocatoria(), PDO::PARAM_INT);
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+                            foreach ($datos as $row) {
+                                $insConvocatoria = new RespuestaConvocatoria();
+                                $insConvocatoria->setIdRespuestaConvocatoria($row['idrespuesta_convocatoria']);
+                                $insConvocatoria->setPregunta($row['pregunta']);
+                                $insConvocatoria->setTipo($row['tipo']);
                                 $insConvocatoria->setRespuesta($row['respuesta']);
                                 $insBeanPagination->setList($insConvocatoria->__toString());
                             }
