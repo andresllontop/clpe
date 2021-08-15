@@ -77,6 +77,8 @@ class Tarea
         array(
             "idtarea" => $this->idtarea,
             "cuenta" => $this->cuenta,
+            "apellido" => $this->pagina,
+            "registro" => $this->registro,
             "subTitulo" => $this->subTitulo,
             "tipo" => $this->tipo,
             "fecha" => $this->fecha,

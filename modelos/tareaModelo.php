@@ -89,6 +89,55 @@ class tareaModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+
+                case "conteo-alumno":
+                    $pagina = mainModel::limpiar_cadena($Leccion->getPagina());
+                    $registros = mainModel::limpiar_cadena($Leccion->getRegistro());
+                    $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
+                    $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
+                    $stmt = $conexion->prepare("SELECT COUNT(tar.idtarea) AS CONTADOR  FROM `tarea` AS tar INNER JOIN `administrador` AS admmini ON tar.cuenta=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE cer.idcertificado is null and tar.tipo=0  and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') ) GROUP BY tar.cuenta");
+                    $stmt->bindValue(1, $Leccion->getCuenta(), PDO::PARAM_STR);
+                    $stmt->bindValue(2, $Leccion->getCuenta(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    $insBeanPagination->setCountFilter(count($datos));
+                    if (count($datos) > 0) {
+                        $stmt = $conexion->prepare("SELECT sum(CASE WHEN lec.estado = 0 THEN 1 ELSE 0 end) as totalestado,sum(lec.estado) as totalnoestado, sub.*,admmini.AdminApellido as apellido,admmini.AdminNombre as nombre_alumno, lec.idtarea,lec.tipo,lec.fecha,tit.tituloNombre,tit.codigoTitulo FROM `tarea` as lec INNER JOIN `administrador` AS admmini ON lec.cuenta=admmini.Cuenta_Codigo inner join `subtitulo` as sub ON sub.codigo_subtitulo=lec.codigo_subtitulo inner join `titulo` as tit ON tit.idtitulo=sub.titulo_idtitulo WHERE (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') ) and lec.tipo=0 GROUP BY lec.cuenta ORDER BY max(lec.fecha) ASC LIMIT ?,?");
+                        $stmt->bindValue(1, $Leccion->getCuenta(), PDO::PARAM_STR);
+                        $stmt->bindValue(2, $Leccion->getCuenta(), PDO::PARAM_STR);
+                        $stmt->bindValue(3, $inicio, PDO::PARAM_INT);
+                        $stmt->bindValue(4, $registros, PDO::PARAM_INT);
+                        $stmt->execute();
+                        $datos = $stmt->fetchAll();
+
+                        foreach ($datos as $row) {
+                            $insTitulo = new Titulo();
+                            $insTitulo->setNombre($row['tituloNombre']);
+                            $insTitulo->setCodigo($row['codigoTitulo']);
+
+                            $insSubTitulo = new SubTitulo();
+                            $insSubTitulo->setIdSubTitulo($row['idsubtitulo']);
+                            $insSubTitulo->setCodigo($row['codigo_subtitulo']);
+                            $insSubTitulo->setNombre($row['nombre']);
+                            $insSubTitulo->setTitulo($insTitulo->__toString());
+
+                            $insTarea = new Tarea();
+                            $insTarea->setIdtarea($row['idtarea']);
+                            $insTarea->setTipo($row['tipo']);
+                            $insTarea->setFecha($row['fecha']);
+                            $insTarea->setCuenta($row['nombre_alumno']);
+                            $insTarea->setPagina($row['apellido']);
+                            $insTarea->setRegistro(array("totalestado" => $row['totalestado'],
+                                "totalnoestado" => $row['totalnoestado'],
+                            ));
+                            $insTarea->setSubTitulo($insSubTitulo->__toString());
+                            $insBeanPagination->setList($insTarea->__toString());
+                        }
+                    }
+
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 case "codigo":
 
                     $stmt = $conexion->prepare("SELECT COUNT(idvideo_subtitulo) AS CONTADOR FROM `video_subtitulo` WHERE codigovideo_subtitulo=:IDlibro");
@@ -252,18 +301,20 @@ class tareaModelo extends mainModel
                     $registros = mainModel::limpiar_cadena($Leccion->getRegistro());
                     $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
                     $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-                    $stmt = $conexion->prepare("SELECT count(idtarea) AS CONTADOR FROM `tarea`  WHERE cuenta=:Cuenta");
+                    $stmt = $conexion->prepare("SELECT count(idtarea) AS CONTADOR FROM `tarea`  WHERE cuenta=:Cuenta AND codigo_subtitulo LIKE CONCAT('%',:Code,'%')");
                     $stmt->bindValue(":Cuenta", $Leccion->getCuenta(), PDO::PARAM_STR);
+                    $stmt->bindValue(":Code", $Leccion->getSubTitulo(), PDO::PARAM_STR);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         $contador = 0;
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT tar.*,ti.codigoTitulo,ti.tituloNombre,ti.titulo_imagen  FROM `tarea`as tar inner join `subtitulo` as sub on sub.codigo_subtitulo=tar.codigo_subtitulo inner join `titulo` as ti on ti.idtitulo=sub.titulo_idtitulo  WHERE tar.cuenta=? group by sub.titulo_idtitulo ASC LIMIT ?,?");
+                            $stmt = $conexion->prepare("SELECT tar.*,ti.codigoTitulo,ti.tituloNombre,ti.titulo_imagen  FROM `tarea`as tar inner join `subtitulo` as sub on sub.codigo_subtitulo=tar.codigo_subtitulo inner join `titulo` as ti on ti.idtitulo=sub.titulo_idtitulo  WHERE tar.cuenta=? AND tar.codigo_subtitulo LIKE CONCAT('%',?,'%') group by sub.titulo_idtitulo ASC LIMIT ?,?");
                             $stmt->bindValue(1, $Leccion->getCuenta(), PDO::PARAM_STR);
-                            $stmt->bindValue(2, $inicio, PDO::PARAM_INT);
-                            $stmt->bindValue(3, $registros, PDO::PARAM_INT);
+                            $stmt->bindValue(2, $Leccion->getSubTitulo(), PDO::PARAM_STR);
+                            $stmt->bindValue(3, $inicio, PDO::PARAM_INT);
+                            $stmt->bindValue(4, $registros, PDO::PARAM_INT);
                             $stmt->execute();
                             $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             foreach ($datos as $row) {
@@ -291,8 +342,9 @@ class tareaModelo extends mainModel
                     break;
                 case "tarea-cantidad":
 
-                    $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR  FROM `tarea` WHERE cuenta=? and tipo=0");
-                    $stmt->bindValue(1, $Leccion->getCuenta(), PDO::PARAM_STR);
+                    $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR  FROM `tarea` WHERE cuenta=:CuentaCodigo and tipo=0 AND codigo_subtitulo LIKE CONCAT('%',:Code,'%')");
+                    $stmt->bindValue(":CuentaCodigo", $Leccion->getCuenta(), PDO::PARAM_STR);
+                    $stmt->bindValue(":Code", $Leccion->getSubTitulo(), PDO::PARAM_STR);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
