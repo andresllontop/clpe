@@ -63,11 +63,13 @@ if (!empty($RESULTADO_token)) {
                         $insLeccionClass->setRegistro($_GET['registros']);
                         echo json_encode($insleccion->datos_lecciones_controlador("conteo", $insLeccionClass));
                     } else if ($accion == "excel") {
+                        
                         header("Content-Type: application/vnd.ms-excel; charset=UTF-16LE");
                         header("Expires: 0");
                         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
                         header("Cache-Control: private", false);
                         echo mb_convert_encoding($insleccion->excel_lecciones_controlador("excel-lecciones", 0), 'UTF-16LE', 'UTF-8');
+                        
                     } else {
                         header("HTTP/1.1 500");
                     }
@@ -80,7 +82,7 @@ if (!empty($RESULTADO_token)) {
                     // echo '<script> window.location.href="' . SERVERURL . 'login" </script>';
                     break;
             }
-        } elseif ($RESULTADO_token->tipo == 2) {
+        } elseif ($RESULTADO_token->tipo == 2 && $RESULTADO_token->libro != "") {
             switch ($_SERVER['REQUEST_METHOD']) {
 
                 case 'POST':
@@ -128,6 +130,8 @@ if (!empty($RESULTADO_token)) {
                     } else if ($accion == "obtener") {
                         $insLeccionClass = new Leccion();
                         $insLeccionClass->setCuenta($RESULTADO_token->codigo);
+                        $insLeccionClass->setLibroCode($RESULTADO_token->libro);
+
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo json_encode($insleccion->obtener_lecciones_alumno_siguiente_controlador($insLeccionClass));
@@ -136,6 +140,8 @@ if (!empty($RESULTADO_token)) {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         $insLeccionClass->setCuenta($RESULTADO_token->codigo);
+                        $insLeccionClass->setLibroCode($RESULTADO_token->libro);
+
                         echo json_encode($insleccion->datos_lecciones_controlador("subtitulo-titulo", $insLeccionClass));
                     } else if ($accion == "anteriorleccion") {
                         //seleccionar leccion del contenido del curso

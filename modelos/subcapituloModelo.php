@@ -64,7 +64,7 @@ class subcapituloModelo extends mainModel
                     $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
                     $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
 
-                    $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo`");
+                    $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo` WHERE codigo_subtitulo LIKE('%L01%')");
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
@@ -92,7 +92,7 @@ class subcapituloModelo extends mainModel
                     break;
                 case "total":
                     $cantidad = 0;
-                    $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo`");
+                    $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo` WHERE codigo_subtitulo LIKE('%L01%')");
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
@@ -119,7 +119,7 @@ class subcapituloModelo extends mainModel
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT * FROM `subtitulo` AS sub INNER JOIN `titulo` AS tit ON tit.idtitulo = sub.titulo_idtitulo ORDER BY sub.codigo_subtitulo");
+                            $stmt = $conexion->prepare("SELECT * FROM `subtitulo` AS sub INNER JOIN `titulo` AS tit ON tit.idtitulo = sub.titulo_idtitulo WHERE codigo_subtitulo LIKE('%L01%') ORDER BY sub.codigo_subtitulo");
                             $stmt->execute();
                             $datos = $stmt->fetchAll();
                             foreach ($datos as $row) {

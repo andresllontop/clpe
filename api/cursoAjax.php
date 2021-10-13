@@ -36,7 +36,6 @@ if (!empty($RESULTADO_token)) {
                         header('Content-Type: application/json; charset=utf-8');
                         echo json_encode($inscurso->datos_curso_controlador("conteo", 0));
                     } else if ($accion == "get") {
-
                         $insCursoClass = new Curso();
                         $insCursoClass->setIdCurso($_GET['id']);
                         header("HTTP/1.1 200");

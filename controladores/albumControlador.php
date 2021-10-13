@@ -106,19 +106,22 @@ class albumControlador extends albumModelo
         return $insBeanCrud->__toString();
 
     }
-    public function paginador_album_controlador($conexion, $inicio, $registros)
+    public function paginador_album_controlador($conexion, $inicio, $registros, $libro)
     {
         $insBeanPagination = new BeanPagination();
         try {
 
-            $stmt = $conexion->query("SELECT COUNT(idalbum) AS CONTADOR FROM `album` where tipo=1");
+            $stmt = $conexion->prepare("SELECT COUNT(idalbum) AS CONTADOR FROM `album` where tipo=1 and (desde like CONCAT('%',?,'%'))");
+            $stmt->bindValue(1, $libro, PDO::PARAM_STR);
+            $stmt->execute();
             $datos = $stmt->fetchAll();
             foreach ($datos as $row) {
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                 if ($row['CONTADOR'] > 0) {
-                    $stmt = $conexion->prepare("SELECT * FROM `album` where tipo=1 ORDER BY desde ASC LIMIT ?,?");
-                    $stmt->bindValue(1, $inicio, PDO::PARAM_INT);
-                    $stmt->bindValue(2, $registros, PDO::PARAM_INT);
+                    $stmt = $conexion->prepare("SELECT * FROM `album` where tipo=1 and (desde like CONCAT('%',?,'%')) ORDER BY desde ASC LIMIT ?,?");
+                    $stmt->bindValue(1, $libro, PDO::PARAM_STR);
+                    $stmt->bindValue(2, $inicio, PDO::PARAM_INT);
+                    $stmt->bindValue(3, $registros, PDO::PARAM_INT);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
@@ -144,15 +147,16 @@ class albumControlador extends albumModelo
         }
         return $insBeanPagination->__toString();
     }
-    public function bean_paginador_album_controlador($pagina, $registros)
+    public function bean_paginador_album_controlador($pagina, $registros, $libro)
     {
         $insBeanCrud = new BeanCrud();
         try {
             $pagina = mainModel::limpiar_cadena($pagina);
             $registros = mainModel::limpiar_cadena($registros);
+            $libro = mainModel::limpiar_cadena($libro);
             $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
             $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-            $insBeanCrud->setBeanPagination(self::paginador_album_controlador($this->conexion_db, $inicio, $registros));
+            $insBeanCrud->setBeanPagination(self::paginador_album_controlador($this->conexion_db, $inicio, $registros, $libro));
 
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";

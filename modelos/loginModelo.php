@@ -54,15 +54,18 @@ class loginModelo extends mainModel
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
             }
             if ($insBeanPagination->getCountFilter() > 0) {
-                $stmt = $conexion->prepare("SELECT * FROM `cuenta` WHERE email=:Email and clave=:Clave and estado=1");
+                $contador = 0;
+
+                $stmt = $conexion->prepare("SELECT cue.*,libcue.libro_codigoLibro FROM `cuenta` AS cue LEFT JOIN `librocuenta` AS libcue ON libcue.cuenta_codigocuenta=cue.CuentaCodigo WHERE cue.email=:Email and cue.clave=:Clave and cue.estado=1");
                 $stmt->bindValue(":Email", $Cuenta->getEmail(), PDO::PARAM_STR);
                 $stmt->bindValue(":Clave", $Cuenta->getClave(), PDO::PARAM_STR);
-
                 $stmt->execute();
                 $datos = $stmt->fetchAll();
                 foreach ($datos as $row) {
-
+                    $contador++;
+                    $inLibroCuenta = new LibroCuenta();
                     $insCuenta = new Cuenta();
+                    $inLibroCuenta->setLibro($row['libro_codigoLibro']);
                     $insCuenta->setEmail($row['email']);
                     $insCuenta->setIdCuenta($row['idcuenta']);
                     $insCuenta->setTipo($row['tipo']);
@@ -72,8 +75,10 @@ class loginModelo extends mainModel
                     $insCuenta->setVerificacion($row['codigo_verificacion']);
                     $insCuenta->setFoto($row['foto']);
                     $insCuenta->setPerfil($row['perfil']);
-                    $insBeanPagination->setList($insCuenta->__toString());
+                    $inLibroCuenta->setCuenta($insCuenta->__toString());
+                    $insBeanPagination->setList($inLibroCuenta->__toString());
                 }
+                $insBeanPagination->setCountFilter($contador);
             }
 
             $stmt->closeCursor();

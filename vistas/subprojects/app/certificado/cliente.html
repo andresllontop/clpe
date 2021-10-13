@@ -1,20 +1,26 @@
 <!--contenido de la pagina  -->
-<div id="seccion-cliente-inactivo">
+<div id="seccion-cliente-inactivo" class="d-none">
   <div class="container-fluid page-header pt-3">
     <div class="form-row">
+      <div class="col-2 text-center pb-2">
+        <button class="btn btn-dark float-left btn-regresar"><i
+            class="zmdi zmdi-long-arrow-left zmdi-hc-2x"></i></button>
+      </div>
+      <h3 class="text-center all-tittles col-9 pr-10 f-weight-600 text-primary pb-2" id="titleLibro"></h3>
       <div class="dropdown col-2">
         <input type="hidden" id="pageCliente" value="1">
-        <select id="sizePageCliente" class="form-control w-auto">
+        <select id="sizePageCliente" class="form-control w-100">
           <option value="20">20</option>
           <option value="25">25</option>
           <option value="30">30</option>
         </select>
       </div>
-      <div class="col-10 text-right">
+      <h3 class="text-center all-tittles col-8 f-weight-600" id="titleManagerCliente"></h3>
+      <div class="col-2 text-right">
         <button type="button" id="btnCertificadosEntregados" data-opcion="0" class="btn btn-primary">CERTIFICADOS
           ENTREGADOS</button>
       </div>
-      <h3 class="text-center all-tittles col-12 f-weight-600" id="titleManagerCliente"></h3>
+
     </div>
   </div>
 

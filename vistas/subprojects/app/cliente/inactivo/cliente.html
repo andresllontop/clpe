@@ -46,9 +46,9 @@
         <tr>
           <th class="text-center">FECHA</th>
           <th class="text-center">NOMBRES</th>
-          <th class="text-center">APELLIDOS</th>
           <th class="text-center" style="width:10%;">TELEFONO</th>
           <th class="text-center">EMAIL</th>
+          <th class="text-center">LIBRO</th>
           <th class="text-center">TIPO DE MEDIO</th>
           <th class="text-center d-none">CÓDIGO VENDEDOR</th>
           <th class="text-center d-none">USUARIO</th>
@@ -84,12 +84,28 @@
               style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
           </button>
         </div>
-        <div class="modal-body" style="padding-top:5%;">
-          <div class="row">
+        <div class="modal-body px-3 py-0">
+          <div class="col-sm-12 mb-5 pb-2 border-bottom">
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="radioTipoCliente" value="1" checked>
+              <label class="form-check-label">
+                NUEVO ALUMNO
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="radioTipoCliente" value="2">
+              <label class="form-check-label">
+                ALUMNO REGISTRADO
+              </label>
+            </div>
+
+          </div>
+          <div class="row" id="htmlAddNew">
             <div class="col-sm-6">
               <div class="group-material">
                 <input id="txtNombreCliente" type="text" class="material-control tooltips-general "
-                  placeholder="Nombre completo" required="" maxlength="70" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,70}"
+                  placeholder="Nombre completo" maxlength="70" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,70}"
                   data-toggle="tooltip" data-placement="top">
                 <span class="highlight"></span>
                 <span class="bar"></span>
@@ -99,7 +115,7 @@
             <div class="col-sm-6">
               <div class="group-material">
                 <input id="txtApellidoCliente" type="text" class="material-control tooltips-general input-check-user"
-                  placeholder="Nombre de usuario" required="" maxlength="50" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ ]{1,50}"
+                  placeholder="Nombre de usuario" maxlength="50" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ ]{1,50}"
                   data-toggle="tooltip" data-placement="top">
                 <span class="highlight"></span>
                 <span class="bar"></span>
@@ -109,7 +125,7 @@
             <div class="col-sm-6">
               <div class="group-material">
                 <input id="txtTelefonoCliente" type="text" class="material-control tooltips-general input-check-user"
-                  placeholder="Telefono" maxlength="20" required="" data-toggle="tooltip" pattern="[0-9]{1,20}"
+                  placeholder="Telefono" maxlength="20" data-toggle="tooltip" pattern="[0-9]{1,20}"
                   data-placement="top">
                 <span class="highlight"></span>
                 <span class="bar"></span>
@@ -128,13 +144,29 @@
             <div class="col-sm-12">
               <div class="group-material">
                 <input id="txtEspecialidadCliente" type="text"
-                  class="material-control tooltips-general input-check-user" placeholder="Nombre de usuario" required=""
+                  class="material-control tooltips-general input-check-user" placeholder="Nombre de usuario"
                   maxlength="50" pattern="[a-zA-Z-áéíóúÁÉÍÓÚñÑ\s]{1,50}" data-toggle="tooltip" data-placement="top">
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label class="all-tittles">Especialidad</label>
               </div>
             </div>
+            <div class="col-sm-12">
+              <div class="group-material">
+                <label class="all-tittles" for="txtLibroCliente" style="top: -20px;
+                  font-size: 17px;
+                  color: #333;
+                  font-weight: normal;">LIBRO</label>
+                <select id="txtLibroCliente" class="material-control tooltips-general">
+                  <option value="L01" selected>PIENSE Y HÁGASE RICO</option>
+                  <option value="L02">ACTITUD MENTAL POSITIVA</option>
+                  <option value="L03">LA LLAVE MAESTRA DE LA RIQUEZA</option>
+                </select>
+
+
+              </div>
+            </div>
+
             <div class="col-sm-12">
 
               <span class="all-tittles">¿ Porqué medio te enteraste de la Plataforma Club de Lectura?</span>
@@ -204,7 +236,7 @@
               <div class="col-sm-6">
                 <div class="group-material">
                   <input id="txtUsuarioName" type="text" class="material-control tooltips-general"
-                    placeholder="Nombre de Usuario" required="" maxlength="40" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}"
+                    placeholder="Nombre de Usuario" maxlength="40" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}"
                     data-toggle="tooltip" data-placement="top" title="Escribe nombre de Usuario">
                   <span class="highlight"></span>
                   <span class="bar"></span>
@@ -310,6 +342,34 @@
             </div>
 
 
+          </div>
+          <div class="row d-none" id="htmlAdd">
+            <div class="col-sm-12">
+              <div class="group-material">
+                <input id="txtEmailOtherUsuario" type="email" class="material-control tooltips-general"
+                  placeholder="E-mail" maxlength="50" data-toggle="tooltip" data-placement="top"
+                  title="Escribe el Email del Cliente" autocomplete="off">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtEmailOtherUsuario">Email</label>
+              </div>
+
+            </div>
+            <div class="col-sm-12">
+              <div class="group-material">
+                <label class="all-tittles" for="txtLibroOtherCliente" style="top: -20px;
+                  font-size: 17px;
+                  color: #333;
+                  font-weight: normal;">LIBRO</label>
+                <select id="txtLibroOtherCliente" class="material-control tooltips-general">
+                  <option value="L01" selected>PIENSE Y HÁGASE RICO</option>
+                  <option value="L02">ACTITUD MENTAL POSITIVA</option>
+                  <option value="L03">LA LLAVE MAESTRA DE LA RIQUEZA</option>
+                </select>
+
+
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

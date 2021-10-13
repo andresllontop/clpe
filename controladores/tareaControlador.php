@@ -4,6 +4,7 @@ require_once './classes/other/beanCrud.php';
 require_once './classes/other/beanPagination.php';
 require_once './classes/principal/subtitulo.php';
 require_once './classes/principal/titulo.php';
+require_once './classes/principal/libro.php';
 class tareaControlador extends tareaModelo
 {
     public function datos_tarea_controlador($tipo, $codigo)

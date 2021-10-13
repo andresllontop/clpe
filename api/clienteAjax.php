@@ -5,6 +5,7 @@ $RESULTADO_token = $insFilter->HeaderToken();
 if (!empty($RESULTADO_token)) {
     require_once './classes/principal/cliente.php';
     require_once './classes/principal/cuenta.php';
+
     require_once './controladores/clienteControlador.php';
     $inscliente = new clienteControlador();
     $accion = $RESULTADO_token->accion;
@@ -23,9 +24,19 @@ if (!empty($RESULTADO_token)) {
                         $insClienteClass->setCuenta($personData->cuenta);
                         $insClienteClass->setVendedor($personData->vendedor);
                         $insClienteClass->setTipoMedio($personData->tipomedio);
+
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
+
                         echo $inscliente->agregar_cliente_controlador(1, $insClienteClass);
+                    } else if ($accion == "add-libro") {
+                        $personData = json_decode($_POST['class']);
+                        $insClienteClass = new Cliente();
+                        $insClienteClass->setTipoMedio($personData->email);
+                        $insClienteClass->setVendedor($personData->libro);
+                        header("HTTP/1.1 200");
+                        header('Content-Type: application/json; charset=utf-8');
+                        echo $inscliente->agregar_cliente_libro_controlador(1, $insClienteClass);
                     } else if ($accion == "update") {
 
                         require_once './classes/principal/empresa.php';
@@ -43,6 +54,7 @@ if (!empty($RESULTADO_token)) {
                         if (isset($personData->tipo_inscripcion)) {
 
                             if ((int) $personData->tipo_inscripcion == 1) {
+
                                 echo ($inscliente->actualizar_datos_tipo_inscripcion_cliente_controlador(1, $insClienteClass, $personData->economico));
                             } else {
                                 require_once './plugins/PHPMailer/src/PHPMailer.php';
@@ -90,6 +102,8 @@ if (!empty($RESULTADO_token)) {
                         $insCuentaClass->setIdCuenta($personData->idcuenta);
                         $insCuentaClass->setCuentaCodigo($personData->codigo);
                         $insCuentaClass->setEstado($personData->estado);
+                        //libro
+                        $insCuentaClass->setClave($personData->libro);
 
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
@@ -100,6 +114,8 @@ if (!empty($RESULTADO_token)) {
                         $insClienteClass = new Cliente();
                         $insClienteClass->setIdCliente($personData->idcliente);
                         $insClienteClass->setEstado($personData->estado);
+                        //libro
+                        $insClienteClass->setvendedor($personData->libro);
 
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
@@ -116,19 +132,21 @@ if (!empty($RESULTADO_token)) {
                         header('Content-Type: application/json; charset=utf-8');
                         $insClienteClass = new Cliente();
                         $insClienteClass->setIdCliente($_GET['id']);
+                        $insClienteClass->setTipoMedio($_GET['libro']);
+                        $insClienteClass->setEstado($_GET['estado']);
                         echo $inscliente->eliminar_cliente_controlador($insClienteClass);
                     } else if ($accion == "paginate") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($inscliente->bean_paginador_cliente_controlador($_GET['pagina'], $_GET['registros'], $_GET['estado'], $_GET['filtro']));
+                        echo json_encode($inscliente->bean_paginador_cliente_controlador($_GET['pagina'], $_GET['registros'], $_GET['estado'], $_GET['filtro'], $_GET['libro']));
                     } else if ($accion == "tarea") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($inscliente->bean_paginador_tarea_cliente_controlador($_GET['pagina'], $_GET['registros'], $_GET['filtro']));
+                        echo json_encode($inscliente->bean_paginador_tarea_cliente_controlador($_GET['pagina'], $_GET['registros'], $_GET['filtro'], $_GET['libro']));
                     } else if ($accion == "terminado") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($inscliente->bean_paginador_terminado_cliente_controlador($_GET['pagina'], $_GET['registros'], $_GET['filtro']));
+                        echo json_encode($inscliente->bean_paginador_terminado_cliente_controlador($_GET['pagina'], $_GET['registros'], $_GET['filtro'], $_GET['libro']));
                     } else if ($accion == "obtener") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');

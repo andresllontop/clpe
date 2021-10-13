@@ -89,19 +89,22 @@ class recursoControlador extends recursoModelo
         return $insBeanCrud->__toString();
 
     }
-    public function paginador_recurso_controlador($conexion, $inicio, $registros)
+    public function paginador_recurso_controlador($conexion, $inicio, $registros, $libro)
     {
         $insBeanPagination = new BeanPagination();
         try {
-            $stmt = $conexion->query("SELECT COUNT(idrecurso) AS CONTADOR FROM `recurso`");
+            $stmt = $conexion->prepare("SELECT COUNT(idrecurso) AS CONTADOR FROM `recurso` WHERE  codigo_subtitulo LIKE CONCAT('%',?,'%')");
+            $stmt->bindParam(1, $libro, PDO::PARAM_STR);
+            $stmt->execute();
             $datos = $stmt->fetchAll();
             foreach ($datos as $row) {
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                 if ($row['CONTADOR'] > 0) {
-                    $stmt = $conexion->prepare("SELECT b.*,s.nombre AS nombre_subtitulo,s.idsubtitulo FROM `recurso` AS b inner join `subtitulo` AS s WHERE b.codigo_subtitulo=s.codigo_subtitulo ORDER BY  b.codigo_subtitulo  ASC LIMIT ?,?");
+                    $stmt = $conexion->prepare("SELECT b.*,s.nombre AS nombre_subtitulo,s.idsubtitulo FROM `recurso` AS b inner join `subtitulo` AS s WHERE b.codigo_subtitulo=s.codigo_subtitulo AND (b.codigo_subtitulo LIKE CONCAT('%',?,'%')) ORDER BY  b.codigo_subtitulo  ASC LIMIT ?,?");
 
-                    $stmt->bindParam(1, $inicio, PDO::PARAM_INT);
-                    $stmt->bindParam(2, $registros, PDO::PARAM_INT);
+                    $stmt->bindParam(1, $libro, PDO::PARAM_STR);
+                    $stmt->bindParam(2, $inicio, PDO::PARAM_INT);
+                    $stmt->bindParam(3, $registros, PDO::PARAM_INT);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
 
@@ -134,15 +137,16 @@ class recursoControlador extends recursoModelo
         }
         return $insBeanPagination->__toString();
     }
-    public function bean_paginador_recurso_controlador($pagina, $registros)
+    public function bean_paginador_recurso_controlador($pagina, $registros, $libro)
     {
         $insBeanCrud = new BeanCrud();
         try {
             $pagina = mainModel::limpiar_cadena($pagina);
             $registros = mainModel::limpiar_cadena($registros);
+            $libro = mainModel::limpiar_cadena($libro);
             $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
             $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-            $insBeanCrud->setBeanPagination(self::paginador_recurso_controlador($this->conexion_db, $inicio, $registros));
+            $insBeanCrud->setBeanPagination(self::paginador_recurso_controlador($this->conexion_db, $inicio, $registros, $libro));
 
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";

@@ -5,14 +5,14 @@ $RESULTADO_token = $insFilter->HeaderToken();
 
 if (!empty($RESULTADO_token)) {
     require_once './classes/principal/tarea.php';
-
     require_once './controladores/tareaControlador.php';
-
     $instarea = new tareaControlador();
     $accion = $RESULTADO_token->accion;
     if (isset($RESULTADO_token->tipo)) {
         if ($RESULTADO_token->tipo == 1) {
+
             switch ($_SERVER['REQUEST_METHOD']) {
+
                 case 'GET':
                     if ($accion == "delete") {
                         header("HTTP/1.1 200");
@@ -35,7 +35,14 @@ if (!empty($RESULTADO_token)) {
                         $insTareaClass->setCuenta($_GET['filter']);
                         $insTareaClass->setPagina($_GET['pagina']);
                         $insTareaClass->setRegistro($_GET['registros']);
+                        $insTareaClass->setTipo($_GET['libro']);
                         echo json_encode($instarea->datos_tarea_controlador("conteo-alumno", $insTareaClass));
+                    } else if ($accion == "libros") {
+
+                        header("HTTP/1.1 200");
+                        header('Content-Type: application/json; charset=utf-8');
+                        $insTareaClass = new Tarea();
+                        echo json_encode($instarea->datos_tarea_controlador("libros", $insTareaClass));
                     } else {
                         header("HTTP/1.1 500");
                     }
@@ -46,7 +53,8 @@ if (!empty($RESULTADO_token)) {
                     // echo '<script> window.location.href="' . SERVERURL . 'login" </script>';
                     break;
             }
-        } elseif ($RESULTADO_token->tipo == 2 && $RESULTADO_token->libro != "") {
+        } elseif ($RESULTADO_token->tipo == 2) {
+            //elseif ($RESULTADO_token->tipo == 2 && $RESULTADO_token->libro != "")
             switch ($_SERVER['REQUEST_METHOD']) {
 
                 case 'GET':
@@ -59,7 +67,8 @@ if (!empty($RESULTADO_token)) {
                         header('Content-Type: application/json; charset=utf-8');
                         $insTareaClass = new Tarea();
                         $insTareaClass->setCuenta($RESULTADO_token->codigo);
-                        $insTareaClass->setSubTitulo($RESULTADO_token->libro);
+                        // $insTareaClass->setSubTitulo($RESULTADO_token->libro);
+                        $insTareaClass->setSubTitulo("L01");
                         $insTareaClass->setPagina($_GET['pagina']);
                         $insTareaClass->setRegistro($_GET['registros']);
                         echo json_encode($instarea->datos_tarea_controlador("titulo", $insTareaClass));
@@ -68,7 +77,8 @@ if (!empty($RESULTADO_token)) {
                         header('Content-Type: application/json; charset=utf-8');
                         $insTareaClass = new Tarea();
                         $insTareaClass->setCuenta($RESULTADO_token->codigo);
-                        $insTareaClass->setSubTitulo($RESULTADO_token->libro);
+                        // $insTareaClass->setSubTitulo($RESULTADO_token->libro);
+                        $insTareaClass->setSubTitulo("L01");
                         echo json_encode($instarea->datos_tarea_controlador("tarea-cantidad", $insTareaClass));
                     } else {
                         header("HTTP/1.1 500");

@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let fetOptions = {
         headers: {
             "Content-Type": 'application/json; charset=UTF-8',
-            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token") + (Cookies.get("clpe_libro") == undefined ? "" : " Clpe " + Cookies.get("clpe_libro"))
         },
         method: "GET",
     }
@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         })
         .catch(err => {
+            document.querySelector("#vistaCatalogo").innerHTML = "";
             circleCargando.toggleLoader("hide");
             showAlertErrorRequest();
         });
@@ -136,7 +137,7 @@ function processAjaxLibro() {
             parameters_pagination,
         type: beanRequestLibro.type_request,
         headers: {
-            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token") + (Cookies.get("clpe_libro")) ? "libro" + Cookies.get("clpe_libro") : ""
         },
         data: null,
         cache: false,
@@ -162,6 +163,7 @@ function processAjaxLibro() {
             listaLibro(beanPaginationLibro);
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
+        document.querySelector("#vistaCatalogo").innerHTML = "";
         $('#modalCargandoLibro').modal("hide");
         showAlertErrorRequest();
 

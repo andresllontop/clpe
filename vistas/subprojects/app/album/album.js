@@ -14,9 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestAlbum.operation = 'paginate';
         $('#modalCargandoAlbum').modal('show');
     });
-
-
-    $('#modalCargandoAlbum').modal('show');
+    document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "INICIO ALUMNO";
+    $('#modalCargandoCurso_c').modal('show');
 
     $("#modalCargandoAlbum").on('shown.bs.modal', function () {
         processAjaxAlbum();
@@ -30,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestAlbum.operation = 'add';
         beanRequestAlbum.type_request = 'POST';
         $("#videoPreview").html("");
-        $("#tituloModalManAlbum").html("REGISTRAR INICIO ALUMNO N01");
+        $("#tituloModalManAlbum").html("REGISTRAR INICIO ALUMNO");
 
         if (beanPaginationSubtituloC == undefined) {
             beanRequestSubtituloC.operation = 'obtener';
@@ -90,9 +89,41 @@ document.addEventListener('DOMContentLoaded', function () {
         subtituloHastaSelected = findBySubtituloC(document.querySelector("#txtSubtituloHasta").value);
 
     };
-
+    document.querySelectorAll('.btn-regresar').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            document.querySelector('#cursoHTML').classList.remove("d-none");
+            document.querySelector('#seccion-cliente').classList.add("d-none");
+        };
+    });
 });
+function addEventsButtonsCurso_c() {
+    document.querySelectorAll('.detalle-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.parentElement.parentElement.getAttribute('idlibro')
+            );
 
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestAlbum.type_request = 'GET';
+                beanRequestAlbum.operation = 'paginate';
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                $('#modalCargandoAlbum').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+
+}
 function processAjaxAlbum() {
     let form_data = new FormData();
 
@@ -168,6 +199,8 @@ function processAjaxAlbum() {
 
             parameters_pagination +=
                 '?filtro=';
+            parameters_pagination +=
+                '&libro=' + curso_cSelected.codigo;
             parameters_pagination +=
                 '&pagina=' + document.querySelector("#pageAlbum").value.trim();
             parameters_pagination +=
@@ -298,7 +331,7 @@ function addAlbum(album = undefined) {
 function listaAlbum(beanPagination) {
     document.querySelector('#tbodyAlbum').innerHTML = '';
     document.querySelector('#titleManagerAlbum').innerHTML =
-        'INICIO ALUMNO N01';
+        'INICIO ALUMNO';
     let row = "";
     if (beanPagination.list.length == 0) {
         destroyPagination($('#paginationAlbum'));
@@ -363,7 +396,7 @@ function addEventsButtonsAlbum() {
                     addAlbum(albumSelected);
                 }
 
-                $("#tituloModalManAlbum").html("EDITAR INICIO ALUMNO N01");
+                $("#tituloModalManAlbum").html("EDITAR INICIO ALUMNO");
                 $("#ventanaModalManAlbum").modal("show");
                 beanRequestAlbum.type_request = 'POST';
                 beanRequestAlbum.operation = 'update';

@@ -88,8 +88,10 @@ class cursoControlador extends cursoModelo
     }
     public function datos_curso_controlador($tipo, $codigo)
     {
+
         $insBeanCrud = new BeanCrud();
         try {
+
             $tipo = mainModel::limpiar_cadena($tipo);
             $insBeanCrud->setBeanPagination(cursoModelo::datos_curso_modelo($this->conexion_db, $tipo, $codigo));
         } catch (Exception $th) {

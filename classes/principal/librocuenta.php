@@ -9,6 +9,10 @@ class LibroCuenta
     private $finalizacion;
     private $estado_certificado;
     private $certificado;
+    private $imagen;
+    private $monto;
+    private $fecha;
+    private $estado;
 
     public function setIdlibroCuenta($idlibroCuenta)
     {
@@ -67,7 +71,38 @@ class LibroCuenta
     {
         return $this->certificado;
     }
-
+    public function setImagen($imagen)
+    {
+        $this->imagen = $imagen;
+    }
+    public function getImagen()
+    {
+        return $this->imagen;
+    }
+    public function setMonto($monto)
+    {
+        $this->monto = $monto;
+    }
+    public function getMonto()
+    {
+        return $this->monto;
+    }
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+    }
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+    }
+    public function getEstado()
+    {
+        return $this->estado;
+    }
     public function __toString()
     {
         return
@@ -76,6 +111,10 @@ class LibroCuenta
             "cuenta" => $this->cuenta,
             "libro" => $this->libro,
             "cliente" => $this->cliente,
+            "imagen" => $this->imagen,
+            "estado" => $this->estado,
+            "fecha" => $this->fecha,
+            "monto" => $this->monto,
             "certificado" => $this->certificado,
             "estado_certificado" => $this->estado_certificado,
             "finalizacion" => $this->finalizacion,

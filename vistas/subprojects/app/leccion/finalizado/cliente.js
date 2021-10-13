@@ -11,9 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestCliente.operation = 'terminado';
         $('#modalCargandoCliente').modal('show');
     });
-
-    $('#modalCargandoCliente').modal('show');
-
+    document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "FINALIZADOS";
+    $('#modalCargandoCurso_c').modal('show');
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();
     });
@@ -33,9 +32,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-
+    document.querySelectorAll('.btn-regresar').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            document.querySelector('#cursoHTML').classList.remove("d-none");
+            document.querySelector('#seccion-cliente').classList.add("d-none");
+        };
+    });
 });
+function addEventsButtonsCurso_c() {
+    document.querySelectorAll('.detalle-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.parentElement.parentElement.getAttribute('idlibro')
+            );
 
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestCliente.type_request = 'GET';
+                beanRequestCliente.operation = 'terminado';
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                $('#modalCargandoCliente').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+
+}
 function processAjaxCliente() {
     let form_data = new FormData();
 
@@ -47,7 +78,9 @@ function processAjaxCliente() {
         default:
 
             parameters_pagination +=
-                '?filtro=' + document.querySelector("#txtSearchCliente").value.trim();;
+                '?filtro=' + document.querySelector("#txtSearchCliente").value.trim();
+            parameters_pagination +=
+                '&libro=' + curso_cSelected.codigo;
             parameters_pagination +=
                 '&pagina=' + document.querySelector("#pageCliente").value.trim();
             parameters_pagination +=

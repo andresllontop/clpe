@@ -67,8 +67,6 @@ function processAjaxMensaje() {
     });
 
 }
-
-
 function listaMensaje(beanPagination) {
     beanPagination.list.forEach((mensaje) => {
         if (mensaje.countMensaje) {
@@ -79,7 +77,8 @@ function listaMensaje(beanPagination) {
             document.querySelector('#countAlumnoActivo').innerHTML = mensaje.countAlumnoActivo;
         } else if (mensaje.countAlumnoEstadoActivo) {
             document.querySelector('#countAlumnoEstadoActivo').innerHTML = mensaje.countAlumnoEstadoActivo;
-            document.querySelector('#countAlumnoEstadoActivo2').innerHTML = mensaje.countAlumnoEstadoActivo;
+        } else if (mensaje.countAlumnoResumen) {
+            document.querySelector('#countAlumnoEstadoActivo2').innerHTML = mensaje.countAlumnoResumen;
         } else {
             document.querySelector('#countTarea').innerHTML = mensaje.countTarea;
         }

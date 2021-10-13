@@ -1,0 +1,22 @@
+body {
+	background-color: rgba(160, 204, 204, 0.397);
+}
+
+#txtSocialTitulo {
+	left: 0;
+	font-size: 3em;
+}
+
+/* col-xs */
+@media (max-width: 767px) {
+	.w-50 {
+		width: 100% !important;
+	}
+	.navigation > h2,
+	#txtSocialTitulo {
+		font-size: 1.4em;
+	}
+	#imgSlug {
+		height: 318px !important;
+	}
+}

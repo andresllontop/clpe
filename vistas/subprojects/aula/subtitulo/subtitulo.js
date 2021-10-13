@@ -193,7 +193,7 @@ function processAjaxSubtitulo() {
             parameters_pagination,
         type: beanRequestSubtitulo.type_request,
         headers: {
-            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token") + (Cookies.get("clpe_libro") == undefined ? "" : " Clpe " + Cookies.get("clpe_libro"))
         },
         data: form_data,
         cache: false,
@@ -341,7 +341,7 @@ function processAjaxTarea() {
         url: getHostAPI() + "tareas/obtener",
         type: beanRequestSubtitulo.type_request,
         headers: {
-            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token") + (Cookies.get("clpe_libro") == undefined ? "" : " Clpe " + Cookies.get("clpe_libro"))
         },
         data: null,
         cache: false,
@@ -430,7 +430,7 @@ function processAjaxSubtituloTitulo(documentId = document.querySelector("#bodySu
         url: getHostAPI() + "lecciones/subtitulotitulo",
         type: "GET",
         headers: {
-            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token") + (Cookies.get("clpe_libro") == undefined ? "" : " Clpe " + Cookies.get("clpe_libro"))
         },
         data: null,
         cache: false,

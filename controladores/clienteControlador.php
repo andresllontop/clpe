@@ -4,6 +4,7 @@ require_once './modelos/clienteModelo.php';
 require_once './classes/other/beanCrud.php';
 require_once './classes/other/beanPagination.php';
 require_once './classes/principal/librocuenta.php';
+require_once './classes/principal/libro.php';
 class clienteControlador extends clienteModelo
 {
 
@@ -21,8 +22,12 @@ class clienteControlador extends clienteModelo
             $Cliente->setVendedor(mainModel::limpiar_cadena($Cliente->getVendedor()));
             $Cliente->setTipoMedio(mainModel::limpiar_cadena($Cliente->getTipoMedio()));
             $Cliente->setFecha(date('Y-m-d H:i:s'));
+            $insLibroCuenta = new LibroCuenta();
+            $insLibroCuenta->setLibro(mainModel::limpiar_cadena($Cliente->getcuenta()->libro));
+            $insLibroCuenta->setMonto(0);
+            $insLibroCuenta->setImagen('');
+            $insLibroCuenta->setFecha($Cliente->getFecha());
             $insCuenta = new Cuenta();
-            $insCuenta->setPrecio(0);
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
             $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($Cliente->getCuenta()->clave)));
             $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()->email));
@@ -53,39 +58,22 @@ class clienteControlador extends clienteModelo
                                     $cuentacodigo = mainModel::generar_codigo_aleatorio("AC", 7, $row3['MAXIMO'] + 1);
                                     $insCuenta->setCuentaCodigo($cuentacodigo);
 
-                                    $insCuenta->setVoucher("");
                                     $stmt = clienteModelo::agregar_cuenta_modelo($this->conexion_db, $insCuenta);
                                     if ($stmt->execute()) {
                                         $Cliente->setCuenta($cuentacodigo);
                                         $stmt = clienteModelo::agregar_cliente_modelo($this->conexion_db, $Cliente);
                                         if ($stmt->execute()) {
-                                            $stmt = $this->conexion_db->query("SELECT COUNT(idlibro) AS CONTADOR FROM `libro`");
-                                            $datos4 = $stmt->fetchAll();
-                                            foreach ($datos4 as $row4) {
-                                                if ($row4['CONTADOR'] > 0) {
-                                                    $stmt = $this->conexion_db->query("SELECT MIN(codigo) AS MINIMO FROM `libro`");
-                                                    $datos5 = $stmt->fetchAll();
-                                                    foreach ($datos5 as $row5) {
-                                                        $insLibroCuenta = new LibroCuenta();
-                                                        $insLibroCuenta->setCuenta($cuentacodigo);
-                                                        $insLibroCuenta->setLibro($row5['MINIMO']);
-                                                        $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
-                                                        if ($stmt->execute()) {
-                                                            $this->conexion_db->commit();
-                                                            $insBeanCrud->setMessageServer("ok");
-                                                            if ($tipo == 1) {
-                                                                $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 5, 0, ""));
-                                                            }
-
-                                                        } else {
-                                                            $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
-                                                        }
-
-                                                    }
-
-                                                } else {
-                                                    $insBeanCrud->setMessageServer("No se encuentra libro para registrar al usuario");
+                                            $insLibroCuenta->setCuenta($cuentacodigo);
+                                            $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
+                                            if ($stmt->execute()) {
+                                                $this->conexion_db->commit();
+                                                $insBeanCrud->setMessageServer("ok");
+                                                if ($tipo == 1) {
+                                                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, 0, ""));
                                                 }
+
+                                            } else {
+                                                $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
                                             }
 
                                         } else {
@@ -216,6 +204,85 @@ class clienteControlador extends clienteModelo
         }
         return json_encode($insBeanCrud->__toString());
     }
+    public function agregar_cliente_libro_controlador($tipo, $Cliente)
+    {
+
+        $insBeanCrud = new BeanCrud();
+        try {
+            $this->conexion_db->beginTransaction();
+
+            $insLibroCuenta = new LibroCuenta();
+            $insLibroCuenta->setLibro($Cliente->getVendedor());
+            $insLibroCuenta->setMonto(0);
+            $insLibroCuenta->setImagen('');
+            $insLibroCuenta->setEstado(0);
+            $insLibroCuenta->setFecha(date('Y-m-d H:i:s'));
+
+            $insCuenta = new Cuenta();
+            $insCuenta->setEmail($Cliente->getTipoMedio());
+
+            $stmt = $this->conexion_db->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE email=?");
+            $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+            $stmt->execute();
+            $datos = $stmt->fetchAll();
+            foreach ($datos as $row) {
+                if ($row['CONTADOR'] > 0) {
+
+                    $stmt = $this->conexion_db->prepare("SELECT CuentaCodigo FROM `cuenta` WHERE email=?");
+                    $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos2 = $stmt->fetchAll();
+                    foreach ($datos2 as $row2) {
+
+                        $stmt = $this->conexion_db->prepare("SELECT COUNT(idlibroCuenta) AS CONTADOR FROM `librocuenta` WHERE cuenta_codigocuenta=? and libro_codigoLibro=?");
+                        $stmt->bindValue(1, $row2['CuentaCodigo'], PDO::PARAM_STR);
+                        $stmt->bindValue(2, $insLibroCuenta->getLibro(), PDO::PARAM_STR);
+                        $stmt->execute();
+                        $datos3 = $stmt->fetchAll();
+                        foreach ($datos3 as $row3) {
+                            if ($row3['CONTADOR'] == 0) {
+                                $insLibroCuenta->setCuenta($row2['CuentaCodigo']);
+                                $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
+                                if ($stmt->execute()) {
+                                    $this->conexion_db->commit();
+                                    $insBeanCrud->setMessageServer("ok");
+                                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, 0, ""));
+
+                                } else {
+                                    $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
+                                }
+                            } else {
+                                $insBeanCrud->setMessageServer("El Libro seleccionado ya se encuentra registrado con el Usuario");
+                            }
+                        }
+
+                    }
+                } else {
+                    $insBeanCrud->setMessageServer("No Se encuentra Registrado el Usuario");
+                }
+            }
+
+        } catch (Exception $th) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            if (isset($stmt)) {
+                $stmt->closeCursor();
+                $stmt = null;
+            }
+            $this->conexion_db = null;
+        }
+        return json_encode($insBeanCrud->__toString());
+    }
     public function agregar_publico_cliente_controlador($Cliente)
     {
 
@@ -231,7 +298,7 @@ class clienteControlador extends clienteModelo
             $Cliente->setTipoMedio(mainModel::limpiar_cadena($Cliente->getTipoMedio()));
             $Cliente->setFecha(date('Y-m-d H:i:s'));
             $insCuenta = new Cuenta();
-            $insCuenta->setPrecio(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
+
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
             $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($Cliente->getCuenta()->clave)));
             $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()->email));
@@ -264,7 +331,7 @@ class clienteControlador extends clienteModelo
                                     if ($row3['MAXIMO'] > 0) {
                                         $cuentacodigo = mainModel::generar_codigo_aleatorio("AC", 7, $row3['MAXIMO'] + 1);
                                         $insCuenta->setCuentaCodigo($cuentacodigo);
-                                        $insCuenta->setVoucher("");
+
                                         $stmt = clienteModelo::agregar_cuenta_modelo($this->conexion_db, $insCuenta);
                                         if ($stmt->execute()) {
                                             $Cliente->setCuenta($cuentacodigo);
@@ -280,6 +347,10 @@ class clienteControlador extends clienteModelo
                                                             $insLibroCuenta = new LibroCuenta();
                                                             $insLibroCuenta->setCuenta($cuentacodigo);
                                                             $insLibroCuenta->setLibro($row5['MINIMO']);
+                                                            $insLibroCuenta->setImagen("");
+                                                            $insLibroCuenta->setMonto(0);
+                                                            $insLibroCuenta->setEstado(0);
+                                                            $insLibroCuenta->setFecha($Cliente->getFecha());
                                                             $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
                                                             if ($stmt->execute()) {
                                                                 $this->conexion_db->commit();
@@ -348,14 +419,18 @@ class clienteControlador extends clienteModelo
             $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
             $Cliente->setVendedor(mainModel::limpiar_cadena($Cliente->getVendedor()));
             $Cliente->setTipoMedio(mainModel::limpiar_cadena($Cliente->getTipoMedio()));
+
             $Cliente->setFecha(date('Y-m-d H:i:s'));
             $insCuenta = new Cuenta();
-            $insCuenta->setPrecio(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
             $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($Cliente->getCuenta()->clave)));
             $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()->email));
             $insCuenta->setEstado(0);
             $insCuenta->setTipo(2);
+            $insLibroCuenta = new LibroCuenta();
+            //curso
+            $insLibroCuenta->setMonto($Cliente->getCuenta()->verificacion);
+            $insLibroCuenta->setLibro($Cliente->getCuenta()->perfil);
             if (($Cliente->getTipoMedio()) < 0 && ($Cliente->getTipoMedio()) > 5) {
                 $insBeanCrud->setMessageServer("Formato de datos incorrectos");
 
@@ -368,7 +443,7 @@ class clienteControlador extends clienteModelo
                     } else {
                         $resultado = mainModel::archivo(array("image/png", "image/jpg", "image/jpeg"), (5 * 1024), $original, $nombre, "./adjuntos/clientes/comprobante/");
                         if ($resultado != "") {
-                            $insCuenta->setVoucher($resultado);
+                            $insLibroCuenta->setImagen($resultado);
 
                             $stmt = $this->conexion_db->query("SELECT MAX(idcuenta) AS MAXIMO FROM `cuenta`");
                             $datos3 = $stmt->fetchAll();
@@ -382,35 +457,21 @@ class clienteControlador extends clienteModelo
                                         $Cliente->setCuenta($cuentacodigo);
                                         $stmt = clienteModelo::agregar_cliente_modelo($this->conexion_db, $Cliente);
                                         if ($stmt->execute()) {
-                                            $stmt = $this->conexion_db->query("SELECT COUNT(idlibro) AS CONTADOR FROM `libro`");
-                                            $datos4 = $stmt->fetchAll();
-                                            foreach ($datos4 as $row4) {
-                                                if ($row4['CONTADOR'] > 0) {
-                                                    $stmt = $this->conexion_db->query("SELECT MIN(codigo) AS MINIMO FROM `libro`");
-                                                    $datos5 = $stmt->fetchAll();
-                                                    foreach ($datos5 as $row5) {
-                                                        $insLibroCuenta = new LibroCuenta();
-                                                        $insLibroCuenta->setCuenta($cuentacodigo);
-                                                        $insLibroCuenta->setLibro($row5['MINIMO']);
-                                                        $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
-                                                        if ($stmt->execute()) {
-                                                            $this->conexion_db->commit();
-                                                            $insBeanCrud->setMessageServer("ok");
-                                                            if (self::enviar_mensaje_clpe_controlador($this->conexion_db, $Cliente, $insCuenta)) {
-                                                                $insBeanCrud->setMessageServer("ok");
-                                                            } else {
-                                                                $insBeanCrud->setMessageServer("registrado, no se envió un email a CLPE");
-                                                            }
-
-                                                        } else {
-                                                            $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
-                                                        }
-
-                                                    }
-
+                                            $insLibroCuenta->setCuenta($cuentacodigo);
+                                            $insLibroCuenta->setEstado(0);
+                                            $insLibroCuenta->setFecha($Cliente->getFecha());
+                                            $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
+                                            if ($stmt->execute()) {
+                                                $this->conexion_db->commit();
+                                                $insBeanCrud->setMessageServer("ok");
+                                                if (self::enviar_mensaje_clpe_controlador($this->conexion_db, $Cliente, $insCuenta)) {
+                                                    $insBeanCrud->setMessageServer("ok");
                                                 } else {
-                                                    $insBeanCrud->setMessageServer("No se encuentra libro para registrar al usuario");
+                                                    $insBeanCrud->setMessageServer("registrado, no se envió un email a CLPE");
                                                 }
+
+                                            } else {
+                                                $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
                                             }
 
                                         } else {
@@ -451,12 +512,98 @@ class clienteControlador extends clienteModelo
         }
         return json_encode($insBeanCrud->__toString());
     }
+    public function agregar_libro_publico_cliente_otro_medio_controlador($insCuenta)
+    {
+
+        $insBeanCrud = new BeanCrud();
+        try {
+            $this->conexion_db->beginTransaction();
+
+            $insCuenta->setUsuario(mainModel::limpiar_cadena($insCuenta->getUsuario()));
+            $insCuenta->setEmail(mainModel::limpiar_cadena($insCuenta->getEmail()));
+            $insCuenta->setEstado(0);
+            $insCuenta->setTipo(2);
+            //libro
+            $libro = mainModel::limpiar_cadena($insCuenta->getPerfil());
+            //
+            if (isset($_FILES['txtImagenVoucher'])) {
+                $original = $_FILES['txtImagenVoucher'];
+                $nombre = $original['name'];
+                if ($original['error'] > 0) {
+                    $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+                } else {
+                    $resultado = mainModel::archivo(array("image/png", "image/jpg", "image/jpeg"), (5 * 1024), $original, $nombre, "./adjuntos/clientes/comprobante/");
+                    if ($resultado != "") {
+                        $stmt = $this->conexion_db->prepare("SELECT CuentaCodigo AS codigo FROM `cuenta` WHERE email=?");
+                        $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+                        $stmt->execute();
+                        $datos = $stmt->fetchAll();
+                        foreach ($datos as $row) {
+                            if ($row['codigo'] != null) {
+                                $insCuenta->setCuentaCodigo($row['codigo']);
+                                $stmt = $this->conexion_db->query("SELECT COUNT(idlibro) AS CONTADOR FROM `libro`");
+                                $datos4 = $stmt->fetchAll();
+                                foreach ($datos4 as $row4) {
+                                    if ($row4['CONTADOR'] > 0) {
+                                        $insLibroCuenta = new LibroCuenta();
+                                        $insLibroCuenta->setCuenta($insCuenta->getCuentaCodigo());
+                                        $insLibroCuenta->setLibro($libro);
+                                        $insLibroCuenta->setImagen($resultado);
+                                        $insLibroCuenta->setMonto(0);
+                                        $insLibroCuenta->setEstado(0);
+                                        $insLibroCuenta->setFecha((date('Y-m-d H:i:s')));
+                                        $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
+                                        if ($stmt->execute()) {
+                                            $this->conexion_db->commit();
+                                            $insBeanCrud->setMessageServer("new libro add");
+                                        } else {
+                                            $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
+                                        }
+
+                                    } else {
+                                        $insBeanCrud->setMessageServer("No se encuentra libro para registrar al usuario");
+                                    }
+                                }
+                            } else {
+                                $insBeanCrud->setMessageServer("el usuario no se encuentra");
+                            }
+
+                        }
+
+                    }
+                }
+            } else {
+                $insBeanCrud->setMessageServer("Ingrese voucher");
+            }
+
+        } catch (Exception $th) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            if (isset($stmt)) {
+                $stmt->closeCursor();
+                $stmt = null;
+            }
+            $this->conexion_db = null;
+        }
+        return json_encode($insBeanCrud->__toString());
+    }
     public function agregar_publico_culqui_cliente_controlador($Cliente, $culqi)
     {
 
         $insBeanCrud = new BeanCrud();
         try {
             $this->conexion_db->beginTransaction();
+            $libro = $Cliente->getFecha();
             $Cliente->setTelefono(mainModel::limpiar_cadena($Cliente->getTelefono()));
             $Cliente->setOcupacion(mainModel::limpiar_cadena($Cliente->getOcupacion()));
             $Cliente->setNombre(mainModel::limpiar_cadena($Cliente->getNombre()));
@@ -466,7 +613,6 @@ class clienteControlador extends clienteModelo
             $Cliente->setTipoMedio(mainModel::limpiar_cadena($Cliente->getTipoMedio()));
             $Cliente->setFecha(date('Y-m-d H:i:s'));
             $insCuenta = new Cuenta();
-            $insCuenta->setPrecio(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
             $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($Cliente->getCuenta()->clave)));
             $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()->email));
@@ -484,7 +630,7 @@ class clienteControlador extends clienteModelo
                     if ($row3['MAXIMO'] > 0) {
                         $cuentacodigo = mainModel::generar_codigo_aleatorio("AC", 7, $row3['MAXIMO'] + 1);
                         $insCuenta->setCuentaCodigo($cuentacodigo);
-                        $insCuenta->setVoucher("CULQI");
+
                         $stmt = clienteModelo::agregar_cuenta_culqui_modelo($this->conexion_db, $insCuenta);
                         if ($stmt->execute()) {
                             $Cliente->setCuenta($cuentacodigo);
@@ -494,67 +640,66 @@ class clienteControlador extends clienteModelo
                                 $datos4 = $stmt->fetchAll();
                                 foreach ($datos4 as $row4) {
                                     if ($row4['CONTADOR'] > 0) {
-                                        $stmt = $this->conexion_db->query("SELECT MIN(codigo) AS MINIMO FROM `libro`");
-                                        $datos5 = $stmt->fetchAll();
-                                        foreach ($datos5 as $row5) {
-                                            $insLibroCuenta = new LibroCuenta();
-                                            $insLibroCuenta->setCuenta($cuentacodigo);
-                                            $insLibroCuenta->setLibro($row5['MINIMO']);
-                                            $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
+                                        $insLibroCuenta = new LibroCuenta();
+                                        $insLibroCuenta->setCuenta($cuentacodigo);
+                                        $insLibroCuenta->setLibro($libro);
+                                        $insLibroCuenta->setImagen("CULQI");
+                                        $insLibroCuenta->setMonto($culqi->precio);
+                                        $insLibroCuenta->setFecha($Cliente->getFecha());
+                                        $insLibroCuenta->setEstado(1);
+                                        $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
+                                        if ($stmt->execute()) {
+                                            $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $culqi);
                                             if ($stmt->execute()) {
-                                                $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $culqi);
-                                                if ($stmt->execute()) {
-                                                    $this->conexion_db->commit();
-                                                    // $insBeanCrud->setMessageServer("ok");
-                                                    //obtener la cuenta registrada
-                                                    $insToken = new Auth();
-                                                    $insUser = new Usuario();
-                                                    $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta", $insCuenta);
-                                                    if ($clienteunico["countFilter"] == 0) {
-                                                        $insBeanCrud->setMessageServer("no se encuentra el usuario");
-                                                    } else {
-                                                        $insUser->setId($clienteunico["list"][0]['cuenta']['idcuenta']);
-                                                        $insUser->setUsuario($clienteunico["list"][0]['cuenta']['usuario']);
-                                                        $insUser->setEmail($clienteunico["list"][0]['cuenta']['email']);
-                                                        $insUser->setTipo(2);
-                                                        $insUser->setCodigo($clienteunico["list"][0]['cuenta']['cuentaCodigo']);
-                                                        //
-
-                                                        $Cliente->setCuenta((object) array("codigo" => $insCuenta->getCuentaCodigo(),
-                                                            "usuario" => $insCuenta->getUsuario(),
-                                                            "clave" => $insCuenta->getClave(),
-                                                            "email" => $insCuenta->getEmail(),
-                                                            "perfil" => $insCuenta->getPerfil(),
-                                                            "cuentaverificacion" => $insCuenta->getVerificacion(),
-                                                            "precio" => $insCuenta->getPrecio(),
-                                                            "estado" => $insCuenta->getEstado(),
-                                                            "voucher" => $insCuenta->getVoucher(),
-                                                            "tipo" => $insCuenta->getTipo(),
-                                                            "foto" => $insCuenta->getFoto(),
-                                                            "idcuenta" => $clienteunico["list"][0]['cuenta']['idcuenta'],
-
-                                                        ));
-                                                        $responsemensaje = self::enviar_mensaje_controlador($this->conexion_db, $Cliente, $insToken->autenticar($insUser)['token']);
-
-                                                        $insBeanCrud->setMessageServer($responsemensaje['messageServer']);
-                                                        $insBeanCrud->setBeanClass(array("nPedido" => $culqi->requestNiubiz->order->purchaseNumber,
-                                                            "nombre" => ($Cliente->getApellido() . " " . $Cliente->getNombre()),
-                                                            "fecha" => $culqi->fecha,
-                                                            "importe" => $culqi->requestNiubiz->dataMap->AMOUNT,
-                                                            "tipoCurrency" => $culqi->requestNiubiz->order->currency,
-                                                            "descripcionProducto" => "CLUB DE LECTURA",
-                                                            "tarjeta" => $culqi->requestNiubiz->dataMap->CARD,
-                                                            "marcaTarjeta" => $culqi->nombre_banco,
-                                                        ));
-                                                    }
+                                                $this->conexion_db->commit();
+                                                // $insBeanCrud->setMessageServer("ok");
+                                                //obtener la cuenta registrada
+                                                $insToken = new Auth();
+                                                $insUser = new Usuario();
+                                                $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta", $insCuenta);
+                                                if ($clienteunico["countFilter"] == 0) {
+                                                    $insBeanCrud->setMessageServer("no se encuentra el usuario");
                                                 } else {
-                                                    $insBeanCrud->setMessageServer("No hemos podido registrar el historial económico.");
-                                                }
+                                                    $insUser->setId($clienteunico["list"][0]['cuenta']['idcuenta']);
+                                                    $insUser->setUsuario($clienteunico["list"][0]['cuenta']['usuario']);
+                                                    $insUser->setEmail($clienteunico["list"][0]['cuenta']['email']);
+                                                    $insUser->setTipo(2);
+                                                    $insUser->setCodigo($clienteunico["list"][0]['cuenta']['cuentaCodigo']);
+                                                    //
 
+                                                    $Cliente->setCuenta((object) array("codigo" => $insCuenta->getCuentaCodigo(),
+                                                        "usuario" => $insCuenta->getUsuario(),
+                                                        "clave" => $insCuenta->getClave(),
+                                                        "email" => $insCuenta->getEmail(),
+                                                        "perfil" => $insCuenta->getPerfil(),
+                                                        "cuentaverificacion" => $insCuenta->getVerificacion(),
+                                                        "estado" => $insCuenta->getEstado(),
+                                                        "tipo" => $insCuenta->getTipo(),
+                                                        "foto" => $insCuenta->getFoto(),
+
+                                                        "idcuenta" => $clienteunico["list"][0]['cuenta']['idcuenta'],
+
+                                                    ));
+
+                                                    $responsemensaje = self::enviar_mensaje_controlador($this->conexion_db, $Cliente, $insToken->autenticar($insUser)['token'], $libro);
+
+                                                    $insBeanCrud->setMessageServer($responsemensaje['messageServer']);
+                                                    $insBeanCrud->setBeanClass(array("nPedido" => $culqi->requestNiubiz->order->purchaseNumber,
+                                                        "nombre" => ($Cliente->getApellido() . " " . $Cliente->getNombre()),
+                                                        "fecha" => $culqi->fecha,
+                                                        "importe" => $culqi->requestNiubiz->dataMap->AMOUNT,
+                                                        "tipoCurrency" => $culqi->requestNiubiz->order->currency,
+                                                        "descripcionProducto" => "TALLER DE LECTURA ",
+                                                        "tarjeta" => $culqi->requestNiubiz->dataMap->CARD,
+                                                        "marcaTarjeta" => $culqi->nombre_banco,
+                                                    ));
+                                                }
                                             } else {
-                                                $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
+                                                $insBeanCrud->setMessageServer("No hemos podido registrar el historial económico.");
                                             }
 
+                                        } else {
+                                            $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
                                         }
 
                                     } else {
@@ -569,6 +714,97 @@ class clienteControlador extends clienteModelo
                             $insBeanCrud->setMessageServer("No hemos podido registrar la cuenta");
                         }
 
+                    }
+
+                }
+            }
+        } catch (Exception $th) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+            if ($this->conexion_db->inTransaction()) {
+                $this->conexion_db->rollback();
+            }
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            if (isset($stmt)) {
+                $stmt->closeCursor();
+                $stmt = null;
+            }
+            $this->conexion_db = null;
+        }
+        return json_encode($insBeanCrud->__toString());
+    }
+    public function agregar_libro_publico_culqui_cliente_controlador($Cliente, $culqi)
+    {
+
+        $insBeanCrud = new BeanCrud();
+        try {
+            $this->conexion_db->beginTransaction();
+            $libro = $Cliente->getFecha();
+            $Cliente->setTelefono(mainModel::limpiar_cadena($Cliente->getTelefono()));
+            $Cliente->setNombre(mainModel::limpiar_cadena($Cliente->getNombre()));
+            $Cliente->setApellido(mainModel::limpiar_cadena($Cliente->getApellido()));
+            $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
+            $insCuenta = new Cuenta();
+            $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()->email));
+            $insCuenta->setTipo(2);
+            if (($Cliente->getTipoMedio()) < 0 && ($Cliente->getTipoMedio()) > 5) {
+                $insBeanCrud->setMessageServer("Formato de datos incorrectos");
+
+            } else {
+                $stmt = $this->conexion_db->prepare("SELECT CuentaCodigo AS codigo FROM `cuenta` WHERE email=?");
+                $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+                $stmt->execute();
+                $datos = $stmt->fetchAll();
+                foreach ($datos as $row) {
+                    if ($row['codigo'] != null) {
+                        $insCuenta->setCuentaCodigo($row['codigo']);
+                        $stmt = $this->conexion_db->query("SELECT COUNT(idlibro) AS CONTADOR FROM `libro`");
+                        $datos4 = $stmt->fetchAll();
+                        foreach ($datos4 as $row4) {
+                            if ($row4['CONTADOR'] > 0) {
+                                $insLibroCuenta = new LibroCuenta();
+                                $insLibroCuenta->setCuenta($insCuenta->getCuentaCodigo());
+                                $insLibroCuenta->setLibro($libro);
+                                $insLibroCuenta->setImagen("CULQI");
+                                $insLibroCuenta->setMonto($culqi->precio);
+                                $insLibroCuenta->setEstado(1);
+                                $insLibroCuenta->setFecha((date('Y-m-d H:i:s')));
+                                $stmt = clienteModelo::agregar_libro_cuenta_modelo($this->conexion_db, $insLibroCuenta);
+                                if ($stmt->execute()) {
+                                    $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $culqi);
+                                    if ($stmt->execute()) {
+                                        $this->conexion_db->commit();
+                                        $insBeanCrud->setMessageServer("new libro add");
+                                        $insBeanCrud->setBeanClass(array("nPedido" => $culqi->requestNiubiz->order->purchaseNumber,
+                                            "nombre" => ($Cliente->getApellido() . " " . $Cliente->getNombre()),
+                                            "fecha" => $culqi->fecha,
+                                            "importe" => $culqi->requestNiubiz->dataMap->AMOUNT,
+                                            "tipoCurrency" => $culqi->requestNiubiz->order->currency,
+                                            "descripcionProducto" => "CLUB DE LECTURA",
+                                            "tarjeta" => $culqi->requestNiubiz->dataMap->CARD,
+                                            "marcaTarjeta" => $culqi->nombre_banco,
+                                        ));
+
+                                    } else {
+                                        $insBeanCrud->setMessageServer("No hemos podido registrar el historial económico.");
+                                    }
+
+                                } else {
+                                    $insBeanCrud->setMessageServer("No hemos podido registrar los datos");
+                                }
+
+                            } else {
+                                $insBeanCrud->setMessageServer("No se encuentra libro para registrar al usuario");
+                            }
+                        }
+                    } else {
+                        $insBeanCrud->setMessageServer("el usuario no se encuentra");
                     }
 
                 }
@@ -613,7 +849,7 @@ class clienteControlador extends clienteModelo
             $datos = $stmt->fetchAll();
             foreach ($datos as $row) {
                 if ($row['CONTADOR'] > 0) {
-                    $insBeanCrud->setMessageServer("Ya se encuentra Registrado el Usuario, cambie de Email");
+                    $insBeanCrud->setMessageServer("Ya se encuentra Registrado el Usuario");
                 } else {
                     $stmt = $this->conexion_db->prepare("SELECT COUNT(id) AS CONTADOR FROM `administrador` WHERE AdminNombre=? and AdminApellido=?");
                     $stmt->bindValue(1, $Cliente->getNombre(), PDO::PARAM_STR);
@@ -627,6 +863,90 @@ class clienteControlador extends clienteModelo
                             $insBeanCrud->setMessageServer("ok");
 
                         }
+                    }
+                }
+            }
+
+        } catch (Exception $th) {
+
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            if (isset($stmt)) {
+                $stmt->closeCursor();
+                $stmt = null;
+            }
+            $this->conexion_db = null;
+        }
+        return json_encode($insBeanCrud->__toString());
+    }
+    public function validar_cliente_libro_controlador($Cliente)
+    {
+
+        $insBeanCrud = new BeanCrud();
+        try {
+            $Cliente->setTelefono(mainModel::limpiar_cadena($Cliente->getTelefono()));
+            $Cliente->setOcupacion(mainModel::limpiar_cadena($Cliente->getOcupacion()));
+            $Cliente->setNombre(mainModel::limpiar_cadena($Cliente->getNombre()));
+            $Cliente->setApellido(mainModel::limpiar_cadena($Cliente->getApellido()));
+            $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
+            $insCuenta = new Cuenta();
+            $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()->email));
+            //LIBRO
+            $libro = (mainModel::limpiar_cadena($Cliente->getCuenta()->tipo));
+
+            $usuarioRegistrado = false;
+            $codigocuenta = "";
+            $stmt = $this->conexion_db->prepare("SELECT count(idcuenta) AS CONTADOR  FROM `cuenta` WHERE email=?");
+
+            $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+            $stmt->execute();
+            $datos = $stmt->fetchAll();
+            foreach ($datos as $row) {
+
+                if ($row['CONTADOR'] > 0) {
+                    $stmt = $this->conexion_db->prepare("SELECT CuentaCodigo  FROM `cuenta` WHERE email=?");
+                    $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos6 = $stmt->fetchAll();
+                    foreach ($datos6 as $row6) {
+                        $codigocuenta = $row6['CuentaCodigo'];
+                        $usuarioRegistrado = true;
+                    }
+
+                } else {
+                    $stmt = $this->conexion_db->prepare("SELECT COUNT(id) AS CONTADOR FROM `administrador` WHERE AdminNombre=? and AdminApellido=?");
+                    $stmt->bindValue(1, $Cliente->getNombre(), PDO::PARAM_STR);
+                    $stmt->bindValue(2, $Cliente->getApellido(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos2 = $stmt->fetchAll();
+                    foreach ($datos2 as $row2) {
+                        if ($row2['CONTADOR'] > 0) {
+                            $insBeanCrud->setMessageServer("datos ya registrados ingrese nueva información");
+                        } else {
+                            $insBeanCrud->setMessageServer("ok");
+
+                        }
+                    }
+                }
+            }
+
+            if ($usuarioRegistrado) {
+
+                $stmt = $this->conexion_db->prepare("SELECT COUNT(idlibroCuenta) AS CONTADOR FROM `librocuenta` WHERE cuenta_codigocuenta=? and libro_codigoLibro=?");
+                $stmt->bindValue(1, $codigocuenta, PDO::PARAM_STR);
+                $stmt->bindValue(2, $libro, PDO::PARAM_STR);
+                $stmt->execute();
+                $datos3 = $stmt->fetchAll();
+                foreach ($datos3 as $row3) {
+                    if ($row3['CONTADOR'] > 0) {
+                        $insBeanCrud->setMessageServer("Ya se encuentra registrado, este usuario con el libro selecionado");
+                    } else {
+                        $insBeanCrud->setMessageServer("Ya se encuentra Registrado el Usuario");
                     }
                 }
             }
@@ -739,8 +1059,9 @@ class clienteControlador extends clienteModelo
         }
         return $row;
     }
-    public function paginador_cliente_controlador($conexion, $inicio, $registros, $estado, $filtro)
+    public function paginador_cliente_controlador($conexion, $inicio, $registros, $estado, $filtro, $libro = '')
     {
+
         $insBeanPagination = new BeanPagination();
         try {
             if ((int) $estado > -1) {
@@ -756,22 +1077,24 @@ class clienteControlador extends clienteModelo
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                 if ($row['CONTADOR'] > 0) {
                     if ((int) $estado > -1) {
-                        $stmt = $conexion->prepare("SELECT * FROM `administrador`  as admmini inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo WHERE cuent.estado=? and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) ORDER BY admmini.id DESC LIMIT ?,?");
+                        $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,licuent.estado as estado_libro,licuent.idlibroCuenta,licuent.imagen AS libr_imagen,licuent.monto,licuent.fecha_compra,licuent.libro_codigoLibro,lib.nombre AS lib_nombre FROM `librocuenta` as licuent inner join `cuenta` as cuent ON cuent.CuentaCodigo=licuent.cuenta_codigocuenta inner join `administrador` as admmini ON licuent.cuenta_codigocuenta=admmini.Cuenta_Codigo inner join `libro` as lib ON lib.codigo=licuent.libro_codigoLibro WHERE licuent.estado=? and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) AND (licuent.libro_codigoLibro LIKE CONCAT('%',?,'%'))  ORDER BY admmini.id DESC LIMIT ?,?");
                         $stmt->bindValue(1, $estado, PDO::PARAM_INT);
                         $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
                         $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
                         $stmt->bindValue(4, $filtro, PDO::PARAM_STR);
                         $stmt->bindValue(5, $filtro, PDO::PARAM_STR);
-                        $stmt->bindValue(6, $inicio, PDO::PARAM_INT);
-                        $stmt->bindValue(7, $registros, PDO::PARAM_INT);
+                        $stmt->bindValue(6, $libro, PDO::PARAM_STR);
+                        $stmt->bindValue(7, $inicio, PDO::PARAM_INT);
+                        $stmt->bindValue(8, $registros, PDO::PARAM_INT);
                     } else {
-                        $stmt = $conexion->prepare("SELECT * FROM `administrador`  as admmini inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo WHERE cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%'))  ORDER BY admmini.id DESC LIMIT ?,?");
+                        $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,licuent.estado as estado_libro,licuent.idlibroCuenta,licuent.imagen AS libr_imagen,licuent.monto,licuent.fecha_compra,licuent.libro_codigoLibro,lib.nombre AS lib_nombre FROM `librocuenta`  as licuent inner join `cuenta` as cuent ON cuent.CuentaCodigo=licuent.cuenta_codigocuenta inner join `administrador` as admmini ON licuent.cuenta_codigocuenta=admmini.Cuenta_Codigo inner join `libro` as lib ON lib.codigo=licuent.libro_codigoLibro WHERE licuent.estado=? and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) AND (licuent.libro_codigoLibro LIKE CONCAT('%',?,'%'))  ORDER BY admmini.id DESC LIMIT ?,?");
                         $stmt->bindValue(1, $filtro, PDO::PARAM_STR);
                         $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
                         $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
                         $stmt->bindValue(4, $filtro, PDO::PARAM_STR);
-                        $stmt->bindValue(5, $inicio, PDO::PARAM_INT);
-                        $stmt->bindValue(6, $registros, PDO::PARAM_INT);
+                        $stmt->bindValue(6, $libro, PDO::PARAM_STR);
+                        $stmt->bindValue(7, $inicio, PDO::PARAM_INT);
+                        $stmt->bindValue(8, $registros, PDO::PARAM_INT);
                     }
 
                     $stmt->execute();
@@ -779,6 +1102,17 @@ class clienteControlador extends clienteModelo
                     foreach ($datos as $row) {
                         $insCliente = new Cliente();
                         $insCuenta = new Cuenta();
+                        $insLibroCuenta = new LibroCuenta();
+                        $insLibro = new Libro();
+                        $insLibroCuenta->setIdlibroCuenta($row['idlibroCuenta']);
+                        $insLibroCuenta->setImagen($row['libr_imagen']);
+                        $insLibroCuenta->setMonto($row['monto']);
+                        $insLibroCuenta->setFecha($row['fecha_compra']);
+                        $insLibroCuenta->setEstado($row['estado_libro']);
+
+                        $insLibro->setNombre($row['lib_nombre']);
+                        $insLibro->setCodigo($row['libro_codigoLibro']);
+
                         $insCuenta->setIdCuenta($row['idcuenta']);
                         $insCuenta->setCuentaCodigo($row['CuentaCodigo']);
                         $insCuenta->setUsuario($row['usuario']);
@@ -787,8 +1121,6 @@ class clienteControlador extends clienteModelo
                         $insCuenta->setEstado($row['estado']);
                         $insCuenta->setTipo($row['tipo']);
                         $insCuenta->setFoto($row['foto']);
-                        $insCuenta->setPrecio($row['precio_curso']);
-                        $insCuenta->setVoucher($row['voucher']);
 
                         $insCliente->setIdCliente($row['id']);
                         $insCliente->setNombre($row['AdminNombre']);
@@ -800,7 +1132,10 @@ class clienteControlador extends clienteModelo
                         $insCliente->setEstado($row['Estado']);
                         $insCliente->setTipoMedio($row['tipo_medio']);
                         $insCliente->setVendedor($row['codigo_vendedor']);
-                        $insCliente->setCuenta($insCuenta->__toString());
+
+                        $insLibroCuenta->setCuenta($insCuenta->__toString());
+                        $insLibroCuenta->setLibro($insLibro->__toString());
+                        $insCliente->setCuenta($insLibroCuenta->__toString());
                         $insBeanPagination->setList($insCliente->__toString());
 
                     }
@@ -819,7 +1154,7 @@ class clienteControlador extends clienteModelo
         return $insBeanPagination->__toString();
 
     }
-    public function bean_paginador_cliente_controlador($pagina, $registros, $estado, $filtro)
+    public function bean_paginador_cliente_controlador($pagina, $registros, $estado, $filtro, $libro = '')
     {
         $insBeanCrud = new BeanCrud();
         try {
@@ -827,9 +1162,10 @@ class clienteControlador extends clienteModelo
             $registros = mainModel::limpiar_cadena($registros);
             $estado = mainModel::limpiar_cadena($estado);
             $filtro = mainModel::limpiar_cadena($filtro);
+            $libro = mainModel::limpiar_cadena($libro);
             $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
             $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-            $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, $inicio, $registros, $estado, $filtro));
+            $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, $inicio, $registros, $estado, $filtro, $libro));
 
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";
@@ -853,6 +1189,7 @@ class clienteControlador extends clienteModelo
             if ($lista["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("No podemos eliminar porque no existe el alumno registrado");
             } else {
+
                 $Cliente->setCuenta($lista["list"][0]['cuenta']['cuentaCodigo']);
                 $stmt = $this->conexion_db->prepare("SELECT COUNT(idlecciones) AS CONTADOR FROM `lecciones` WHERE cuenta_codigocuenta=?");
                 $stmt->bindValue(1, $Cliente->getCuenta(), PDO::PARAM_STR);
@@ -860,43 +1197,42 @@ class clienteControlador extends clienteModelo
                 $datos = $stmt->fetchAll();
                 foreach ($datos as $row) {
                     if ($row['CONTADOR'] == 0) {
-                        $stmt = $this->conexion_db->prepare("SELECT MAX(idlibroCuenta) AS CONTADOR FROM `librocuenta` WHERE cuenta_codigocuenta=?");
+                        $stmt = $this->conexion_db->prepare("SELECT count(idlibroCuenta) AS CONTADOR FROM `librocuenta` WHERE cuenta_codigocuenta=?");
                         $stmt->bindValue(1, $Cliente->getCuenta(), PDO::PARAM_STR);
                         $stmt->execute();
                         $datos2 = $stmt->fetchAll();
                         foreach ($datos2 as $row2) {
                             if ($row2['CONTADOR'] > 0) {
-                                $idcuentalibr = $row2['CONTADOR'];
-                                $stmt = clienteModelo::eliminar_libro_cuenta_modelo($this->conexion_db, (int) $idcuentalibr);
+
+                                $stmt = clienteModelo::eliminar_libro_cuenta_modelo($this->conexion_db, $Cliente->getCuenta(), $Cliente->getTipoMedio());
                                 if ($stmt->execute()) {
-                                    $stmt = clienteModelo::eliminar_cliente_modelo($this->conexion_db, $Cliente->getIdCliente());
-                                    if ($stmt->execute()) {
-                                        $stmt = $this->conexion_db->prepare("DELETE FROM `bitacora` WHERE cuenta_codigoCuenta=:Codigo");
-                                        $stmt->bindValue(":Codigo", $lista["list"][0]['cuenta']['cuentaCodigo'], PDO::PARAM_STR);
+                                    if ($row2['CONTADOR'] == 1) {
+                                        $stmt = clienteModelo::eliminar_cliente_modelo($this->conexion_db, $Cliente->getIdCliente());
                                         if ($stmt->execute()) {
-                                            $stmt = clienteModelo::eliminar_cuenta_modelo($this->conexion_db, $lista["list"][0]['cuenta']['idcuenta']);
+                                            $stmt = $this->conexion_db->prepare("DELETE FROM `bitacora` WHERE cuenta_codigoCuenta=:Codigo");
+                                            $stmt->bindValue(":Codigo", $lista["list"][0]['cuenta']['cuentaCodigo'], PDO::PARAM_STR);
                                             if ($stmt->execute()) {
-
-                                                if ($lista["list"][0]['cuenta']['foto'] != "") {
-                                                    unlink('./adjuntos/clientes/' . $lista["list"][0]['cuenta']['foto']);
+                                                $stmt = clienteModelo::eliminar_cuenta_modelo($this->conexion_db, $lista["list"][0]['cuenta']['idcuenta']);
+                                                if ($stmt->execute()) {
+                                                    if ($lista["list"][0]['cuenta']['foto'] != "") {
+                                                        unlink('./adjuntos/clientes/' . $lista["list"][0]['cuenta']['foto']);
+                                                    }
+                                                    $this->conexion_db->commit();
+                                                    $insBeanCrud->setMessageServer("ok");
+                                                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $Cliente->getEstado(), $Cliente->getTipoMedio()));
                                                 }
-                                                /*
-                                                if ($lista["list"][0]['cuenta']['voucher'] != "") {
-                                                if ($lista["list"][0]['cuenta']['voucher'] != "CULQI") {
-                                                unlink('./adjuntos/clientes/comprobante/' . $lista["list"][0]['cuenta']['voucher']);
-                                                }
-
-                                                }*/
-                                                $this->conexion_db->commit();
-                                                $insBeanCrud->setMessageServer("ok");
-                                                $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $lista["list"][0]['cuenta']['estado'], ""));
+                                            } else {
+                                                $insBeanCrud->setMessageServer("no se eliminó el alumno");
                                             }
                                         } else {
                                             $insBeanCrud->setMessageServer("no se eliminó el alumno");
                                         }
                                     } else {
-                                        $insBeanCrud->setMessageServer("no se eliminó el alumno");
+                                        $this->conexion_db->commit();
+                                        $insBeanCrud->setMessageServer("ok");
+                                        $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $Cliente->getEstado(), $Cliente->getTipoMedio()));
                                     }
+
                                 } else {
                                     $insBeanCrud->setMessageServer("no se eliminó el alumno");
                                 }
@@ -947,13 +1283,13 @@ class clienteControlador extends clienteModelo
             $insCuenta = new Cuenta();
             //  $insCuenta->setVoucher(mainModel::limpiar_cadena($Cliente->getCuenta()->voucher));
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()["usuario"]));
-
             $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()["email"]));
             $insCuenta->setCuentaCodigo(mainModel::limpiar_cadena($Cliente->getCuenta()["cuentaCodigo"]));
             $insCuenta->setClave($Cliente->getCuenta()["clave"]);
             // $insCuenta->setEstado(0);
             // $insCuenta->setTipo(2);
             $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta", $insCuenta);
+
             if ($clienteunico["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("no se encuentra el usuario");
             } else {
@@ -1132,13 +1468,13 @@ class clienteControlador extends clienteModelo
                                     if ($stmt->execute()) {
                                         $stmt = clienteModelo::actualizar_cliente_modelo($this->conexion_db, $Cliente);
                                         if ($stmt->execute()) {
-                                            if ($clienteunico["list"][0]['cuenta']['voucher'] != "") {
-                                                unlink('./adjuntos/clientes/comprobante/' . $clienteunico["list"][0]['cuenta']['voucher']);
+                                            if ($clienteunico["list"][0]['cuenta']['imagen'] != "") {
+                                                unlink('./adjuntos/clientes/comprobante/' . $clienteunico["list"][0]['cuenta']['imagen']);
                                             }
                                             $this->conexion_db->commit();
                                             $insBeanCrud->setMessageServer("ok");
                                             if ($tipo == 1) {
-                                                $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 5, $clienteunico["list"][0]['cuenta']['estado'], ""));
+                                                $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $clienteunico["list"][0]['cuenta']['estado'], ""));
                                             } else {
                                                 $insCuenta = new Cuenta();
                                                 $insCuenta->setFoto($resultado);
@@ -1235,7 +1571,6 @@ class clienteControlador extends clienteModelo
             $Cuenta->setEstado(mainModel::limpiar_cadena($Cuenta->getEstado()));
             $Cuenta->setIdCuenta(mainModel::limpiar_cadena($Cuenta->getIdCuenta()));
             $Cuenta->setVerificacion(mainModel::limpiar_cadena($Cuenta->getVerificacion()));
-
             $cuentaunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta-unico", $Cuenta);
             if ($cuentaunico["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("no se encuentra el usuario");
@@ -1243,9 +1578,14 @@ class clienteControlador extends clienteModelo
 
                 $stmt = clienteModelo::actualizar_cuenta_estado_modelo($this->conexion_db, $Cuenta);
                 if ($stmt->execute()) {
-                    $this->conexion_db->commit();
-                    $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $cuentaunico["list"][0]['cuenta']['estado'], ""));
+                    $stmt = clienteModelo::actualizar_libro_cuenta_estado_modelo($this->conexion_db, $Cuenta);
+                    if ($stmt->execute()) {
+                        $this->conexion_db->commit();
+                        $insBeanCrud->setMessageServer("ok");
+                        $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $cuentaunico["list"][0]['cuenta']['estado'], "", $Cuenta->getClave()));
+                    } else {
+                        $insBeanCrud->setMessageServer("No hemos podido cambiar de estado al Usuario");
+                    }
                 } else {
                     $insBeanCrud->setMessageServer("No hemos podido cambiar de estado al Usuario");
                 }
@@ -1290,7 +1630,7 @@ class clienteControlador extends clienteModelo
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $lista["list"][0]['cuenta']['estado'], ""));
+                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $lista["list"][0]['cuenta']['estado'], "", $Cliente->getvendedor()));
                 } else {
                     $insBeanCrud->setMessageServer("No hemos podido cambiar de estado al Usuario");
                 }
@@ -1319,28 +1659,30 @@ class clienteControlador extends clienteModelo
         return json_encode($insBeanCrud->__toString());
     }
 
-    public function paginador_cliente_tarea_controlador($conexion, $inicio, $registros, $filtro)
+    public function paginador_cliente_tarea_controlador($conexion, $inicio, $registros, $filtro, $libro)
     {
         $insBeanPagination = new BeanPagination();
         try {
-            $stmt = $conexion->prepare("SELECT tar.cuenta FROM `tarea` as tar inner join `administrador` as admmini ON tar.cuenta=admmini.Cuenta_Codigo inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE cer.idcertificado is null and tar.tipo=0 and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR cuent.email like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%')OR admmini.pais like concat('%',?,'%')) GROUP BY tar.cuenta ");
+            $stmt = $conexion->prepare("SELECT tar.cuenta FROM `tarea` as tar inner join `administrador` as admmini ON tar.cuenta=admmini.Cuenta_Codigo inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE cer.idcertificado is null and tar.tipo=0 and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR cuent.email like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR admmini.pais like concat('%',?,'%')) AND (tar.codigo_subtitulo LIKE CONCAT('%',?,'%')) GROUP BY tar.cuenta ");
             $stmt->bindValue(1, $filtro, PDO::PARAM_STR);
             $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
             $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
             $stmt->bindValue(4, $filtro, PDO::PARAM_STR);
             $stmt->bindValue(5, $filtro, PDO::PARAM_STR);
+            $stmt->bindValue(6, $libro, PDO::PARAM_STR);
             $stmt->execute();
             $datos = $stmt->fetchAll();
             $insBeanPagination->setCountFilter(count($datos));
             if (count($datos) > 0) {
-                $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,sum(CASE WHEN tar.estado = 0 THEN 1 ELSE 0 end) as totalestado,sum(tar.estado) as totalnoestado FROM `tarea` as tar inner join `administrador` as admmini ON tar.cuenta=admmini.Cuenta_Codigo inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE cer.idcertificado is null and tar.tipo=0 and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR cuent.email like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%')OR admmini.pais like concat('%',?,'%')) GROUP BY tar.cuenta ORDER BY max(tar.fecha) DESC LIMIT ?,? ");
+                $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,sum(CASE WHEN tar.estado = 0 THEN 1 ELSE 0 end) as totalestado,sum(tar.estado) as totalnoestado FROM `tarea` as tar inner join `administrador` as admmini ON tar.cuenta=admmini.Cuenta_Codigo inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE cer.idcertificado is null and tar.tipo=0 and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR cuent.email like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%')OR admmini.pais like concat('%',?,'%')) AND (tar.codigo_subtitulo LIKE CONCAT('%',?,'%')) GROUP BY tar.cuenta ORDER BY max(tar.fecha) DESC LIMIT ?,? ");
                 $stmt->bindValue(1, $filtro, PDO::PARAM_STR);
                 $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
                 $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
                 $stmt->bindValue(4, $filtro, PDO::PARAM_STR);
                 $stmt->bindValue(5, $filtro, PDO::PARAM_STR);
-                $stmt->bindValue(6, $inicio, PDO::PARAM_INT);
-                $stmt->bindValue(7, $registros, PDO::PARAM_INT);
+                $stmt->bindValue(6, $libro, PDO::PARAM_STR);
+                $stmt->bindValue(7, $inicio, PDO::PARAM_INT);
+                $stmt->bindValue(8, $registros, PDO::PARAM_INT);
 
                 $stmt->execute();
                 $datos = $stmt->fetchAll();
@@ -1387,16 +1729,17 @@ class clienteControlador extends clienteModelo
         return $insBeanPagination->__toString();
 
     }
-    public function bean_paginador_tarea_cliente_controlador($pagina, $registros, $filtro)
+    public function bean_paginador_tarea_cliente_controlador($pagina, $registros, $filtro, $libro)
     {
         $insBeanCrud = new BeanCrud();
         try {
             $pagina = mainModel::limpiar_cadena($pagina);
             $registros = mainModel::limpiar_cadena($registros);
             $filtro = mainModel::limpiar_cadena($filtro);
+            $libro = mainModel::limpiar_cadena($libro);
             $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
             $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-            $insBeanCrud->setBeanPagination(self::paginador_cliente_tarea_controlador($this->conexion_db, $inicio, $registros, $filtro));
+            $insBeanCrud->setBeanPagination(self::paginador_cliente_tarea_controlador($this->conexion_db, $inicio, $registros, $filtro, $libro));
 
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";
@@ -1409,26 +1752,28 @@ class clienteControlador extends clienteModelo
         }
         return $insBeanCrud->__toString();
     }
-    public function paginador_cliente_terminado_controlador($conexion, $inicio, $registros, $filtro)
+    public function paginador_cliente_terminado_controlador($conexion, $inicio, $registros, $filtro, $libro)
     {
         $insBeanPagination = new BeanPagination();
         try {
             $contador = 0;
-            $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR FROM `tarea` WHERE tipo=0 ");
+            $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR FROM `tarea` WHERE tipo=0 and (codigo_subtitulo LIKE CONCAT('%',?,'%'))");
+            $stmt->bindValue(1, $libro, PDO::PARAM_STR);
             $stmt->execute();
             $datos = $stmt->fetchAll();
 
             foreach ($datos as $row) {
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                 if ($row['CONTADOR'] > 0) {
-                    $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,sum(CASE WHEN tar.estado = 0 THEN 1 ELSE 0 end) as totalestado,sum(tar.estado) as totalnoestado FROM `tarea` as tar inner join `administrador` as admmini ON tar.cuenta=admmini.Cuenta_Codigo inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo inner join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE  tar.tipo=0 and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR cuent.email like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%')OR admmini.pais like concat('%',?,'%')) GROUP BY tar.cuenta ORDER BY max(tar.fecha) DESC LIMIT ?,? ");
+                    $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,sum(CASE WHEN tar.estado = 0 THEN 1 ELSE 0 end) as totalestado,sum(tar.estado) as totalnoestado FROM `tarea` as tar inner join `administrador` as admmini ON tar.cuenta=admmini.Cuenta_Codigo inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo inner join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE  tar.tipo=0 and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR cuent.email like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR admmini.pais like concat('%',?,'%')) and (tar.codigo_subtitulo LIKE CONCAT('%',?,'%')) GROUP BY tar.cuenta ORDER BY max(tar.fecha) DESC LIMIT ?,? ");
                     $stmt->bindValue(1, $filtro, PDO::PARAM_STR);
                     $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
                     $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
                     $stmt->bindValue(4, $filtro, PDO::PARAM_STR);
                     $stmt->bindValue(5, $filtro, PDO::PARAM_STR);
-                    $stmt->bindValue(6, $inicio, PDO::PARAM_INT);
-                    $stmt->bindValue(7, $registros, PDO::PARAM_INT);
+                    $stmt->bindValue(6, $libro, PDO::PARAM_STR);
+                    $stmt->bindValue(7, $inicio, PDO::PARAM_INT);
+                    $stmt->bindValue(8, $registros, PDO::PARAM_INT);
 
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
@@ -1471,16 +1816,17 @@ class clienteControlador extends clienteModelo
         return $insBeanPagination->__toString();
 
     }
-    public function bean_paginador_terminado_cliente_controlador($pagina, $registros, $filtro)
+    public function bean_paginador_terminado_cliente_controlador($pagina, $registros, $filtro, $libro)
     {
         $insBeanCrud = new BeanCrud();
         try {
             $pagina = mainModel::limpiar_cadena($pagina);
             $registros = mainModel::limpiar_cadena($registros);
             $filtro = mainModel::limpiar_cadena($filtro);
+            $libro = mainModel::limpiar_cadena($libro);
             $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
             $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-            $insBeanCrud->setBeanPagination(self::paginador_cliente_terminado_controlador($this->conexion_db, $inicio, $registros, $filtro));
+            $insBeanCrud->setBeanPagination(self::paginador_cliente_terminado_controlador($this->conexion_db, $inicio, $registros, $filtro, $libro));
 
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";
@@ -1505,134 +1851,158 @@ class clienteControlador extends clienteModelo
             $Cliente->setApellido(mainModel::limpiar_cadena($Cliente->getApellido()));
             $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
             $insCuenta = new Cuenta();
-            $insCuenta->setPrecio(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
+
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
             $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()->email));
             $insCuenta->setEstado(mainModel::limpiar_cadena($Cliente->getCuenta()->estado));
             $insCuenta->setCuentaCodigo(mainModel::limpiar_cadena($Cliente->getCuenta()->codigo));
             $insCuenta->setClave($Cliente->getCuenta()->clave);
             $insCuenta->setVerificacion($Cliente->getCuenta()->cuentaverificacion);
-            // $insCuenta->setEstado(0);
-            // $insCuenta->setTipo(2);
+            $insLibroCuenta = new LibroCuenta();
+            $insLibroCuenta->setIdlibroCuenta(mainModel::limpiar_cadena($Cliente->getCuenta()->idlibroCuenta));
+            $insLibroCuenta->setEstado(mainModel::limpiar_cadena($Cliente->getCuenta()->estado));
+            $insLibroCuenta->setLibro(mainModel::limpiar_cadena($Cliente->getcuenta()->libro));
+            $insLibroCuenta->setMonto(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
+            $insLibroCuenta->setCuenta($insCuenta->__toString());
             $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta", $insCuenta);
+            $updateData = true;
             if ($clienteunico["countFilter"] == 0) {
-                $insBeanCrud->setMessageServer("no se encuentra el usuario");
-            } else {
-                if (isset($_FILES['txtImagenVoucher'])) {
-                    $original = $_FILES['txtImagenVoucher'];
-                    $nombre = $original['name'];
-                    if ($original['error'] > 0) {
-                        $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
-                    } else {
-                        $resultado = mainModel::archivo(array("image/png", "image/jpg", "image/jpeg"), (5 * 1024), $original, $nombre, "./adjuntos/clientes/comprobante/");
-                        if ($resultado != "") {
-                            $insCuenta->setVoucher("");
-                            $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['foto']);
-                            $insCuenta->setIdCuenta($clienteunico["list"][0]['cuenta']['idcuenta']);
-                            $stmt = $this->conexion_db->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE email=? and idcuenta!=?");
-                            $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
-                            $stmt->bindValue(2, $insCuenta->getIdCuenta(), PDO::PARAM_INT);
-                            $stmt->execute();
-                            $datos = $stmt->fetchAll();
-                            foreach ($datos as $row) {
-                                if ($row['CONTADOR'] == 0) {
-                                    if ($insCuenta->getClave() == "") {
-                                        $insCuenta->setClave($clienteunico["list"][0]['cuenta']['clave']);
+                $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta-libro-other", $insLibroCuenta);
+                if ($clienteunico["countFilter"] == 0) {
+                    $updateData = false;
+                    $insBeanCrud->setMessageServer("no se encuentra el usuario");
+                }
+            }
+            if ($updateData) {
+                if ($clienteunico["list"][0]['cuenta']['idlibroCuenta'] != $insLibroCuenta->getIdlibroCuenta()) {
+                    $insBeanCrud->setMessageServer("este usuario ya se encuentra registrado con el libro seleccionado");
+                } else {
+                    if (isset($_FILES['txtImagenVoucher'])) {
+                        $original = $_FILES['txtImagenVoucher'];
+                        $nombre = $original['name'];
+                        if ($original['error'] > 0) {
+                            $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+                        } else {
+                            $resultado = mainModel::archivo(array("image/png", "image/jpg", "image/jpeg"), (5 * 1024), $original, $nombre, "./adjuntos/clientes/comprobante/");
+                            if ($resultado != "") {
+                                $insLibroCuenta->setImagen($resultado);
+                                $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['cuenta']['foto']);
+                                $insCuenta->setIdCuenta($clienteunico["list"][0]['cuenta']['cuenta']['idcuenta']);
+                                $stmt = $this->conexion_db->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE email=? and idcuenta!=?");
+                                $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+                                $stmt->bindValue(2, $insCuenta->getIdCuenta(), PDO::PARAM_INT);
+                                $stmt->execute();
+                                $datos = $stmt->fetchAll();
+                                foreach ($datos as $row) {
+                                    if ($row['CONTADOR'] == 0) {
+                                        if ($insCuenta->getClave() == "") {
+                                            $insCuenta->setClave($clienteunico["list"][0]['cuenta']['cuenta']['clave']);
+                                        } else {
+                                            $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($insCuenta->getClave())));
+                                        }
+                                        $stmt = clienteModelo::actualizar_datos_cuenta_libro_modelo($this->conexion_db, $insLibroCuenta);
+                                        if ($stmt->execute()) {
+                                            $stmt = clienteModelo::actualizar_datos_cuenta_modelo($this->conexion_db, $insCuenta);
+                                            if ($stmt->execute()) {
+                                                $stmt = clienteModelo::actualizar_cliente_modelo($this->conexion_db, $Cliente);
+                                                if ($stmt->execute()) {
+                                                    if ($clienteunico["list"][0]['cuenta']['imagen'] != "") {
+                                                        unlink('./adjuntos/clientes/comprobante/' . $clienteunico["list"][0]['cuenta']['imagen']);
+                                                    }
+
+                                                    $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $Economico, $resultado);
+                                                    if ($stmt->execute()) {
+
+                                                        $this->conexion_db->commit();
+                                                        $insBeanCrud->setMessageServer("ok");
+                                                        if ($tipo == 1) {
+                                                            $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $clienteunico["list"][0]['cuenta']['estado'], ""));
+                                                        } else {
+                                                            $insCuenta = new Cuenta();
+                                                            $insCuenta->setFoto($resultado);
+                                                            $insBeanCrud->setBeanPagination($insCuenta->__toString());
+                                                        }
+                                                        $responsemensaje = self::enviar_mensaje_controlador($this->conexion_db, $Cliente, $token, $insLibroCuenta->getLibro());
+
+                                                        $insBeanCrud->setMessageServer($responsemensaje['messageServer']);
+
+                                                    } else {
+                                                        $insBeanCrud->setMessageServer("No hemos podido registrar el historial economico");
+                                                    }
+
+                                                } else {
+                                                    $insBeanCrud->setMessageServer("No hemos podido actualizar sus datos");
+                                                }
+                                            } else {
+                                                $insBeanCrud->setMessageServer("No hemos podido actualizar al Usuario");
+                                            }
+                                        } else {
+                                            $insBeanCrud->setMessageServer("No hemos podido actualizar sus datos");
+                                        }
+
                                     } else {
-                                        $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($insCuenta->getClave())));
+                                        $insBeanCrud->setMessageServer("Ya se encuentra un usuario registrado con los datos, cambie de Correo Electrónico");
                                     }
+                                }
+                            } else {
+                                $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido");
+
+                            }
+                        }
+                    } else {
+                        $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['cuenta']['foto']);
+                        $insLibroCuenta->setImagen($clienteunico["list"][0]['cuenta']['imagen']);
+                        $insCuenta->setIdCuenta($clienteunico["list"][0]['cuenta']['cuenta']['idcuenta']);
+                        $stmt = $this->conexion_db->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE email=? and idcuenta!=?");
+                        $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+                        $stmt->bindValue(2, $insCuenta->getIdCuenta(), PDO::PARAM_INT);
+                        $stmt->execute();
+                        $datos = $stmt->fetchAll();
+                        foreach ($datos as $row) {
+                            if ($row['CONTADOR'] == 0) {
+                                if ($insCuenta->getClave() == "") {
+                                    $insCuenta->setClave($clienteunico["list"][0]['cuenta']['cuenta']['clave']);
+                                } else {
+                                    $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($insCuenta->getClave())));
+                                }
+                                $stmt = clienteModelo::actualizar_datos_cuenta_libro_modelo($this->conexion_db, $insLibroCuenta);
+                                if ($stmt->execute()) {
                                     $stmt = clienteModelo::actualizar_datos_cuenta_modelo($this->conexion_db, $insCuenta);
                                     if ($stmt->execute()) {
                                         $stmt = clienteModelo::actualizar_cliente_modelo($this->conexion_db, $Cliente);
                                         if ($stmt->execute()) {
-                                            if ($clienteunico["list"][0]['cuenta']['voucher'] != "") {
-                                                unlink('./adjuntos/clientes/comprobante/' . $clienteunico["list"][0]['cuenta']['voucher']);
-                                            }
 
-                                            $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $Economico, $resultado);
+                                            $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $Economico, $insLibroCuenta->getImagen());
                                             if ($stmt->execute()) {
-
                                                 $this->conexion_db->commit();
                                                 $insBeanCrud->setMessageServer("ok");
                                                 if ($tipo == 1) {
-                                                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 5, $clienteunico["list"][0]['cuenta']['estado'], ""));
+                                                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $clienteunico["list"][0]['cuenta']['estado'], ""));
                                                 } else {
                                                     $insCuenta = new Cuenta();
-                                                    $insCuenta->setFoto($resultado);
+                                                    $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['cuenta']['foto']);
                                                     $insBeanCrud->setBeanPagination($insCuenta->__toString());
                                                 }
-                                                $responsemensaje = self::enviar_mensaje_controlador($this->conexion_db, $Cliente, $token);
-
+                                                $responsemensaje = self::enviar_mensaje_controlador($this->conexion_db, $Cliente, $token, $insLibroCuenta->setLibro());
                                                 $insBeanCrud->setMessageServer($responsemensaje['messageServer']);
-
-                                            } else {
-                                                $insBeanCrud->setMessageServer("No hemos podido registrar el historial economico");
-                                            }
-
+                                            } else { $insBeanCrud->setMessageServer("No se registro el historial economico");}
                                         } else {
                                             $insBeanCrud->setMessageServer("No hemos podido actualizar sus datos");
                                         }
                                     } else {
                                         $insBeanCrud->setMessageServer("No hemos podido actualizar al Usuario");
                                     }
-
-                                } else {
-                                    $insBeanCrud->setMessageServer("Ya se encuentra un usuario registrado con los datos, cambie de Correo Electrónico");
-                                }
-                            }
-                        } else {
-                            $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido");
-
-                        }
-                    }
-                } else {
-                    $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['foto']);
-                    $insCuenta->setVoucher($clienteunico["list"][0]['cuenta']['voucher']);
-                    $insCuenta->setIdCuenta($clienteunico["list"][0]['cuenta']['idcuenta']);
-                    $stmt = $this->conexion_db->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE email=? and idcuenta!=?");
-                    $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
-                    $stmt->bindValue(2, $insCuenta->getIdCuenta(), PDO::PARAM_INT);
-                    $stmt->execute();
-                    $datos = $stmt->fetchAll();
-                    foreach ($datos as $row) {
-                        if ($row['CONTADOR'] == 0) {
-                            if ($insCuenta->getClave() == "") {
-                                $insCuenta->setClave($clienteunico["list"][0]['cuenta']['clave']);
-                            } else {
-                                $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($insCuenta->getClave())));
-                            }
-                            $stmt = clienteModelo::actualizar_datos_cuenta_modelo($this->conexion_db, $insCuenta);
-                            if ($stmt->execute()) {
-                                $stmt = clienteModelo::actualizar_cliente_modelo($this->conexion_db, $Cliente);
-                                if ($stmt->execute()) {
-
-                                    $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $Economico, $insCuenta->getVoucher());
-                                    if ($stmt->execute()) {
-                                        $this->conexion_db->commit();
-                                        $insBeanCrud->setMessageServer("ok");
-                                        if ($tipo == 1) {
-                                            $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 5, $clienteunico["list"][0]['cuenta']['estado'], ""));
-                                        } else {
-                                            $insCuenta = new Cuenta();
-                                            $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['foto']);
-                                            $insBeanCrud->setBeanPagination($insCuenta->__toString());
-                                        }
-                                        $responsemensaje = self::enviar_mensaje_controlador($this->conexion_db, $Cliente, $token);
-                                        $insBeanCrud->setMessageServer($responsemensaje['messageServer']);
-                                    } else { $insBeanCrud->setMessageServer("No se registro el historial economico");}
                                 } else {
                                     $insBeanCrud->setMessageServer("No hemos podido actualizar sus datos");
-                                }
-                            } else {
-                                $insBeanCrud->setMessageServer("No hemos podido actualizar al Usuario");
-                            }
 
-                        } else {
-                            $insBeanCrud->setMessageServer("Ya se encuentra un usuario registrado con los datos, cambie de Correo Electrónico");
+                                }
+
+                            } else {
+                                $insBeanCrud->setMessageServer("Ya se encuentra un usuario registrado con los datos, cambie de Correo Electrónico");
+                            }
                         }
                     }
                 }
-
             }
 
         } catch (Exception $th) {
@@ -1668,130 +2038,160 @@ class clienteControlador extends clienteModelo
             $Cliente->setNombre(mainModel::limpiar_cadena($Cliente->getNombre()));
             $Cliente->setApellido(mainModel::limpiar_cadena($Cliente->getApellido()));
             $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
+
             $insCuenta = new Cuenta();
-            $insCuenta->setPrecio(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
+
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
             $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()->email));
             $insCuenta->setEstado(mainModel::limpiar_cadena($Cliente->getCuenta()->estado));
             $insCuenta->setCuentaCodigo(mainModel::limpiar_cadena($Cliente->getCuenta()->codigo));
             $insCuenta->setClave($Cliente->getCuenta()->clave);
-            // $insCuenta->setEstado(0);
-            // $insCuenta->setTipo(2);
-            $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta", $insCuenta);
+
+            $insLibroCuenta = new LibroCuenta();
+            $insLibroCuenta->setIdlibroCuenta(mainModel::limpiar_cadena($Cliente->getCuenta()->idlibroCuenta));
+            $insLibroCuenta->setEstado(mainModel::limpiar_cadena($Cliente->getCuenta()->estado));
+            $insLibroCuenta->setLibro(mainModel::limpiar_cadena($Cliente->getcuenta()->libro));
+            $insLibroCuenta->setMonto(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
+            $insLibroCuenta->setCuenta($insCuenta->__toString());
+
+            $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta-libro", $insLibroCuenta);
+            $updateData = true;
+
             if ($clienteunico["countFilter"] == 0) {
-                $insBeanCrud->setMessageServer("no se encuentra el usuario");
-            } else {
-                if (isset($_FILES['txtImagenVoucher'])) {
-                    $original = $_FILES['txtImagenVoucher'];
-                    $nombre = $original['name'];
-                    if ($original['error'] > 0) {
-                        $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
-                    } else {
-                        $resultado = mainModel::archivo(array("image/png", "image/jpg", "image/jpeg"), (5 * 1024), $original, $nombre, "./adjuntos/clientes/comprobante/");
-                        if ($resultado != "") {
-                            $insCuenta->setVoucher("");
-                            $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['foto']);
-                            $insCuenta->setIdCuenta($clienteunico["list"][0]['cuenta']['idcuenta']);
-                            $stmt = $this->conexion_db->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE email=? and idcuenta!=?");
-                            $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
-                            $stmt->bindValue(2, $insCuenta->getIdCuenta(), PDO::PARAM_INT);
-                            $stmt->execute();
-                            $datos = $stmt->fetchAll();
-                            foreach ($datos as $row) {
-                                if ($row['CONTADOR'] == 0) {
-                                    if ($insCuenta->getClave() == "") {
-                                        $insCuenta->setClave($clienteunico["list"][0]['cuenta']['clave']);
+                $clienteunico = clienteModelo::datos_cliente_modelo($this->conexion_db, "cuenta-libro-other", $insLibroCuenta);
+                if ($clienteunico["countFilter"] == 0) {
+                    $updateData = false;
+                    $insBeanCrud->setMessageServer("no se encuentra el usuario");
+                }
+            }
+            if ($updateData) {
+                if ($clienteunico["list"][0]['cuenta']['idlibroCuenta'] != $insLibroCuenta->getIdlibroCuenta()) {
+                    $insBeanCrud->setMessageServer("este usuario ya se encuentra registrado con el libro seleccionado");
+                } else {
+                    if (isset($_FILES['txtImagenVoucher'])) {
+                        $original = $_FILES['txtImagenVoucher'];
+                        $nombre = $original['name'];
+                        if ($original['error'] > 0) {
+                            $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+                        } else {
+                            $resultado = mainModel::archivo(array("image/png", "image/jpg", "image/jpeg"), (5 * 1024), $original, $nombre, "./adjuntos/clientes/comprobante/");
+                            if ($resultado != "") {
+                                $insLibroCuenta->setImagen($resultado);
+                                $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['cuenta']['foto']);
+                                $insCuenta->setIdCuenta($clienteunico["list"][0]['cuenta']['cuenta']['idcuenta']);
+                                $stmt = $this->conexion_db->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE email=? and idcuenta!=?");
+                                $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+                                $stmt->bindValue(2, $insCuenta->getIdCuenta(), PDO::PARAM_INT);
+                                $stmt->execute();
+                                $datos = $stmt->fetchAll();
+                                foreach ($datos as $row) {
+                                    if ($row['CONTADOR'] == 0) {
+                                        if ($insCuenta->getClave() == "") {
+                                            $insCuenta->setClave($clienteunico["list"][0]['cuenta']['cuenta']['clave']);
+                                        } else {
+                                            $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($insCuenta->getClave())));
+                                        }
+
+                                        $stmt = clienteModelo::actualizar_datos_cuenta_modelo($this->conexion_db, $insCuenta);
+                                        if ($stmt->execute()) {
+                                            $stmt = clienteModelo::actualizar_datos_cuenta_libro_modelo($this->conexion_db, $insLibroCuenta);
+                                            if ($stmt->execute()) {
+
+                                                $stmt = clienteModelo::actualizar_cliente_modelo($this->conexion_db, $Cliente);
+                                                if ($stmt->execute()) {
+                                                    if ($clienteunico["list"][0]['cuenta']['imagen'] != "") {
+                                                        unlink('./adjuntos/clientes/comprobante/' . $clienteunico["list"][0]['cuenta']['imagen']);
+                                                    }
+
+                                                    $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $Economico, $resultado);
+                                                    if ($stmt->execute()) {
+
+                                                        $this->conexion_db->commit();
+                                                        $insBeanCrud->setMessageServer("ok");
+                                                        if ($tipo == 1) {
+                                                            $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, $clienteunico["list"][0]['cuenta']['cuenta']['estado'], ""));
+                                                        } else {
+                                                            $insCuenta = new Cuenta();
+                                                            $insCuenta->setFoto($resultado);
+                                                            $insBeanCrud->setBeanPagination($insCuenta->__toString());
+                                                        }
+
+                                                    } else {
+                                                        $insBeanCrud->setMessageServer("No hemos podido registrar el historial economico");
+                                                    }
+
+                                                } else {
+                                                    $insBeanCrud->setMessageServer("No hemos podido actualizar sus datos");
+                                                }
+                                            } else {
+                                                $insBeanCrud->setMessageServer("No hemos podido actualizar sus datos");
+                                            }
+                                        } else {
+                                            $insBeanCrud->setMessageServer("No hemos podido actualizar al Usuario");
+                                        }
+
                                     } else {
-                                        $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($insCuenta->getClave())));
+                                        $insBeanCrud->setMessageServer("Ya se encuentra un usuario registrado con los datos, cambie de Correo Electrónico");
                                     }
+                                }
+                            } else {
+                                $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido");
+
+                            }
+                        }
+                    } else {
+
+                        $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['cuenta']['foto']);
+                        $insLibroCuenta->setImagen($clienteunico["list"][0]['cuenta']['imagen']);
+                        $insCuenta->setIdCuenta($clienteunico["list"][0]['cuenta']['cuenta']['idcuenta']);
+                        $stmt = $this->conexion_db->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE email=? and idcuenta!=?");
+                        $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
+                        $stmt->bindValue(2, $insCuenta->getIdCuenta(), PDO::PARAM_INT);
+                        $stmt->execute();
+                        $datos = $stmt->fetchAll();
+                        foreach ($datos as $row) {
+                            if ($row['CONTADOR'] == 0) {
+                                if ($insCuenta->getClave() == "") {
+                                    $insCuenta->setClave($clienteunico["list"][0]['cuenta']['cuenta']['clave']);
+                                } else {
+                                    $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($insCuenta->getClave())));
+                                }
+                                $stmt = clienteModelo::actualizar_datos_cuenta_libro_modelo($this->conexion_db, $insLibroCuenta);
+                                if ($stmt->execute()) {
                                     $stmt = clienteModelo::actualizar_datos_cuenta_modelo($this->conexion_db, $insCuenta);
                                     if ($stmt->execute()) {
                                         $stmt = clienteModelo::actualizar_cliente_modelo($this->conexion_db, $Cliente);
                                         if ($stmt->execute()) {
-                                            if ($clienteunico["list"][0]['cuenta']['voucher'] != "") {
-                                                unlink('./adjuntos/clientes/comprobante/' . $clienteunico["list"][0]['cuenta']['voucher']);
-                                            }
 
-                                            $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $Economico, $resultado);
+                                            $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $Economico, $insLibroCuenta->getImagen());
                                             if ($stmt->execute()) {
-
                                                 $this->conexion_db->commit();
                                                 $insBeanCrud->setMessageServer("ok");
                                                 if ($tipo == 1) {
-                                                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 5, $clienteunico["list"][0]['cuenta']['estado'], ""));
+                                                    $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 20, 0, "", ""));
                                                 } else {
                                                     $insCuenta = new Cuenta();
-                                                    $insCuenta->setFoto($resultado);
+                                                    $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['cuenta']['foto']);
                                                     $insBeanCrud->setBeanPagination($insCuenta->__toString());
                                                 }
 
-                                            } else {
-                                                $insBeanCrud->setMessageServer("No hemos podido registrar el historial economico");
-                                            }
-
+                                            } else { $insBeanCrud->setMessageServer("No se registro el historial economico");}
                                         } else {
                                             $insBeanCrud->setMessageServer("No hemos podido actualizar sus datos");
                                         }
                                     } else {
                                         $insBeanCrud->setMessageServer("No hemos podido actualizar al Usuario");
                                     }
-
                                 } else {
-                                    $insBeanCrud->setMessageServer("Ya se encuentra un usuario registrado con los datos, cambie de Correo Electrónico");
+                                    $insBeanCrud->setMessageServer("No hemos podido actualizar el libro del usuario");
                                 }
-                            }
-                        } else {
-                            $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido");
 
-                        }
-                    }
-                } else {
-                    $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['foto']);
-                    $insCuenta->setVoucher($clienteunico["list"][0]['cuenta']['voucher']);
-                    $insCuenta->setIdCuenta($clienteunico["list"][0]['cuenta']['idcuenta']);
-                    $stmt = $this->conexion_db->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE email=? and idcuenta!=?");
-                    $stmt->bindValue(1, $insCuenta->getEmail(), PDO::PARAM_STR);
-                    $stmt->bindValue(2, $insCuenta->getIdCuenta(), PDO::PARAM_INT);
-                    $stmt->execute();
-                    $datos = $stmt->fetchAll();
-                    foreach ($datos as $row) {
-                        if ($row['CONTADOR'] == 0) {
-                            if ($insCuenta->getClave() == "") {
-                                $insCuenta->setClave($clienteunico["list"][0]['cuenta']['clave']);
                             } else {
-                                $insCuenta->setClave(mainModel::encryption(mainModel::limpiar_cadena($insCuenta->getClave())));
+                                $insBeanCrud->setMessageServer("Ya se encuentra un usuario registrado con los datos, cambie de Correo Electrónico");
                             }
-                            $stmt = clienteModelo::actualizar_datos_cuenta_modelo($this->conexion_db, $insCuenta);
-                            if ($stmt->execute()) {
-                                $stmt = clienteModelo::actualizar_cliente_modelo($this->conexion_db, $Cliente);
-                                if ($stmt->execute()) {
-
-                                    $stmt = clienteModelo::agregar_historial_economico_modelo($this->conexion_db, $Cliente, $Economico, $insCuenta->getVoucher());
-                                    if ($stmt->execute()) {
-                                        $this->conexion_db->commit();
-                                        $insBeanCrud->setMessageServer("ok");
-                                        if ($tipo == 1) {
-                                            $insBeanCrud->setBeanPagination(self::paginador_cliente_controlador($this->conexion_db, 0, 5, $clienteunico["list"][0]['cuenta']['estado'], ""));
-                                        } else {
-                                            $insCuenta = new Cuenta();
-                                            $insCuenta->setFoto($clienteunico["list"][0]['cuenta']['foto']);
-                                            $insBeanCrud->setBeanPagination($insCuenta->__toString());
-                                        }
-
-                                    } else { $insBeanCrud->setMessageServer("No se registro el historial economico");}
-                                } else {
-                                    $insBeanCrud->setMessageServer("No hemos podido actualizar sus datos");
-                                }
-                            } else {
-                                $insBeanCrud->setMessageServer("No hemos podido actualizar al Usuario");
-                            }
-
-                        } else {
-                            $insBeanCrud->setMessageServer("Ya se encuentra un usuario registrado con los datos, cambie de Correo Electrónico");
                         }
                     }
                 }
-
             }
 
         } catch (Exception $th) {
@@ -1816,7 +2216,7 @@ class clienteControlador extends clienteModelo
         return json_encode($insBeanCrud->__toString());
 
     }
-    public function enviar_mensaje_controlador($conexion, $Cliente, $token)
+    public function enviar_mensaje_controlador($conexion, $Cliente, $token, $libro = "")
     {
         $insBeanCrud = new BeanCrud();
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
@@ -1828,7 +2228,7 @@ class clienteControlador extends clienteModelo
             $Cliente->setApellido(mainModel::limpiar_cadena($Cliente->getApellido()));
             $Cliente->setPais(mainModel::limpiar_cadena($Cliente->getPais()));
             $insCuenta = new Cuenta();
-            $insCuenta->setPrecio(mainModel::limpiar_cadena($Cliente->getCuenta()->precio));
+
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Cliente->getCuenta()->usuario));
             $insCuenta->setEmail(mainModel::limpiar_cadena($Cliente->getCuenta()->email));
             $insCuenta->setEstado(mainModel::limpiar_cadena($Cliente->getCuenta()->estado));

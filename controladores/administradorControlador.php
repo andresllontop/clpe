@@ -229,7 +229,6 @@ class administradorControlador extends administradorModelo
                         $insCuenta->setTipo($row['tipo']);
                         $insCuenta->setPerfil($row['perfil']);
                         $insCuenta->setFoto($row['foto']);
-                        $insCuenta->setVoucher($row['voucher']);
 
                         $insAdministrador->setIdAdministrador($row['id']);
                         $insAdministrador->setNombre($row['AdminNombre']);
@@ -341,13 +340,15 @@ class administradorControlador extends administradorModelo
             $Administrador->setApellido(mainModel::limpiar_cadena($Administrador->getApellido()));
             $Administrador->setPais(mainModel::limpiar_cadena($Administrador->getPais()));
             $insCuenta = new Cuenta();
-            //  $insCuenta->setVoucher(mainModel::limpiar_cadena($Administrador->getCuenta()->voucher));
+           
             $insCuenta->setUsuario(mainModel::limpiar_cadena($Administrador->getCuenta()->usuario));
             $insCuenta->setPerfil(mainModel::limpiar_cadena($Administrador->getCuenta()->perfil));
             $insCuenta->setEmail(mainModel::limpiar_cadena($Administrador->getCuenta()->email));
             // $insCuenta->setEstado(0);
             // $insCuenta->setTipo(2);
+           
             $administradorunico = administradorModelo::datos_administrador_modelo($this->conexion_db, "unico", $Administrador);
+
             if ($administradorunico["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("no se encuentra el usuario");
             } else {
@@ -380,7 +381,7 @@ class administradorControlador extends administradorModelo
                                         if ($stmt->execute()) {
 
                                             if ($tipo == 1) {
-                                                $insBeanCrud->setBeanPagination(self::paginador_administrador_controlador($this->conexion_db, 0, 5, $administradorunico["list"][0]['cuenta']['estado']));
+                                                $insBeanCrud->setBeanPagination(self::paginador_administrador_controlador($this->conexion_db, 0, 15, $administradorunico["list"][0]['cuenta']['estado']));
                                             }
                                             if ($administradorunico["list"][0]['cuenta']['foto'] != "") {
                                                 unlink('./adjuntos/clientes/' . $administradorunico["list"][0]['cuenta']['foto']);
@@ -426,7 +427,7 @@ class administradorControlador extends administradorModelo
                                     $this->conexion_db->commit();
                                     $insBeanCrud->setMessageServer("ok");
                                     if ($tipo == 1) {
-                                        $insBeanCrud->setBeanPagination(self::paginador_administrador_controlador($this->conexion_db, 0, 5, $administradorunico["list"][0]['cuenta']['estado']));
+                                        $insBeanCrud->setBeanPagination(self::paginador_administrador_controlador($this->conexion_db, 0, 15, $administradorunico["list"][0]['cuenta']['estado']));
                                     }
                                 } else {
                                     $insBeanCrud->setMessageServer("No hemos podido actualizar sus datos");

@@ -1,7 +1,9 @@
 var beanPaginationCliente, totalLecciones = 0;
 var clienteSelected;
+
 var beanRequestCliente = new BeanRequest();
 document.addEventListener('DOMContentLoaded', function () {
+    parametro = 'tarea';
     beanRequestCliente.entity_api = 'cliente';
     beanRequestCliente.operation = 'tarea';
     beanRequestCliente.type_request = 'GET';
@@ -11,8 +13,22 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestCliente.operation = 'tarea';
         $('#modalCargandoCliente').modal('show');
     });
+    if (Cookies.get("clpe_libro") != undefined) {
+        curso_cSelected = JSON.parse(Cookies.get("clpe_libro"));
+        document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+        addClass(
+            document.querySelector("#cursoHTML"), "d-none");
+        removeClass(
+            document.querySelector("#seccion-cliente"), "d-none");
 
-    // $('#modalCargandoCliente').modal('show');
+        PromiseInit();
+    } else {
+        addClass(
+            document.querySelector("#seccion-cliente"), "d-none");
+        removeClass(
+            document.querySelector("#cursoHTML"), "d-none");
+        processAjaxTarea();
+    }
 
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();
@@ -24,14 +40,26 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#formularioClienteSearch").submit(function (event) {
         event.preventDefault();
         event.stopPropagation();
-
         beanRequestCliente.type_request = 'GET';
         beanRequestCliente.operation = 'tarea';
         $('#modalCargandoCliente').modal('show');
-
-
-
     });
+    document.querySelectorAll('.btn-regresar').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            document.querySelector('#cursoHTML').classList.remove("d-none");
+            document.querySelector('#seccion-cliente').classList.add("d-none");
+            Cookies.remove('clpe_libro');
+            if (beanPaginationCurso_c == undefined) {
+                processAjaxTarea();
+            }
+
+        };
+    });
+
+
+});
+function PromiseInit() {
 
     document.querySelector('#tbodyCliente').innerHTML += `<tr>
     <td class="text-center" colspan="10">Espere cargando ...</td>
@@ -45,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         method: "GET",
     }
     Promise.all([
-        fetch(getHostAPI() + "cliente/tarea?filtro=&pagina=1&registros=20", fetOptions),
+        fetch(getHostAPI() + "cliente/tarea?filtro=&pagina=1&registros=20&libro=" + curso_cSelected.codigo, fetOptions),
 
         fetch(getHostAPI() + "subtitulos/total", fetOptions)
     ])
@@ -65,10 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(err);
             showAlertErrorRequest();
         });
-
-
-});
-
+}
 function processAjaxCliente() {
     let form_data = new FormData();
 
@@ -83,6 +108,8 @@ function processAjaxCliente() {
                 '?filtro=' + document.querySelector("#txtSearchCliente").value.trim();;
             parameters_pagination +=
                 '&pagina=' + document.querySelector("#pageCliente").value.trim();
+            parameters_pagination +=
+                '&libro=' + curso_cSelected.codigo;
             parameters_pagination +=
                 '&registros=' + document.querySelector("#sizePageCliente").value.trim();
             break;
@@ -117,6 +144,33 @@ function processAjaxCliente() {
 
             beanPaginationCliente = beanCrudResponse.beanPagination;
             listaCliente(beanPaginationCliente);
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        $('#modalCargandoCliente').modal("hide");
+        showAlertErrorRequest();
+
+    });
+
+}
+function processAjaxTarea() {
+    $.ajax({
+        url: getHostAPI() + "tareas/libros",
+        type: "GET",
+        headers: {
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+        },
+        data: null,
+        cache: false,
+        contentType: 'application/json; charset=UTF-8',
+        processData: false,
+        dataType: 'json'
+    }).done(function (beanCrudResponse) {
+
+        $('#modalCargandoCliente').modal('hide');
+
+        if (beanCrudResponse.beanPagination !== null) {
+            beanPaginationCurso_c = beanCrudResponse.beanPagination;
+            listaCurso_c(beanPaginationCurso_c);
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         $('#modalCargandoCliente').modal("hide");
@@ -183,7 +237,33 @@ border: 2px solid #28a745;"> ${parseInt(cliente.tarea.totalnoestado) + parseInt(
 
 
 }
+function addEventsButtonsCurso_c() {
+    document.querySelectorAll('.detalle-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.parentElement.parentElement.getAttribute('idlibro')
+            );
 
+            if (curso_cSelected != undefined) {
+                setCookieSessionLibro({ codigo: curso_cSelected.codigo, nombre: curso_cSelected.nombre });
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestCliente.operation = 'tarea';
+                beanRequestCliente.type_request = 'GET';
+                PromiseInit();
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+
+}
 function addEventsButtonsCliente() {
     let color = Chart.helpers.color;
     let chartColors = {

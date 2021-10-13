@@ -9,9 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#sizePageCliente').change(function () {
         $('#modalCargandoCliente').modal('show');
     });
-
-    // $('#modalCargandoCliente').modal('show');
-    PromiseInit();
+    document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "RESUMEN GENERAL";
+    $('#modalCargandoCurso_c').modal('show');
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();
     });
@@ -21,8 +20,42 @@ document.addEventListener('DOMContentLoaded', function () {
         event.stopPropagation();
         $('#modalCargandoCliente').modal('show');
     });
+    document.querySelectorAll('.btn-regresar').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            document.querySelector('#cursoHTML').classList.remove("d-none");
+            document.querySelector('#seccion-cliente').classList.add("d-none");
+        };
+    });
 
 });
+function addEventsButtonsCurso_c() {
+    document.querySelectorAll('.detalle-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.parentElement.parentElement.getAttribute('idlibro')
+            );
+
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestCliente.operation = 'alumno';
+                beanRequestCliente.type_request = 'GET';
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                PromiseInit();
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+
+}
 function PromiseInit() {
 
     document.querySelector('#tbodyCliente').innerHTML += `<tr>
@@ -37,7 +70,7 @@ function PromiseInit() {
         method: "GET",
     }
     Promise.all([
-        fetch(getHostAPI() + beanRequestCliente.entity_api + "/" + beanRequestCliente.operation + "?filter=&pagina=1&registros=20", fetOptions),
+        fetch(getHostAPI() + beanRequestCliente.entity_api + "/" + beanRequestCliente.operation + "?filter=&pagina=1&registros=20" + '&libro=' + curso_cSelected.codigo, fetOptions),
 
         fetch(getHostAPI() + "subtitulos/total", fetOptions)
     ])
@@ -69,7 +102,9 @@ function processAjaxCliente() {
         default:
 
             parameters_pagination +=
-                '?filter=' + document.querySelector("#txtSearchCliente").value.trim();;
+                '?filter=' + document.querySelector("#txtSearchCliente").value.trim();
+            parameters_pagination +=
+                '&libro=' + curso_cSelected.codigo;
             parameters_pagination +=
                 '&pagina=' + document.querySelector("#pageCliente").value.trim();
             parameters_pagination +=
@@ -117,10 +152,10 @@ function processAjaxCliente() {
 
 function listaCliente(beanPagination) {
 
-    let row = "", contador = 1;
+    let row = "";
     document.querySelector('#tbodyCliente').innerHTML = '';
     document.querySelector('#titleManagerCliente').innerHTML =
-        'LISTA DE ALUMNOS (TAREAS)';
+        'RESUMEN GENERAL (TAREAS)';
     document.querySelector('#txtCountCliente').value =
         beanPagination.countFilter;
 
@@ -133,11 +168,10 @@ function listaCliente(beanPagination) {
         document.querySelector('#tbodyCliente').innerHTML += row;
         return;
     }
-    beanPagination.list.forEach((cliente) => {
+    beanPagination.list[0].forEach((cliente) => {
 
-        row += `<tr  idtarea="${cliente.idtarea}">
-<td class="text-center pt-5">${contador++}</td>
-<td class="text-center pt-5">${cliente.cuenta}</td>
+        row += `<tr  cuenta="${cliente.cuenta}">
+<td class="text-center pt-5">${cliente.registro}</td>
 <td class="text-center pt-5">${cliente.apellido}</td>
 <td class="text-center ver-grafica">
 <p style="transform: translateY(69px);margin-top:-52px; font-size: 20px;" class="f-weight-700">0%</p>
@@ -182,8 +216,9 @@ function addEventsButtonsCliente() {
     };
 
     document.querySelectorAll('.ver-grafica').forEach((btn) => {
-        clienteSelected = findByCliente(
-            btn.parentElement.getAttribute('idtarea')
+
+        clienteSelected = findByClienteByCuenta(
+            btn.parentElement.getAttribute('cuenta')
         );
         if (clienteSelected != undefined) {
             var proposal_data = {
@@ -249,11 +284,12 @@ function addViewArchivosPreviusCliente() {
     });
 }
 
-function findIndexCliente(idbusqueda) {
-    return beanPaginationCliente.list.findIndex(
+function findByClienteByCuenta(cuenta) {
+    return beanPaginationCliente.list[1].find(
         (Cliente) => {
-            if (Cliente.idtarea == parseInt(idbusqueda))
+            if (cuenta == Cliente.cuenta) {
                 return Cliente;
+            }
 
 
         }
@@ -261,9 +297,9 @@ function findIndexCliente(idbusqueda) {
 }
 
 function findByCliente(idtarea) {
-    return beanPaginationCliente.list.find(
+    return beanPaginationCliente.list[0].find(
         (Cliente) => {
-            if (parseInt(idtarea) == Cliente.idtarea) {
+            if (parseInt(idtarea) == parseInt(Cliente.idtarea)) {
                 return Cliente;
             }
 

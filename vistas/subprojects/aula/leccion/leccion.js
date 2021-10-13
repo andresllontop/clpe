@@ -36,7 +36,7 @@ function processAjaxLeccion() {
             parameters_pagination,
         type: beanRequestLeccion.type_request,
         headers: {
-            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token") + (Cookies.get("clpe_libro") == undefined ? "" : " Clpe " + Cookies.get("clpe_libro"))
         },
         data: null,
         cache: false,

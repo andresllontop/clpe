@@ -11,6 +11,7 @@ class Usuario
     private $foto;
     private $empresa;
     private $perfil;
+    private $libroCode;
 
     public function setId($id)
     {
@@ -27,6 +28,14 @@ class Usuario
     public function getUsuario()
     {
         return $this->usuario;
+    }
+    public function setLibroCode($libroCode)
+    {
+        $this->libroCode = $libroCode;
+    }
+    public function getLibroCode()
+    {
+        return $this->libroCode;
     }
     public function setTipo($tipo)
     {
@@ -97,6 +106,7 @@ class Usuario
             "foto" => $this->foto,
             "perfil" => $this->perfil,
             "idbitacora" => $this->idbitacora,
+            "libroCode" => $this->libroCode,
         );
     }
 }

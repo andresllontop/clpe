@@ -52,7 +52,7 @@ if (!empty($RESULTADO_token)) {
                     } else if ($accion == "paginate") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($insrecurso->bean_paginador_recurso_controlador($_GET['pagina'], $_GET['registros']));
+                        echo json_encode($insrecurso->bean_paginador_recurso_controlador($_GET['pagina'], $_GET['registros'], $_GET['libro']));
                     } else if ($accion == "obtener") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
@@ -68,7 +68,7 @@ if (!empty($RESULTADO_token)) {
 
                     break;
             }
-        } elseif ($RESULTADO_token->tipo == 2) {
+        } elseif ($RESULTADO_token->tipo == 2 && $RESULTADO_token->libro != "") {
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'GET':
                     if ($accion == "alumno") {
@@ -76,6 +76,7 @@ if (!empty($RESULTADO_token)) {
                         $insRecursoClass->setCuenta($RESULTADO_token->codigo);
                         $insRecursoClass->setPagina($_GET['pagina']);
                         $insRecursoClass->setRegistro($_GET['registros']);
+                        $insRecursoClass->setSubTitulo($RESULTADO_token->libro);
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo json_encode($insrecurso->datos_recurso_controlador("conteo", $insRecursoClass));

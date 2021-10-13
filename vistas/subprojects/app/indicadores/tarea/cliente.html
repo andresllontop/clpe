@@ -1,7 +1,12 @@
 <!--contenido de la pagina  -->
-<div id="seccion-cliente">
+<div id="seccion-cliente" class="d-none">
   <div class="container-fluid page-header pt-3">
     <div class="form-row">
+      <div class="col-2 text-center pb-2">
+        <button class="btn btn-dark float-left btn-regresar"><i
+            class="zmdi zmdi-long-arrow-left zmdi-hc-2x"></i></button>
+      </div>
+      <h3 class="text-center all-tittles col-9 f-weight-600 text-primary pr-10" id="titleLibro"></h3>
       <div class="dropdown col-2">
         <input type="hidden" id="pageCliente" value="1">
         <select id="sizePageCliente" class="form-control w-auto">
@@ -41,7 +46,6 @@
       <table class="table table-hover text-center mb-0">
         <thead>
           <tr>
-            <th class="text-center" style="width:10%">#</th>
             <th class="text-center" style="width:15%">NOMBRES</th>
             <th class="text-center" style="width:15%">APELLIDOS</th>
             <th class="text-center" style="width:15%">GRÁFICA</th>

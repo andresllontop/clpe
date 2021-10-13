@@ -26,7 +26,8 @@ if (!empty($RESULTADO_token)) {
                         if ($empresaBean["messageServer"] == "ok") {
 
                             // $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][0]["precio"], 'USD', ip_info(get_client_ip(), "countrycode"));
-                            $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][1]["precio"], 'USD', "PE");
+                            $paiscurrency = convertCurrency($empresaBean["beanPagination"]["list"][1]["precio"], "USD", "PE");
+
                             echo json_encode(array("messageServer" => $empresaBean["messageServer"], "nombre" => $empresaBean["beanPagination"]["list"][1]["titulo"],
                                 "email" => $empresaBean["beanPagination"]["list"][0]["email"],
                                 "telefono" => $empresaBean["beanPagination"]["list"][0]["telefono"],
@@ -254,9 +255,9 @@ function convertCurrency($amount, $from_currency, $to_currency)
     $apikey = '28a171a41d8c554c9882';
 
     //OBTENER LISTA DE PAISES CON LA MONEDA
-    $paises = file_get_contents("https://free.currconv.com/api/v7/countries?apiKey={$apikey}");
+    $paises = getRequest("https://free.currconv.com/api/v7/countries?apiKey={$apikey}");
+
     $obj_pais = json_decode($paises, true);
-    //print_r($obj_pais["results"]);
 
     foreach ($obj_pais["results"] as $key => $val) {
         if ($key == $to_currency) {
@@ -269,11 +270,35 @@ function convertCurrency($amount, $from_currency, $to_currency)
     $from_Currency = urlencode($from_currency);
     $to_Currency = urlencode($to_currency["currencyId"]);
     $query = "{$from_Currency}_{$to_Currency}";
-    $json = file_get_contents("https://free.currconv.com/api/v7/convert?q={$query}&compact=ultra&apiKey={$apikey}");
+    $json = getRequest("https://free.currconv.com/api/v7/convert?q={$query}&compact=ultra&apiKey={$apikey}");
     $obj = json_decode($json, true);
     // print_r($obj);
     $val = floatval($obj["$query"]);
 
     $total = $val * $amount;
     return array("pais" => $to_currency, "precio" => number_format($total, 2, '.', ''), "precio_USD" => $amount);
+}
+
+function getRequest($url)
+{
+
+    $curl = curl_init(); //Initialiaze curl
+    if ($curl === false) {
+        throw new Exception('failed to initialize');
+    }
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, 0);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    //curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+    $data = curl_exec($curl);
+    curl_close($ch);
+    $curl_errno = curl_errno($curl);
+    $curl_error = curl_error($curl);
+    curl_close($curl);
+    if ($curl_errno > 0) {
+        echo "cURL Error ($curl_errno): $curl_error\n";
+    }
+    return $data;
 }

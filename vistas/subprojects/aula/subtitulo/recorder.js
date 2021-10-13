@@ -576,7 +576,7 @@ function ProcesarAjaxLeccion() {
             parameters_pagination,
         type: beanRequestLeccion.type_request,
         headers: {
-            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token") + (Cookies.get("clpe_libro") == undefined ? "" : " Clpe " + Cookies.get("clpe_libro"))
         },
         data: form_data,
         cache: false,
@@ -792,7 +792,7 @@ var validarFormularioVideo = () => {
             return false;
         }
 
-        if (!(document.querySelector("#txtVideoLeccion").files[0].type == "video/mp4" || document.querySelector("#txtVideoLeccion").files[0].type == "video/webm" || document.querySelector("#txtVideoLeccion").files[0].type == "video/ogg" || document.querySelector("#txtVideoLeccion").files[0].type == "video/quicktime")) {
+        if (!(document.querySelector("#txtVideoLeccion").files[0].type == "video/mp4" || document.querySelector("#txtVideoLeccion").files[0].type == "video/webm" || document.querySelector("#txtVideoLeccion").files[0].type == "video/ogg" || document.querySelector("#txtVideoLeccion").files[0].type == "video/quicktime" || document.querySelector("#txtVideoLeccion").files[0].type == "video/mov")) {
             showAlertTopEnd("info", "Formato Incorrecto", "Ingrese tipo de arhivo video => mp4, webm, ogg, mov");
             return false;
         }

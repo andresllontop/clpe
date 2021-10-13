@@ -1,6 +1,7 @@
 <?php
 class SecurityFilter
 {
+    private $codigo_libro = "";
 /**
  * Get header Authorization
  * */
@@ -38,8 +39,12 @@ class SecurityFilter
         // HEADER: Get the access token from the header
         if (!empty($headers)) {
             if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+                if (preg_match('/Clpe\s(\S+)/', $headers, $matchesClpe)) {
+                    $this->codigo_libro = $matchesClpe[1];
+                }
                 return $matches[1];
             }
+
         }
         return null;
     }
@@ -66,14 +71,15 @@ class SecurityFilter
         $values_path = explode("/", $values_path);
         $accion = $values_path[sizeof($values_path) - 1];
         $resultadoTOKEN = $this->validarBearerToken();
+
         // echo ("hola es " . $_SERVER['CONTENT_TYPE']);
         if (isset($_SERVER['CONTENT_TYPE'])) {
             if ($_SERVER['CONTENT_TYPE'] == "application/json; charset=UTF-8" ||
                 preg_match('/multipart\/form-data/i', $_SERVER['CONTENT_TYPE'])) {
                 if (!empty($resultadoTOKEN)) {
-                    //   echo ("ingreso el token");
                     $json_TOKEN = json_decode($resultadoTOKEN);
                     if ($json_TOKEN->tipo == 1 || $json_TOKEN->tipo == 2) {
+                        $json_TOKEN->libro = ($json_TOKEN->tipo == 1) ? "" : $this->codigo_libro;
                         $json_TOKEN->accion = $accion;
                         return $json_TOKEN;
                     } else {

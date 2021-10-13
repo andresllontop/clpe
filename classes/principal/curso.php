@@ -11,6 +11,7 @@ class Curso
     private $imagen;
     private $portada;
     private $presentacion;
+    private $libro;
 
     public function setIdcurso($idcurso)
     {
@@ -86,7 +87,14 @@ class Curso
     {
         return $this->presentacion;
     }
-
+    public function setLibro($libro)
+    {
+        $this->libro = $libro;
+    }
+    public function getLibro()
+    {
+        return $this->libro;
+    }
     public function __toString()
     {
         return
@@ -99,6 +107,7 @@ class Curso
             "descripcion" => $this->descripcion,
             "idcurso" => $this->idcurso,
             "titulo" => $this->titulo,
+            "libro" => $this->libro,
         );
     }
 }

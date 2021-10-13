@@ -10,6 +10,7 @@ try {
     //HACEMOS UN SPLIT PARA DEJAR EL PATH SIN PARAMETROS
     $values_path = explode("/", $values_path);
     $accion = $values_path[sizeof($values_path) - 1];
+
     if (isset($_SERVER['CONTENT_TYPE'])) {
         if (preg_match('/application\/json/i', $_SERVER['CONTENT_TYPE'])) {
             switch ($_SERVER['REQUEST_METHOD']) {

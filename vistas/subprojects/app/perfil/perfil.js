@@ -209,8 +209,7 @@ var vaidarFormularioPerfil = () => {
     let letra = letra_campo(
         document.querySelector('#txtNombre'),
         document.querySelector("#txtApellido"),
-        document.querySelector("#txtEspecialidad"),
-        document.querySelector("#txtUsuario")
+        document.querySelector("#txtEspecialidad")
 
     );
     if (letra != undefined) {

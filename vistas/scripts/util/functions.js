@@ -3,6 +3,10 @@ function closeSession() {
   for (let i = 0; i < keys.length; i++) {
     Cookies.remove(keys[i]);
   }
+  if (Cookies.get('clpe_libro') != undefined) {
+    Cookies.remove('clpe_libro');
+  }
+
   //REDIRECCIONAMOS EL LOGIN
   location.href = getHostAPP() + getContextAPP() + "index";
 }
@@ -25,6 +29,12 @@ function keysCOOKIESNiubiz() {
 function setCookieSessionNiubiz(test) {
   if (test != undefined) {
     Cookies.set('clpe_niubiz', test);
+  }
+
+}
+function setCookieSessionLibro(test) {
+  if (test != undefined) {
+    Cookies.set('clpe_libro', test);
   }
 
 }

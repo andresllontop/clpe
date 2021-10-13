@@ -47,10 +47,25 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#formularioCliente").submit(function (event) {
         event.preventDefault();
         event.stopPropagation();
-
-        if (validarFormularioCliente()) {
-            $('#modalCargandoCliente').modal('show');
+        if (beanRequestCliente.operation == 'add') {
+            if (document.getElementsByName('radioTipoCliente')[1].checked) {
+                beanRequestCliente.operation = 'add-libro';
+                if (validarFormularioClienteRegistrado()) {
+                    $('#modalCargandoCliente').modal('show');
+                }
+            } else {
+                beanRequestCliente.operation = 'add';
+                if (validarFormularioCliente()) {
+                    $('#modalCargandoCliente').modal('show');
+                }
+            }
+        } else {
+            if (validarFormularioCliente()) {
+                $('#modalCargandoCliente').modal('show');
+            }
         }
+
+
     });
     document.querySelector("#ButtonPassword1").onclick = () => {
 
@@ -72,7 +87,19 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector("#txtPasswordUsuario").value = "(" + e.target.value + ")";
         document.querySelector("#txtPasswordUsuario2").value = "(" + e.target.value + ")";
     }
+    $('input[type="radio"]').on('change', function (e) {
 
+        if (e.target.name == 'radioTipoCliente') {
+            if (e.target.value == '1') {
+                removeClass(document.querySelector("#htmlAddNew"), 'd-none');
+                addClass(document.querySelector("#htmlAdd"), 'd-none');
+            } else {
+                removeClass(document.querySelector("#htmlAdd"), 'd-none');
+                addClass(document.querySelector("#htmlAddNew"), 'd-none');
+            }
+        }
+
+    });
 });
 
 function processAjaxCliente() {
@@ -82,7 +109,8 @@ function processAjaxCliente() {
     let json = '';
     if (
         beanRequestCliente.operation == 'update' ||
-        beanRequestCliente.operation == 'add'
+        beanRequestCliente.operation == 'add' ||
+        beanRequestCliente.operation == 'add-libro'
     ) {
         let radioButTrat = document.getElementsByName("radioTipoComunicacion");
         let valorRadio = 0;
@@ -96,33 +124,45 @@ function processAjaxCliente() {
         let today = new Date();
         let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        json = {
-            nombre: document.querySelector("#txtNombreCliente").value,
-            apellido: document.querySelector("#txtApellidoCliente").value,
-            ocupacion: document.querySelector("#txtEspecialidadCliente").value,
-            telefono: document.querySelector("#txtTelefonoCliente").value,
-            vendedor: document.querySelector("#txtCodigoVendedorCliente").value == "" ? null : document.querySelector("#txtCodigoVendedorCliente").value,
-            pais: document.querySelector("#txtPaisCliente").value,
-            tipomedio: valorRadio,
-            tipo_inscripcion: document.querySelector("#txtTipoInscripcionCliente").value,
-            cuenta: {
-                idcuenta: 0,
-                codigo: "",
-                email: document.querySelector("#txtEmailUsuario").value,
-                usuario: document.querySelector("#txtUsuarioName").value,
-                clave: document.querySelector("#txtPasswordUsuario").value,
-                precio: document.querySelector("#txtMontoCliente").value
-            },
-            economico: {
-                nombre_banco: document.querySelector("#txtNombreBancoCliente").value,
-                comision: document.querySelector("#txtComisionCliente").value,
-                moneda: document.querySelector("#txtTipoMonedaCliente").value,
-                precio: document.querySelector("#txtMontoCliente").value,
-                tipo: 2,
-                fecha: date + ' ' + time,
+        if (document.getElementsByName('radioTipoCliente')[1].checked) {
+            json = {
 
-            }
-        };
+                email: document.querySelector("#txtEmailOtherUsuario").value,
+                libro: document.querySelector("#txtLibroOtherCliente").value,
+
+            };
+        } else {
+            json = {
+                nombre: document.querySelector("#txtNombreCliente").value,
+                apellido: document.querySelector("#txtApellidoCliente").value,
+                ocupacion: document.querySelector("#txtEspecialidadCliente").value,
+                telefono: document.querySelector("#txtTelefonoCliente").value,
+                vendedor: document.querySelector("#txtCodigoVendedorCliente").value == "" ? null : document.querySelector("#txtCodigoVendedorCliente").value,
+                pais: document.querySelector("#txtPaisCliente").value,
+                tipomedio: valorRadio,
+                tipo_inscripcion: document.querySelector("#txtTipoInscripcionCliente").value,
+                cuenta: {
+                    idcuenta: 0,
+                    codigo: "",
+                    email: document.querySelector("#txtEmailUsuario").value,
+                    usuario: document.querySelector("#txtUsuarioName").value,
+                    clave: document.querySelector("#txtPasswordUsuario").value,
+                    precio: document.querySelector("#txtMontoCliente").value,
+                    libro: document.querySelector("#txtLibroCliente").value,
+                },
+
+                economico: {
+                    nombre_banco: document.querySelector("#txtNombreBancoCliente").value,
+                    comision: document.querySelector("#txtComisionCliente").value,
+                    moneda: document.querySelector("#txtTipoMonedaCliente").value,
+                    precio: document.querySelector("#txtMontoCliente").value,
+                    tipo: 2,
+                    fecha: date + ' ' + time,
+
+                }
+            };
+        }
+
 
 
     } else {
@@ -132,12 +172,17 @@ function processAjaxCliente() {
     switch (beanRequestCliente.operation) {
         case 'delete':
             parameters_pagination = '?id=' + clienteSelected.idcliente;
+            parameters_pagination +=
+                '&libro=' + clienteSelected.cuenta.libro.codigo;
+            parameters_pagination +=
+                '&estado=0';
             break;
 
         case 'update':
             json.idcliente = clienteSelected.idcliente;
-            json.cuenta.idcuenta = clienteSelected.cuenta.idcuenta;
-            json.cuenta.codigo = clienteSelected.cuenta.cuentaCodigo;
+            json.cuenta.idlibroCuenta = clienteSelected.cuenta.idlibroCuenta;
+            json.cuenta.idcuenta = clienteSelected.cuenta.cuenta.idcuenta;
+            json.cuenta.codigo = clienteSelected.cuenta.cuenta.cuentaCodigo;
             json.cuenta.estado = 1;
             json.cuenta.cuentaverificacion = Math.floor(Math.random() * (9999 - 1000) + 1000);
             if (document.querySelector("#txtImagenVoucher").files.length != 0) {
@@ -151,9 +196,9 @@ function processAjaxCliente() {
             form_data.append("class", JSON.stringify(json));
             break;
 
+        case 'add-libro':
+
         case 'add':
-            /* let dataImagen2 = $("#txtImagenVoucher").prop("files")[0];
-             form_data.append("txtImagenVoucher", dataImagen2);*/
             form_data.append("class", JSON.stringify(json));
             break;
 
@@ -162,7 +207,7 @@ function processAjaxCliente() {
             parameters_pagination +=
                 '?filtro=' + document.querySelector("#txtSearchCliente").value.trim();
             parameters_pagination +=
-                '&estado=0';
+                '&estado=0&libro=';
             parameters_pagination +=
                 '&pagina=' + document.querySelector("#pageCliente").value.trim();
             parameters_pagination +=
@@ -178,7 +223,7 @@ function processAjaxCliente() {
         },
         data: form_data,
         cache: false,
-        contentType: ((beanRequestCliente.operation == 'updateestado' || beanRequestCliente.operation == 'update' || beanRequestCliente.operation == 'add') ? false : 'application/json; charset=UTF-8'),
+        contentType: ((beanRequestCliente.operation == 'updateestado' || beanRequestCliente.operation == 'update' || beanRequestCliente.operation == 'add' || beanRequestCliente.operation == 'add-libro') ? false : 'application/json; charset=UTF-8'),
         processData: false,
         dataType: 'json', xhr: function () {
             var xhr = new window.XMLHttpRequest();
@@ -214,7 +259,6 @@ function processAjaxCliente() {
         },
     }).done(function (beanCrudResponse) {
 
-        //$('#modalCargandoCliente').modal('hide');
         $('#modalCargandoCliente').modal('toggle');
         if (beanCrudResponse.messageServer !== null) {
             if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
@@ -225,8 +269,6 @@ function processAjaxCliente() {
                     timer: 2000,
                     showConfirmButton: false
                 });
-
-                $('#ventanaModalManCliente').modal('hide');
             } else {
 
                 swal({
@@ -236,7 +278,9 @@ function processAjaxCliente() {
                     timer: 2000,
                     showConfirmButton: false
                 });
+
             }
+            $('#ventanaModalManCliente').modal('hide');
         }
         if (beanCrudResponse.beanPagination !== null) {
 
@@ -257,39 +301,40 @@ function addCliente(cliente = undefined) {
     document.querySelector('#txtNombreCliente').value = (cliente == undefined) ? '' : cliente.nombre;
     document.querySelector('#txtApellidoCliente').value = (cliente == undefined) ? '' : cliente.apellido;
     document.querySelector('#txtCodigoVendedorCliente').value = (cliente == undefined) ? '' : cliente.vendedor;
+    document.querySelector('#txtLibroCliente').value = (cliente == undefined) ? 'L01' : cliente.cuenta.libro.codigo;
+
     if (cliente == undefined) {
         document.getElementsByName("radioTipoComunicacion")[4].checked = true;
 
     } else {
-        document.getElementsByName("radioTipoComunicacion")[parseInt(cliente.tipomedio == null ? 5 : cliente.tipomedio) - 1].checked = true;
+        document.getElementsByName("radioTipoComunicacion")[parseInt(cliente.tipomedio == null || cliente.tipomedio == 0 ? 5 : cliente.tipomedio) - 1].checked = true;
     }
 
 
     document.querySelector('#txtTelefonoCliente').value = (cliente == undefined) ? '' : cliente.telefono;
     document.querySelector('#txtEspecialidadCliente').value = (cliente == undefined) ? '' : cliente.ocupacion;
     document.querySelector('#txtPaisCliente').value = (cliente == undefined) ? '' : cliente.pais;
-    document.querySelector('#txtMontoCliente').value = (cliente == undefined) ? '' : cliente.cuenta.precio;
+    document.querySelector('#txtMontoCliente').value = (cliente == undefined) ? '' : cliente.cuenta.monto;
     document.querySelector('#txtComisionCliente').value = 0;
-    document.querySelector('#txtUsuarioName').value = (cliente == undefined) ? '' : cliente.cuenta.usuario;
-    document.querySelector('#txtEmailUsuario').value = (cliente == undefined) ? '' : cliente.cuenta.email;
-    document.querySelector('#txtPasswordUsuario').value = (cliente == undefined) ? '' : cliente.cuenta.clave;
-    document.querySelector('#txtPasswordUsuario2').value = (cliente == undefined) ? '' : cliente.cuenta.clave;
+    document.querySelector('#txtUsuarioName').value = (cliente == undefined) ? '' : cliente.cuenta.cuenta.usuario;
+    document.querySelector('#txtEmailUsuario').value = (cliente == undefined) ? '' : cliente.cuenta.cuenta.email;
+    document.querySelector('#txtPasswordUsuario').value = (cliente == undefined) ? '' : cliente.cuenta.cuenta.clave;
+    document.querySelector('#txtPasswordUsuario2').value = (cliente == undefined) ? '' : cliente.cuenta.cuenta.clave;
 
 
     if (cliente !== undefined) {
 
         $("#imagePreview").html(
-            `<img  style="height: 168px;width: 177px;"  alt='user-picture' class='img-responsive center-box img-circle' src='${getHostFrontEnd()}${(cliente.cuenta.foto == "" || cliente.cuenta.foto == null) ? "vistas/assets/img/userclpe.png" : "adjuntos/clientes/" + cliente.cuenta.foto}' />`
+            `<img  style="height: 168px;width: 177px;"  alt='user-picture' class='img-responsive center-box img-circle' src='${getHostFrontEnd()}${(cliente.cuenta.cuenta.foto == "" || cliente.cuenta.cuenta.foto == null) ? "vistas/assets/img/userclpe.png" : "adjuntos/clientes/" + cliente.cuenta.cuenta.foto}' />`
         );
-        if (cliente.cuenta.voucher == "" || cliente.cuenta.voucher == null) {
+        if (cliente.cuenta.imagen == "" || cliente.cuenta.imagen == null) {
             $("#imagenVaucherPreview").html(
                 ``
             );
             // document.querySelector("#txtMontoCliente").parentElement.parentElement.style.marginTop = "5em";
         } else {
-
             $("#imagenVaucherPreview").html(
-                `<img  style="height:180px;width: 100%;"  alt='user-picture' class='img-responsive center-box ' src='${getHostFrontEnd() + "adjuntos/clientes/comprobante/" + cliente.cuenta.voucher}' />`
+                `<img  style="height:180px;width: 100%;"  alt='user-picture' class='img-responsive center-box ' src='${getHostFrontEnd() + "adjuntos/clientes/comprobante/" + cliente.cuenta.imagen}' />`
             );
             //document.querySelector("#txtMontoCliente").parentElement.parentElement.style.marginTop = 0;
         }
@@ -305,6 +350,7 @@ function addCliente(cliente = undefined) {
     addViewArchivosPrevius();
 
 }
+
 function TipoMedioComunicacion(params) {
     switch (parseInt(params)) {
         case 1:
@@ -321,6 +367,7 @@ function TipoMedioComunicacion(params) {
     }
 
 }
+
 function listaCliente(beanPagination) {
     document.querySelector('#tbodyCliente').innerHTML = '';
     document.querySelector('#titleCliente').innerHTML =
@@ -341,10 +388,10 @@ function listaCliente(beanPagination) {
 
         row += `<tr  idcliente="${cliente.idcliente}">
 <td class="text-center" >${cliente.fecha == null ? '' : cliente.fecha.split(" ")[0].split("-")[2] + '-' + cliente.fecha.split(" ")[0].split("-")[1] + '-' + cliente.fecha.split(" ")[0].split("-")[0]}</br>${cliente.fecha == null ? '' : cliente.fecha.split(" ")[1]}</td>
-<td class="text-center" >${cliente.nombre}</td>
-<td class="text-center" >${cliente.apellido}</td>
+<td class="text-center" >${cliente.nombre} <br> ${cliente.apellido}</td>
 <td class="text-center" >${cliente.telefono}</td>
-<td class="text-center" >${cliente.cuenta.email}</td>
+<td class="text-center" >${cliente.cuenta.cuenta.email}</td>
+<td class="text-center" >${cliente.cuenta.libro.nombre}</td>
 <td class="text-center" >${TipoMedioComunicacion(cliente.tipomedio)}</td>
 <td class="text-center d-none" >${cliente.vendedor == null ? "" : cliente.vendedor}</td>
 <td class="text-center d-none" >${cliente.cuenta.usuario}</td>
@@ -645,5 +692,28 @@ var validarFormularioCliente = () => {
 
     }
     */
+    return true;
+}
+
+var validarFormularioClienteRegistrado = () => {
+    if (document.querySelector("#txtLibroOtherCliente").value == "") {
+        showAlertTopEnd("info", "Vacío", "Seleccione Libro");
+        return false;
+    }
+    let email = email_campo(
+        document.querySelector('#txtEmailOtherUsuario')
+
+    );
+    if (email != undefined) {
+        if (email.value == '') {
+            showAlertTopEnd('info', "Formato Incorrecto", 'Por favor ingrese correo electrónico');
+        } else {
+            showAlertTopEnd(
+                'info', "Formato Incorrecto",
+                'Por favor ingrese un correo electrónico Válido'
+            );
+        }
+        return false;
+    }
     return true;
 }

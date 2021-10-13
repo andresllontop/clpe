@@ -9,10 +9,8 @@ class Cuenta
     private $estado = 0;
     private $tipo;
     private $foto;
-    private $voucher;
     private $verificacion;
     private $perfil;
-    private $precio = 0;
 
     public function setIdCuenta($idcuenta)
     {
@@ -22,14 +20,7 @@ class Cuenta
     {
         return $this->idcuenta;
     }
-    public function setVoucher($voucher)
-    {
-        $this->voucher = $voucher;
-    }
-    public function getVoucher()
-    {
-        return $this->voucher;
-    }
+
     public function setTipo($tipo)
     {
         $this->tipo = $tipo;
@@ -88,14 +79,7 @@ class Cuenta
     {
         return $this->estado;
     }
-    public function setPrecio($precio)
-    {
-        $this->precio = $precio;
-    }
-    public function getPrecio()
-    {
-        return $this->precio;
-    }
+
     public function setVerificacion($verificacion)
     {
         $this->verificacion = $verificacion;
@@ -121,9 +105,7 @@ class Cuenta
             "email" => $this->email,
             "perfil" => $this->perfil,
             "verificacion" => $this->verificacion,
-            "precio" => $this->precio,
             "estado" => $this->estado,
-            "voucher" => $this->voucher,
             "tipo" => $this->tipo,
             "foto" => $this->foto,
             "idcuenta" => $this->idcuenta,

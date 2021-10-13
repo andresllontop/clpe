@@ -11,7 +11,7 @@ class Leccion
     private $fecha;
     private $pagina;
     private $registro;
-
+    private $libroCode;
     public function setIdleccion($idleccion)
     {
         $this->idleccion = $idleccion;
@@ -87,7 +87,14 @@ class Leccion
     {
         return $this->registro;
     }
-
+    public function setLibroCode($libroCode)
+    {
+        $this->libroCode = $libroCode;
+    }
+    public function getLibroCode()
+    {
+        return $this->libroCode;
+    }
     public function __toString()
     {
         return
@@ -99,6 +106,7 @@ class Leccion
             "subTitulo" => $this->subTitulo,
             "video" => $this->video,
             "comentario" => $this->comentario,
+            "libroCode" => $this->libroCode,
         );
     }
 }

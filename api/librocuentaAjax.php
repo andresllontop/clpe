@@ -120,7 +120,7 @@ if (!empty($RESULTADO_token)) {
                         $insLibroCuentaClass->setCuenta($RESULTADO_token->codigo);
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($inslibrocuenta->datos_librocuenta_controlador("perfil", $insLibroCuentaClass));
+                        echo json_encode($inslibrocuenta->datos_librocuenta_controlador("alumno", $insLibroCuentaClass));
                     } else {
                         header("HTTP/1.1 500");
                     }

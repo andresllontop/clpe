@@ -2,7 +2,6 @@
 require_once './api/security/filter.php';
 $insFilter = new SecurityFilter();
 $RESULTADO_token = $insFilter->HeaderToken();
-
 if (!empty($RESULTADO_token)) {
     require_once './classes/principal/libro.php';
     require_once './classes/principal/categoria.php';
@@ -72,7 +71,7 @@ if (!empty($RESULTADO_token)) {
                     // echo '<script> window.location.href="' . SERVERURL . 'login" </script>';
                     break;
             }
-        } elseif ($RESULTADO_token->tipo == 2) {
+        } elseif ($RESULTADO_token->tipo == 2 && $RESULTADO_token->libro != "") {
             switch ($_SERVER['REQUEST_METHOD']) {
 
                 case 'GET':
@@ -85,6 +84,8 @@ if (!empty($RESULTADO_token)) {
                         header('Content-Type: application/json; charset=utf-8');
                         $insLibroClass = new Libro();
                         $insLibroClass->setCuenta($RESULTADO_token->codigo);
+                        $insLibroClass->setCodigo($RESULTADO_token->libro);
+
                         echo json_encode($inslibro->datos_libro_controlador("cuenta", $insLibroClass));
                     } else {
                         header("HTTP/1.1 500");

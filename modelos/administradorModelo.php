@@ -51,7 +51,6 @@ class administradorModelo extends mainModel
                             foreach ($datos as $row) {
                                 $insCuenta = new Cuenta();
                                 $insCuenta->setIdCuenta($row['idcuenta']);
-                                $insCuenta->setVoucher($row['voucher']);
                                 //$insCuenta->setTipo($row['tipo']);
                                 $insCuenta->setFoto($row['foto']);
                                 $insCuenta->setCuentaCodigo($row['Cuenta_Codigo']);
@@ -89,7 +88,6 @@ class administradorModelo extends mainModel
                             foreach ($datos as $row) {
                                 $insCuenta = new Cuenta();
                                 $insCuenta->setIdCuenta($row['idcuenta']);
-                                $insCuenta->setVoucher($row['voucher']);
                                 //$insCuenta->setTipo($row['tipo']);
                                 $insCuenta->setFoto($row['foto']);
                                 $insCuenta->setCuentaCodigo($row['Cuenta_Codigo']);
@@ -136,7 +134,6 @@ class administradorModelo extends mainModel
                                 $insCuenta->setEstado($row['estado']);
                                 $insCuenta->setTipo($row['tipo']);
                                 $insCuenta->setFoto($row['foto']);
-                                $insCuenta->setVoucher($row['voucher']);
 
                                 $insAdministrador->setIdAdministrador($row['id']);
                                 $insAdministrador->setNombre($row['AdminNombre']);
@@ -182,7 +179,6 @@ class administradorModelo extends mainModel
                             foreach ($datos as $row) {
                                 $insCuenta = new Cuenta();
                                 $insCuenta->setIdCuenta($row['idcuenta']);
-                                $insCuenta->setVoucher($row['voucher']);
                                 //$insCuenta->setTipo($row['tipo']);
                                 $insCuenta->setFoto($row['foto']);
                                 $insCuenta->setCuentaCodigo($row['Cuenta_Codigo']);

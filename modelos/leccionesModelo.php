@@ -167,9 +167,9 @@ class leccionesModelo extends mainModel
                     break;
 
                 case "subtitulo-video":
-
-                    $stmt = $conexion->prepare("SELECT COUNT(idvideo_subtitulo) AS CONTADOR FROM `video_subtitulo`  WHERE subtitulo_codigosubtitulo =?");
-                    $stmt->bindValue(1, $Leccion->getSubTitulo(), PDO::PARAM_STR);
+                    $stmt = $conexion->prepare("SELECT COUNT(idvideo_subtitulo) AS CONTADOR FROM `video_subtitulo`  WHERE subtitulo_codigosubtitulo=:Subtitulo AND subtitulo_codigosubtitulo  LIKE CONCAT('%',:Code,'%')");
+                    $stmt->bindValue(":Subtitulo", $Leccion->getSubTitulo(), PDO::PARAM_STR);
+                    $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
@@ -217,13 +217,17 @@ class leccionesModelo extends mainModel
                     $stmt = null;
                     break;
                 case "subtitulo-video-minimo":
-                    $stmt = $conexion->query("SELECT COUNT(idvideo_subtitulo) AS CONTADOR FROM `video_subtitulo`");
+                    $stmt = $conexion->prepare("SELECT COUNT(idvideo_subtitulo) AS CONTADOR FROM `video_subtitulo` WHERE subtitulo_codigosubtitulo LIKE CONCAT('%',:Code,'%')");
+                    $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
+                    $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->query("SELECT MIN(subtitulo_codigosubtitulo) AS CONTADOR FROM `video_subtitulo`");
-                            $datos2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            $stmt = $conexion->prepare("SELECT MIN(subtitulo_codigosubtitulo) AS CONTADOR FROM `video_subtitulo` WHERE subtitulo_codigosubtitulo  LIKE CONCAT('%',:Code,'%')");
+                            $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
+                            $stmt->execute();
+                            $datos2 = $stmt->fetchAll();
                             foreach ($datos2 as $row2) {
                                 $stmt = $conexion->prepare("SELECT VID_SUB.*,
                                 SUB.nombre,SUB.titulo_idtitulo,SUB.subtituloPDF,SUB.subtitulo_imagen,
@@ -272,13 +276,17 @@ class leccionesModelo extends mainModel
                     $stmt = null;
                     break;
                 case "subtitulo-video-maximo":
-                    $stmt = $conexion->query("SELECT COUNT(idvideo_subtitulo) AS CONTADOR FROM `video_subtitulo`");
+                    $stmt = $conexion->prepare("SELECT COUNT(idvideo_subtitulo) AS CONTADOR FROM `video_subtitulo` WHERE subtitulo_codigosubtitulo LIKE CONCAT('%',:Code,'%')");
+                    $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
+                    $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->query("SELECT max(subtitulo_codigosubtitulo) AS CONTADOR FROM `video_subtitulo`");
-                            $datos2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            $stmt = $conexion->prepare("SELECT max(subtitulo_codigosubtitulo) AS CONTADOR FROM `video_subtitulo` WHERE subtitulo_codigosubtitulo LIKE CONCAT('%',:Code,'%')");
+                            $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
+                            $stmt->execute();
+                            $datos2 = $stmt->fetchAll();
                             foreach ($datos2 as $row2) {
                                 $stmt = $conexion->prepare("SELECT VID_SUB.*,
                                     SUB.nombre,SUB.titulo_idtitulo,SUB.subtituloPDF,SUB.subtitulo_imagen,
@@ -327,21 +335,25 @@ class leccionesModelo extends mainModel
                     $stmt = null;
                     break;
                 case "leccion-maximo":
-                    $stmt = $conexion->prepare("SELECT count(idlecciones) AS CONTADOR FROM `lecciones`  WHERE cuenta_codigocuenta=:Cuenta");
+                    $stmt = $conexion->prepare("SELECT count(idlecciones) AS CONTADOR FROM `lecciones`  WHERE cuenta_codigocuenta=:Cuenta AND subtitulo_codigosubtitulo LIKE CONCAT('%',:Code,'%')");
                     $stmt->bindValue(":Cuenta", $Leccion->getCuenta(), PDO::PARAM_STR);
+                    $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
+
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT MAX(subtitulo_codigosubtitulo) AS subtitulo_codigosubtitulo FROM `lecciones` WHERE cuenta_codigocuenta=:Cuenta");
+                            $stmt = $conexion->prepare("SELECT MAX(subtitulo_codigosubtitulo) AS subtitulo_codigosubtitulo FROM `lecciones` WHERE cuenta_codigocuenta=:Cuenta AND subtitulo_codigosubtitulo LIKE CONCAT('%',:Code,'%')");
                             $stmt->bindValue(":Cuenta", $Leccion->getCuenta(), PDO::PARAM_STR);
+                            $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
                             $stmt->execute();
                             $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             foreach ($datos as $row) {
-                                $stmt = $conexion->prepare("SELECT tipo_estado FROM `lecciones` WHERE cuenta_codigocuenta=:Cuenta and subtitulo_codigosubtitulo=:Subtitulo");
+                                $stmt = $conexion->prepare("SELECT tipo_estado FROM `lecciones` WHERE cuenta_codigocuenta=:Cuenta and subtitulo_codigosubtitulo=:Subtitulo AND subtitulo_codigosubtitulo LIKE CONCAT('%',:Code,'%')");
                                 $stmt->bindValue(":Cuenta", $Leccion->getCuenta(), PDO::PARAM_STR);
                                 $stmt->bindValue(":Subtitulo", $row['subtitulo_codigosubtitulo'], PDO::PARAM_STR);
+                                $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
                                 $stmt->execute();
                                 $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 foreach ($datos as $row2) {
@@ -589,13 +601,15 @@ class leccionesModelo extends mainModel
 
                 case "subtitulo-titulo":
 
-                    $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo`");
+                    $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo` WHERE codigo_subtitulo LIKE CONCAT('%',:Code,'%')");
+                    $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT * FROM `subtitulo` AS sub INNER JOIN `titulo` AS tit ON tit.idtitulo = sub.titulo_idtitulo ORDER BY sub.codigo_subtitulo");
+                            $stmt = $conexion->prepare("SELECT * FROM `subtitulo` AS sub INNER JOIN `titulo` AS tit ON tit.idtitulo = sub.titulo_idtitulo WHERE sub.codigo_subtitulo LIKE CONCAT('%',:Code,'%') ORDER BY sub.codigo_subtitulo");
+                            $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
                             $stmt->execute();
                             $datos = $stmt->fetchAll();
                             foreach ($datos as $row) {
@@ -617,12 +631,14 @@ class leccionesModelo extends mainModel
                         }
                     }
                     //CUESTIONARIO
-                    $stmt = $conexion->prepare("SELECT count(idtest) AS CONTADOR FROM `test` ");
+                    $stmt = $conexion->prepare("SELECT count(idtest) AS CONTADOR FROM `test` WHERE codigotitulo LIKE CONCAT('%',:Code,'%')");
+                    $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT * FROM `test`");
+                            $stmt = $conexion->prepare("SELECT * FROM `test` WHERE codigotitulo LIKE CONCAT('%',:Code,'%')");
+                            $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
                             $stmt->execute();
                             $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             foreach ($datos as $row) {
@@ -656,12 +672,14 @@ class leccionesModelo extends mainModel
                         }
                     }
                     //RECURSO
-                    $stmt = $conexion->prepare("SELECT count(idrecurso) AS CONTADOR FROM `recurso` ");
+                    $stmt = $conexion->prepare("SELECT count(idrecurso) AS CONTADOR FROM `recurso` WHERE codigo_subtitulo LIKE CONCAT('%',:Code,'%')");
+                    $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT * FROM `recurso`");
+                            $stmt = $conexion->prepare("SELECT * FROM `recurso` WHERE codigo_subtitulo LIKE CONCAT('%',:Code,'%')");
+                            $stmt->bindValue(":Code", $Leccion->getLibroCode(), PDO::PARAM_STR);
                             $stmt->execute();
                             $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             foreach ($datos as $row) {

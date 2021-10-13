@@ -10,6 +10,7 @@ var left, opacity, scale; //fieldset properties which we will animate
 var animating; //flag to prevent quick multi-click glitches
 var stateCompra;
 document.addEventListener('DOMContentLoaded', function () {
+
     let GETsearch = window.location.pathname;
     console.log(GETsearch.split("/").length);
     if (GETsearch.split("/").length == 4) {
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         window.location.href = getHostFrontEnd() + "matricula";
     }
-    stateCompra = new Array({ codigo: "355", icon: "flag-icon-al", nombre: "Albania" }, { codigo: "376", icon: "flag-icon-ad", nombre: "Andorra" }, { codigo: "244", icon: "flag-icon-ao", nombre: "Angola" }, { codigo: "54", icon: "flag-icon-ar", nombre: "Argentina" }, { codigo: "374", icon: "flag-icon-am", nombre: "Armenia" }, { codigo: "61", icon: "flag-icon-au", nombre: "Australia" }, { codigo: "43", icon: "flag-icon-at", nombre: "Austria" }, { codigo: "973", icon: "flag-icon-bh", nombre: "Bahrain" }, { codigo: "880", icon: "flag-icon-bd", nombre: "Bangladesh" }, { codigo: "591", icon: "flag-icon-bo", nombre: "Bolivia" }, { codigo: "55", icon: "flag-icon-br", nombre: "Brazil" }, { codigo: "359", icon: "flag-icon-bg", nombre: "Bulgaria" }, { codigo: "1", icon: "flag-icon-ca", nombre: "Canada" }, { codigo: "236", icon: "flag-icon-cf", nombre: "Central African Republic" }, { codigo: "56", icon: "flag-icon-cl", nombre: "Chile" }, { codigo: "57", icon: "flag-icon-co", nombre: "Colombia" }, { codigo: "506", icon: "flag-icon-cr", nombre: "Costa Rica" }, { codigo: "53", icon: "flag-icon-cu", nombre: "Cuba" }, { codigo: "45", icon: "flag-icon-dk", nombre: "Dinamarca" }, { codigo: "1809", icon: "flag-icon-do", nombre: "Dominican Republic" }, { codigo: "593", icon: "flag-icon-ec", nombre: "Ecuador" }, { codigo: "503", icon: "flag-icon-sv", nombre: "El Salvador" }, { codigo: "001", icon: "flag-icon-us", nombre: "Estados Unidos" }, { codigo: "33", icon: "flag-icon-fr", nombre: "France" }, { codigo: "502", icon: "flag-icon-gt", nombre: "Guatemala" }, { codigo: "504", icon: "flag-icon-hn", nombre: "Honduras" }, { codigo: "39", icon: "flag-icon-it", nombre: "Italy" }, { codigo: "1876", icon: "flag-icon-jm", nombre: "Jamaica" }, { codigo: "81", icon: "flag-icon-jp", nombre: "Japan" }, { codigo: "52", icon: "flag-icon-mx", nombre: "México" }, { codigo: "505", icon: "flag-icon-ni", nombre: "Nicaragua" }, { codigo: "507", icon: "flag-icon-pa", nombre: "Panama" }, { codigo: "595", icon: "flag-icon-py", nombre: "Paraguay" }, { codigo: "51", icon: "flag-icon-pe", nombre: "Perú" }, { codigo: "351", icon: "flag-icon-pt", nombre: "Portugal" }, { codigo: "44", icon: "flag-icon-gb", nombre: "Reino Unido" }, { codigo: "7", icon: "flag-icon-ru", nombre: "Rusia" }, { codigo: "90", icon: "flag-icon-tr", nombre: "Turquía" }, { codigo: "598", icon: "flag-icon-uy", nombre: "Uruguay" }, { codigo: "58", icon: "flag-icon-ve", nombre: "Venezuela" }, { codigo: "260", icon: "flag-icon-zm", nombre: "Zambia" });
+    paisArray();
     if (Cookies.get("clpe_niubiz_date") != undefined) {
         if ((new Date(parseInt(Cookies.get("clpe_niubiz_date"))) - parseInt(new Date().getTime())) < 0) {
             closeCOOKIESNiubiz();
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (Cookies.get("clpe_empresa_compra") == undefined) {
+
         circleCargando.containerOcultar = $(document.querySelector("#precioCompra"));
         circleCargando.container = $(document.querySelector("#precioCompra").parentElement);
         circleCargando.createLoader();
@@ -59,7 +61,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(json => {
                 circleCargando.toggleLoader("hide");
                 if (json.messageServer == "ok") {
+                    json.idcurso = comprarSelected.idcurso;
                     Cookies.set('clpe_empresa_compra', json);
+                    document.querySelector(".details-title").innerHTML = json.nombre;
                     //20 minutos de expiracion
                     Cookies.set('clpe_niubiz_date', parseInt(new Date().getTime()) + parseInt(20 * 60 * 1000));
                     requestEmpresa(json);
@@ -75,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log(err);
             });
     } else {
+
         requestEmpresa(JSON.parse(Cookies.get("clpe_empresa_compra")));
 
     }
@@ -99,14 +104,10 @@ document.addEventListener('DOMContentLoaded', function () {
     beanRequestComprar.type_request = 'POST';
     eventoCompra();
 
-
-
     document.querySelector("#txtcountryCuenta").onchange = function () {
         paisSelectedCompra = findByPaisesCompra(document.querySelector("#txtcountryCuenta").value);
         document.querySelector(".paises-cuenta").innerHTML = `<i class="flag-icon ${paisSelectedCompra.icon} mr-2"></i>${paisSelectedCompra.nombre} (+${paisSelectedCompra.codigo})`;
     };
-
-
 
     $("#txtTelefonoCodigoCuenta > li").click(function (btn) {
         document.querySelector(".paises-cuenta").innerHTML = btn.currentTarget.innerHTML;
@@ -152,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 address: document.querySelector('#txtemailCuentaOtro').value,
                 pass: document.querySelector('#txtpassCuentaOtro').value,
                 pais: paisSelectedCompra.nombre,
+                curso: comprarSelected.idcurso,
                 precio: parseFloat(beanPaginationFooter.precio),
                 vendedor: document.querySelector("#txtCodigoVendedorClienteOtro2").value == "" ? null : document.querySelector("#txtCodigoVendedorClienteOtro2").value,
                 tipomedio: valorRadio,
@@ -184,15 +186,24 @@ var findByPaisesCompra = (nombre) => {
     );
 };
 function requestEmpresa(json) {
+    if (json.idcurso != comprarSelected.idcurso) {
+        Cookies.remove("clpe_empresa_compra");
+        location.reload();
+    }
     let paises = "<option value=''>[Pais]</option>", codigos = '';
     beanPaginationFooter = json;
     document.querySelector('#visitaContador').innerHTML = json.countFilter;
-    document.querySelector('#precioCompra').innerHTML = `<small class="mr-1">${json.pais.currencySymbol}</small>` + json.precio;
+
+    if (json.pais.currencySymbol != undefined) {
+
+        document.querySelector('#precioCompra').innerHTML = `<small class="mr-1">${json.pais.currencySymbol}</small>` + json.precio;
+    }
+
     if (!(json.pais.currencyId == "USD")) {
         document.querySelector('#precioCompraUSD').innerHTML = `= <small class="mr-1">$</small>` + json.precio_USD + `<small class="mx-1">USD</small>` + ` <i class="flag-icon flag-icon-us mr-2"></i>`;
     }
 
-
+    document.querySelector(".details-title").innerHTML = json.nombre;
     document.querySelector('#emailComprar').innerHTML = json.email;
     document.querySelector('#emailComprar').setAttribute("href", "mailto:" + json.email);
 
@@ -203,7 +214,10 @@ function requestEmpresa(json) {
         if (removeAccents(country.nombre).toLocaleLowerCase() == removeAccents(json.pais.name).toLocaleLowerCase()) {
             paises += `<option value="${country.nombre}" selected>${country.nombre}</option>`;
             codigos += `<li class="aula-cursor-mano"><i class="flag-icon ${country.icon} mr-2"></i>${country.nombre} (+${country.codigo})</li>`;
-            document.querySelector('#precioCompra').innerHTML = `<small class="mr-1">${json.pais.currencySymbol}</small>${json.precio}<i class="flag-icon ${country.icon} mx-2"></i>`;
+            if (json.pais.currencySymbol != undefined) {
+                document.querySelector('#precioCompra').innerHTML = `<small class="mr-1">${json.pais.currencySymbol}</small>${json.precio}<i class="flag-icon ${country.icon} mx-2"></i>`;
+            }
+
         } else {
             paises += `<option value="${country.nombre}">${country.nombre}</option>`;
             codigos += `<li class="aula-cursor-mano"><i class="flag-icon ${country.icon} mr-2"></i>${country.nombre} (+${country.codigo})</li>`;
@@ -622,11 +636,7 @@ function payNiubiz() {
         tipomedio: valorRadio,
 
     };
-
-
-
     // console.log('configuration: ', window.configuration);
-
     window.payform.createToken(
         [window.cardNumber, window.cardExpiry, window.cardCvv], {
         name: json.nombre,
@@ -639,6 +649,7 @@ function payNiubiz() {
             json.transactionToken = data.transactionToken;
             json.amount = window.amount;
             json.curso = comprarSelected.idcurso;
+
             json.purchase = window.purchase;
             form_data.append("class", JSON.stringify(json));
             processAjaxRegisterCompra(form_data, json);
@@ -1008,6 +1019,8 @@ var validarFormularioRegisterOtroCompra = () => {
         });
         return false;
     }
+
+
     if (document.querySelector("#txtcountryCuentaOtro").value == "") {
         swal({
             title: "Formato Incorrecto",
@@ -1018,7 +1031,6 @@ var validarFormularioRegisterOtroCompra = () => {
         });
         return false;
     }
-
 
     /*IMAGEN */
     if (document.querySelector("#txtvoucherCuentaOtro").files.length == 0) {
@@ -1084,7 +1096,7 @@ function processAjaxRegisterCompra(form_data, json = undefined) {
         $('#modalCargandoCompra').modal('hide');
 
         if (beanCrudResponse.messageServer != undefined) {
-            if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
+            if (beanCrudResponse.messageServer.toLowerCase() == 'ok' || beanCrudResponse.messageServer.toLowerCase() == 'new libro add') {
 
                 addClass(document.querySelector(".success-compra"), "active pulse-2 m-2 border");
                 document.querySelector(".success-compra").setAttribute("style", "background: white;border: 0 none;border-radius: 3px;box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);padding: 20px 30px;box-sizing: border-box;margin: 0 10%;");
@@ -1096,13 +1108,13 @@ function processAjaxRegisterCompra(form_data, json = undefined) {
                     <p> Fecha y Hora de Pedido : ${beanCrudResponse.beanClass.fecha} </p>
                     <p> Importe de la Transacción : ${beanCrudResponse.beanClass.importe} </p>
                     <p> Tipo de Moneda : ${beanCrudResponse.beanClass.tipoCurrency} </p>
-                    <p> Producto : "TALLER DE LECTURA PIENSE Y HAGASE RICO"</p>
+                    <p> Producto : "TALLER DE LECTURA '${JSON.parse(Cookies.get("clpe_empresa_compra")).nombre}'"</p>
                     <p> Tarjeta : ${beanCrudResponse.beanClass.marcaTarjeta} </p>
                     <p> N° de Tarjeta : ${beanCrudResponse.beanClass.tarjeta} </p>
                     
                     <p>se envió a tu correo un código de verificación para que puedas acceder al curso.</p>`;
                 } else {
-                    document.querySelector(".success-compra").innerHTML = `<h2 class="text-center">COMPRA EXITOSA!</h2><p>en un máximo de 24 horas el administrador de Club de Lectura para emprendedores verificará el depósito realizado, y enviará a tu correo un código de verificación para que puedas acceder al curso.</p>`;
+                    document.querySelector(".success-compra").innerHTML = `<h2 class="text-center">COMPRA EXITOSA!</h2><p>en un máximo de 24 horas el administrador de Club de Lectura para emprendedores verificará el depósito realizado, y enviará a tu correo un código de verificación para que puedas acceder al curso '${JSON.parse(Cookies.get("clpe_empresa_compra")).nombre}'</p>`;
                 }
                 document.querySelectorAll(".form-check").forEach((btn) => {
                     btn.innerHTML = "";
@@ -1124,12 +1136,19 @@ function processAjaxRegisterCompra(form_data, json = undefined) {
     }).fail(function (jqXHR, textStatus, errorThrown) {
         $('#modalCargandoCompra').modal('hide');
         showAlertErrorRequest();
-        setCookieSessionNiubiz(json);
+        //   setCookieSessionNiubiz(json);
         setTimeout(function () { location.reload(); }, 8000);
     });
 
 }
 
-const removeAccents = (str) => {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const removeAccents = (cadena) => {
+    if (cadena == undefined) {
+        cadena = "Perú";
+    }
+    const acentos = { 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U' };
+    return cadena.split('').map(letra => acentos[letra] || letra).join('').toString();
+}
+function paisArray() {
+    stateCompra = new Array({ codigo: "355", icon: "flag-icon-al", nombre: "Albania" }, { codigo: "376", icon: "flag-icon-ad", nombre: "Andorra" }, { codigo: "244", icon: "flag-icon-ao", nombre: "Angola" }, { codigo: "54", icon: "flag-icon-ar", nombre: "Argentina" }, { codigo: "374", icon: "flag-icon-am", nombre: "Armenia" }, { codigo: "61", icon: "flag-icon-au", nombre: "Australia" }, { codigo: "43", icon: "flag-icon-at", nombre: "Austria" }, { codigo: "973", icon: "flag-icon-bh", nombre: "Bahrain" }, { codigo: "880", icon: "flag-icon-bd", nombre: "Bangladesh" }, { codigo: "591", icon: "flag-icon-bo", nombre: "Bolivia" }, { codigo: "55", icon: "flag-icon-br", nombre: "Brazil" }, { codigo: "359", icon: "flag-icon-bg", nombre: "Bulgaria" }, { codigo: "1", icon: "flag-icon-ca", nombre: "Canada" }, { codigo: "236", icon: "flag-icon-cf", nombre: "Central African Republic" }, { codigo: "56", icon: "flag-icon-cl", nombre: "Chile" }, { codigo: "57", icon: "flag-icon-co", nombre: "Colombia" }, { codigo: "506", icon: "flag-icon-cr", nombre: "Costa Rica" }, { codigo: "53", icon: "flag-icon-cu", nombre: "Cuba" }, { codigo: "45", icon: "flag-icon-dk", nombre: "Dinamarca" }, { codigo: "1809", icon: "flag-icon-do", nombre: "Dominican Republic" }, { codigo: "593", icon: "flag-icon-ec", nombre: "Ecuador" }, { codigo: "503", icon: "flag-icon-sv", nombre: "El Salvador" }, { codigo: "001", icon: "flag-icon-us", nombre: "Estados Unidos" }, { codigo: "33", icon: "flag-icon-fr", nombre: "France" }, { codigo: "502", icon: "flag-icon-gt", nombre: "Guatemala" }, { codigo: "504", icon: "flag-icon-hn", nombre: "Honduras" }, { codigo: "39", icon: "flag-icon-it", nombre: "Italy" }, { codigo: "1876", icon: "flag-icon-jm", nombre: "Jamaica" }, { codigo: "81", icon: "flag-icon-jp", nombre: "Japan" }, { codigo: "52", icon: "flag-icon-mx", nombre: "México" }, { codigo: "505", icon: "flag-icon-ni", nombre: "Nicaragua" }, { codigo: "507", icon: "flag-icon-pa", nombre: "Panama" }, { codigo: "595", icon: "flag-icon-py", nombre: "Paraguay" }, { codigo: "51", icon: "flag-icon-pe", nombre: "Perú" }, { codigo: "351", icon: "flag-icon-pt", nombre: "Portugal" }, { codigo: "44", icon: "flag-icon-gb", nombre: "Reino Unido" }, { codigo: "7", icon: "flag-icon-ru", nombre: "Rusia" }, { codigo: "90", icon: "flag-icon-tr", nombre: "Turquía" }, { codigo: "598", icon: "flag-icon-uy", nombre: "Uruguay" }, { codigo: "58", icon: "flag-icon-ve", nombre: "Venezuela" }, { codigo: "260", icon: "flag-icon-zm", nombre: "Zambia" });
 }

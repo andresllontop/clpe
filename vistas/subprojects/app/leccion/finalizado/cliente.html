@@ -1,7 +1,14 @@
 <!--contenido de la pagina  -->
-<div id="seccion-cliente">
-  <div class="container-fluid page-header pt-3">
-    <div class="form-row">
+<div id="seccion-cliente" class="d-none">
+  <div class="container-fluid page-header">
+    <div class="form-row py-2">
+      <h3 class="text-center all-tittles col-12 f-weight-600 text-primary" id="titleLibro"></h3>
+      <div class="col-2 text-center">
+        <button class="btn btn-dark float-left btn-regresar"><i
+            class="zmdi zmdi-long-arrow-left zmdi-hc-2x"></i></button>
+      </div>
+
+      <h3 class="text-center all-tittles col-8 f-weight-600" id="titleManagerCliente"></h3>
       <div class="dropdown col-2">
         <input type="hidden" id="pageCliente" value="1">
         <select id="sizePageCliente" class="form-control w-auto">
@@ -10,8 +17,6 @@
           <option value="30">30</option>
         </select>
       </div>
-      <h3 class="text-center all-tittles col-12 f-weight-600" id="titleManagerCliente"></h3>
-
     </div>
   </div>
 

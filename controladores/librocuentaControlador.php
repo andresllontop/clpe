@@ -4,6 +4,7 @@ require_once './modelos/librocuentaModelo.php';
 require_once './classes/other/beanCrud.php';
 require_once './classes/other/beanPagination.php';
 require_once './classes/principal/cliente.php';
+require_once './classes/principal/libro.php';
 class librocuentaControlador extends librocuentaModelo
 {
     public function agregar_librocuenta_controlador($data)
@@ -12,9 +13,22 @@ class librocuentaControlador extends librocuentaModelo
     }
     public function datos_librocuenta_controlador($tipo, $codigo)
     {
-        $tipo = mainModel::limpiar_cadena($tipo);
-        return librocuentaModelo::datos_librocuenta_modelo($tipo, $codigo);
 
+        $insBeanCrud = new BeanCrud();
+        try {
+            $tipo = mainModel::limpiar_cadena($tipo);
+
+            $insBeanCrud->setBeanPagination(librocuentaModelo::datos_librocuenta_modelo($this->conexion_db, $tipo, $codigo));
+        } catch (Exception $th) {
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            $this->conexion_db = null;
+        }
+        return $insBeanCrud->__toString();
     }
     public function paginador_librocuenta_controlador($conexion, $inicio, $registros, $estado, $filtro)
     {

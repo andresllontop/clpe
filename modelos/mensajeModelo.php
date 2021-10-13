@@ -123,7 +123,7 @@ class mensajeModelo extends mainModel
                         $insBeanPagination->setList(array("countMensaje" => $row['CONTADOR']));
 
                     }
-                    $stmt = $conexion->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE tipo=2 and estado=0 and precio_curso=0");
+                    $stmt = $conexion->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE tipo=2 and estado=0 ");
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
@@ -151,6 +151,10 @@ class mensajeModelo extends mainModel
                         $insBeanPagination->setList(array("countTarea" => $row['CONTADOR']));
 
                     }
+
+                    $stmt = $conexion->prepare("SELECT COUNT(tar.idtarea) AS CONTADOR  FROM `tarea` AS tar left join `certificado` as cer ON cer.cuenta=tar.cuenta WHERE cer.idcertificado is null and tar.tipo=0 GROUP BY tar.cuenta");
+                    $stmt->execute();
+                    $insBeanPagination->setList(array("countAlumnoResumen" => count($stmt->fetchAll())));
 
                     $stmt->closeCursor();
                     $stmt = null;

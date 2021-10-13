@@ -50,7 +50,7 @@ if (!empty($RESULTADO_token)) {
                     } else if ($accion == "paginate") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($insalbum->bean_paginador_album_controlador($_GET['pagina'], $_GET['registros']));
+                        echo json_encode($insalbum->bean_paginador_album_controlador($_GET['pagina'], $_GET['registros'], $_GET['libro']));
                     } else if ($accion == "obtener") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
@@ -71,11 +71,7 @@ if (!empty($RESULTADO_token)) {
             switch ($_SERVER['REQUEST_METHOD']) {
 
                 case 'GET':
-                    if ($accion == "paginate") {
-                        header("HTTP/1.1 200");
-                        header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($insalbum->bean_paginador_album_controlador($_GET['pagina'], $_GET['registros'], $RESULTADO_token->codigo, $_GET['filtro']));
-                    } else if ($accion == "obtener") {
+                    if ($accion == "obtener") {
                         $insAlbumClass = new Album();
                         $insAlbumClass->setCuenta($RESULTADO_token->codigo);
                         header("HTTP/1.1 200");

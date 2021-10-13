@@ -330,7 +330,14 @@ class visitaControlador extends visitaModelo
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_visita_controlador($this->conexion_db, 0, 5));
+
+                    $insBeanCrud->setBeanPagination(self::paginador_visita_controlador($this->conexion_db, 0, 20, array(
+                        "f_inicial" => "",
+                        "f_final" => date("Y-m-d"),
+                        "pagina" => 'todo',
+                        "pais" => "",
+
+                    )));
                 } else {
                     $insBeanCrud->setMessageServer("No hemos podido eliminar la visita");
                 }

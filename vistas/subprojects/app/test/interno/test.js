@@ -13,9 +13,9 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestTest.operation = 'paginate';
         $('#modalCargandoTest').modal('show');
     });
-
-    $('#modalCargandoTest').modal('show');
-
+    document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "PREGUNTAS INTERNAS";
+    // $('#modalCargandoTest').modal('show');
+    $('#modalCargandoCurso_c').modal('show');
     $("#modalCargandoTest").on('shown.bs.modal', function () {
         processAjaxTest();
     });
@@ -71,8 +71,41 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#modalCargandoTest').modal('show');
         }
     });
+    document.querySelectorAll('.btn-regresar').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            document.querySelector('#cursoHTML').classList.remove("d-none");
+            document.querySelector('#seccion-cliente').classList.add("d-none");
+        };
+    });
 
 });
+function addEventsButtonsCurso_c() {
+    document.querySelectorAll('.detalle-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.parentElement.parentElement.getAttribute('idlibro')
+            );
+
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestTest.operation = 'paginate';
+                beanRequestTest.type_request = 'GET';
+                $('#modalCargandoTest').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+
+}
 
 
 function addDetalle() {
@@ -141,6 +174,8 @@ function processAjaxTest() {
                 '?filtro=2';
             parameters_pagination +=
                 '&pagina=' + document.querySelector("#pageTest").value.trim();
+            parameters_pagination +=
+                '&libro=' + curso_cSelected.codigo;
             parameters_pagination +=
                 '&registros=' + document.querySelector("#sizePageTest").value.trim();
             break;

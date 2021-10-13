@@ -31,6 +31,7 @@ class cursoModelo extends mainModel
         try {
             switch ($tipo) {
                 case "unico":
+
                     $stmt = $conexion->prepare("SELECT COUNT(idcurso) AS CONTADOR FROM `curso` WHERE idcurso=:IDcurso");
                     $stmt->bindValue(":IDcurso", $curso->getIdcurso(), PDO::PARAM_INT);
                     $stmt->execute();
@@ -50,6 +51,7 @@ class cursoModelo extends mainModel
                                 $insCurso->setDescripcion($row['descripcion']);
                                 $insCurso->setPresentacion($row['presentacion']);
                                 $insCurso->setDescuento($row['precio_descuento']);
+                                $insCurso->setLibro($row['codigo_libro']);
                                 //TIPO=1 PAGADO ; TIPO=2 MEDIANTE ZOOM;
                                 $insCurso->setTipo($row['tipo']);
                                 $insCurso->setImagen($row['imagen']);

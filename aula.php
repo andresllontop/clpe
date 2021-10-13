@@ -41,7 +41,7 @@ if ($array_styles != "") {
         echo '
                 <link
                 rel="stylesheet"
-                href="' . SERVERURL . $path_style . '"
+                href="' . $path_style . '"
               />
 
             ';
@@ -161,15 +161,14 @@ if ($array_resource != "") {
     src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.js?v=0.54"></script>
   <script type="text/javascript"
     src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.init.js?v=0.54"></script>
-
-
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/main.js?v=0.54"></script>
   <!--Scripts -->
 
   <?php
 //INCLUIMOS LOS SCRIPTS
 $array_scripts = $beanResource->path_scripts;if ($array_scripts !=
     "") {foreach ($array_scripts as $path_script) {echo '
-    <script type="text/javascript" src="' . SERVERURL . $path_script . '"></script>
+    <script type="text/javascript" src="' . $path_script . '"></script>
     ';}}
 ?>
   <!--Scripts MOLINO-->

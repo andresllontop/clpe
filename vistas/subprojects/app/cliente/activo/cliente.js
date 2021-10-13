@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoCliente').modal('show');
     });
 
-    $('#modalCargandoCliente').modal('show');
-
+    document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "ALUMNOS";
+    $('#modalCargandoCurso_c').modal('show');
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();
     });
@@ -32,7 +32,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     });
+    document.querySelectorAll('.btn-regresar').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            document.querySelector('#cursoHTML').classList.remove("d-none");
+            document.querySelector('#seccion-cliente').classList.add("d-none");
 
+        };
+    });
 });
 
 function processAjaxCliente() {
@@ -60,6 +67,10 @@ function processAjaxCliente() {
     switch (beanRequestCliente.operation) {
         case 'delete':
             parameters_pagination = '?id=' + clienteSelected.idcliente;
+            parameters_pagination +=
+                '&libro=' + clienteSelected.cuenta.libro.codigo;
+            parameters_pagination +=
+                '&estado=1';
             break;
 
         case 'update':
@@ -72,8 +83,9 @@ function processAjaxCliente() {
         case 'updateestado':
             form_data = new FormData();
             json = {
-                idcuenta: clienteSelected.cuenta.idcuenta,
-                codigo: clienteSelected.cuenta.cuentaCodigo,
+                idcuenta: clienteSelected.cuenta.cuenta.idcuenta,
+                codigo: clienteSelected.cuenta.cuenta.cuentaCodigo,
+                libro: clienteSelected.cuenta.libro.codigo,
                 estado: 0
             };
             form_data.append("class", JSON.stringify(json));
@@ -82,7 +94,8 @@ function processAjaxCliente() {
             form_data = new FormData();
             json = {
                 idcliente: clienteSelected.idcliente,
-                estado: clienteSelected.estado
+                estado: clienteSelected.estado,
+                libro: clienteSelected.cuenta.libro.codigo,
             };
             form_data.append("class", JSON.stringify(json));
             break;
@@ -101,6 +114,8 @@ function processAjaxCliente() {
                 '?filtro=' + document.querySelector("#txtSearchCliente").value.trim();
             parameters_pagination +=
                 '&estado=1';
+            parameters_pagination +=
+                '&libro=' + curso_cSelected.codigo;
             parameters_pagination +=
                 '&pagina=' + document.querySelector("#pageCliente").value.trim();
             parameters_pagination +=
@@ -154,26 +169,26 @@ function addCliente(cliente = undefined) {
 
     document.querySelector('#txtTelefonoCliente').value = (cliente == undefined) ? '' : cliente.telefono;
     document.querySelector('#txtEspecialidadCliente').value = (cliente == undefined) ? '' : cliente.ocupacion;
-    document.querySelector('#txtMontoCliente').value = (cliente == undefined) ? '' : cliente.cuenta.precio;
-    document.querySelector('#txtUsuarioName').value = (cliente == undefined) ? '' : cliente.cuenta.usuario;
-    document.querySelector('#txtEmailUsuario').value = (cliente == undefined) ? '' : cliente.cuenta.email;
-    document.querySelector('#txtPasswordUsuario').value = (cliente == undefined) ? '' : cliente.cuenta.clave;
+    document.querySelector('#txtMontoCliente').value = (cliente == undefined) ? '' : cliente.cuenta.cuenta.precio;
+    document.querySelector('#txtUsuarioName').value = (cliente == undefined) ? '' : cliente.cuenta.cuenta.usuario;
+    document.querySelector('#txtEmailUsuario').value = (cliente == undefined) ? '' : cliente.cuenta.cuenta.email;
+    document.querySelector('#txtPasswordUsuario').value = (cliente == undefined) ? '' : cliente.cuenta.cuenta.clave;
 
 
 
     if (cliente !== undefined) {
 
         $("#imagePreview").html(
-            `<img  style="height:120px;width: 125px;"  alt='user-picture' class='img-responsive center-box img-circle' src='${getHostFrontEnd()}${(cliente.cuenta.foto == "" || cliente.cuenta.foto == null) ? "vistas/assets/img/userclpe.png" : "adjuntos/clientes/" + cliente.cuenta.foto}' />`
+            `<img  style="height:120px;width: 125px;"  alt='user-picture' class='img-responsive center-box img-circle' src='${getHostFrontEnd()}${(cliente.cuenta.cuenta.foto == "" || cliente.cuenta.cuenta.foto == null) ? "vistas/assets/img/userclpe.png" : "adjuntos/clientes/" + cliente.cuenta.cuenta.foto}' />`
         );
-        if (cliente.cuenta.voucher == "CULQI") {
+        if (cliente.cuenta.imagen == "CULQI") {
             document.querySelector('#txtMontoCliente').parentElement.parentElement.style = "";
             $("#imagenVaucherPreview").html(
                 `METODO DE PAGO CULQI`
             );
         } else {
             $("#imagenVaucherPreview").html(
-                `<img  style="height:180px;width: 100%;"  alt='user-picture' class='img-responsive center-box ' src='${getHostFrontEnd() + "adjuntos/clientes/comprobante/" + cliente.cuenta.voucher}' />`
+                `<img  style="height:180px;width: 100%;"  alt='user-picture' class='img-responsive center-box ' src='${getHostFrontEnd() + "adjuntos/clientes/comprobante/" + cliente.cuenta.imagen}' />`
             );
         }
 
@@ -190,11 +205,38 @@ function addCliente(cliente = undefined) {
     addViewArchivosPrevius();
 
 }
+function addEventsButtonsCurso_c() {
+    document.querySelectorAll('.detalle-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.parentElement.parentElement.getAttribute('idlibro')
+            );
 
+            if (curso_cSelected != undefined) {
+
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                beanRequestCliente.type_request = 'GET';
+                beanRequestCliente.operation = 'paginate';
+                $('#modalCargandoCliente').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+
+}
 function listaCliente(beanPagination) {
     document.querySelector('#tbodyCliente').innerHTML = '';
     document.querySelector('#titleCliente').innerHTML =
-        'ALUMNOS INSCRITOS N01';
+        'ALUMNOS INSCRITOS';
     document.querySelector('#txtCountCliente').value =
         beanPagination.countFilter
 
@@ -213,10 +255,10 @@ function listaCliente(beanPagination) {
         row += `<tr  idcliente="${cliente.idcliente}">
         
 <td class="text-center" >${cliente.fecha == null ? '' : cliente.fecha.split(" ")[0].split("-")[2] + '-' + cliente.fecha.split(" ")[0].split("-")[1] + '-' + cliente.fecha.split(" ")[0].split("-")[0]}</br>${cliente.fecha == null ? '' : cliente.fecha.split(" ")[1]}</td>
-<td class="text-center px-1" >${cliente.nombre}</td>
-<td class="text-center px-1" >${cliente.apellido}</td>
+<td class="text-center px-1" >${cliente.nombre}<br> ${cliente.apellido}</td>
 <td class="text-center px-1" >${cliente.telefono}</td>
-<td class="text-center px-1" >${cliente.cuenta.email}</td>
+<td class="text-center px-1" >${cliente.cuenta.cuenta.email}</td>
+<td class="text-center px-1 d-none" >${cliente.cuenta.libro.nombre}</td>
 <td class="text-center px-1">
 <button class="btn ${cliente.estado == 1 ? "btn-warning" : "btn-danger"} editar-estado-visto-cliente" ><i class="zmdi ${cliente.estado == 1 ? "zmdi-check-all" : "zmdi-minus"}"></i> </button>
 </td>
@@ -260,8 +302,8 @@ function addEventsButtonsAdmin() {
                 btn.parentElement.parentElement.getAttribute('idcliente')
             );
 
-            if (clienteSelected != undefined && clienteSelected.cuenta.estado == 1) {
-                clienteSelected.cuenta.estado = 1;
+            if (clienteSelected != undefined) {
+                clienteSelected.cuenta.estado = 0;
                 beanRequestCliente.type_request = 'POST';
                 beanRequestCliente.operation = 'updateestado';
                 $('#modalCargandoCliente').modal('show');
@@ -306,10 +348,8 @@ function addEventsButtonsAdmin() {
                 // beanRequestCliente.type_request = 'POST';
                 // beanRequestCliente.operation = 'update';
             } else {
-                console.log(
-                    'warning',
-                    'No se encontró el Almacen para poder editar'
-                );
+                showAlertTopEnd("info", "Vacío!", "No se encontró el alumno");
+
             }
         };
     });
@@ -326,10 +366,7 @@ function addEventsButtonsAdmin() {
                 beanRequestCliente.operation = 'delete';
                 $('#modalCargandoCliente').modal('show');
             } else {
-                console.log(
-                    'warning',
-                    'No se encontró el Almacen para poder editar'
-                );
+                showAlertTopEnd("info", "Vacío!", "No se encontró el alumno");
             }
         };
     });

@@ -12,8 +12,9 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestCliente.operation = 'paginate';
         $('#modalCargandoCliente').modal('show');
     });
-
-    $('#modalCargandoCliente').modal('show');
+    document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "CERTIFICADOS";
+    $('#modalCargandoCurso_c').modal('show');
+    // $('#modalCargandoCliente').modal('show');
 
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();
@@ -47,9 +48,42 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#modalCargandoCliente').modal('show');
         }
     }
+    document.querySelectorAll('.btn-regresar').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            document.querySelector('#cursoHTML').classList.remove("d-none");
+            document.querySelector('#seccion-cliente-inactivo').classList.add("d-none");
+        };
+    });
 
 });
+function addEventsButtonsCurso_c() {
+    document.querySelectorAll('.detalle-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.parentElement.parentElement.getAttribute('idlibro')
+            );
 
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente-inactivo"), "d-none");
+                beanRequestCliente.type_request = 'GET';
+                beanRequestCliente.operation = 'paginate';
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                $('#modalCargandoCliente').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+
+}
 function processAjaxCliente() {
 
 
@@ -64,6 +98,8 @@ function processAjaxCliente() {
 
             parameters_pagination +=
                 '?estado=' + clienteEstado + '&filtro=' + document.querySelector("#txtSearchCliente").value.trim();
+            parameters_pagination +=
+                '&libro=' + curso_cSelected.codigo;
             parameters_pagination +=
                 '&pagina=' + parseInt(document.querySelector("#pageCliente").value.trim());
             parameters_pagination +=
@@ -152,7 +188,7 @@ function listaCliente(beanPagination) {
     <th class="text-center">TELEFONO</th>
     <th class="text-center">EMAIL</th>
     <th class="text-center">CERTIFICADO</th>
-    <th class="text-center">TERMINO N01</th>
+    <th class="text-center">TERMINÓ?</th>
     <th class="text-center">VER</th>
     `;
     if (document.querySelector("#btnCertificadosEntregados").dataset.opcion == 0) {

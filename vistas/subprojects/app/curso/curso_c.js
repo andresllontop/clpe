@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $('#modalCargandoCurso_c').modal('show');
 
+
+
     $("#modalCargandoCurso_c").on('shown.bs.modal', function () {
         processAjaxCurso_c();
     });

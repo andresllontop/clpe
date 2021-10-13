@@ -23,6 +23,38 @@ class librocuentaModelo extends mainModel
         $insBeanPagination = new BeanPagination();
         try {
             switch ($tipo) {
+                case "alumno":
+                    $stmt = $conexion->prepare("SELECT COUNT(idlibroCuenta) AS CONTADOR FROM `librocuenta` WHERE cuenta_codigocuenta=:Codigo");
+                    $stmt->bindValue(":Codigo", $codigo->getCuenta(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $conexion->prepare("SELECT lib.* FROM `librocuenta` AS lib_cuent INNER JOIN `libro` AS lib ON lib_cuent.libro_codigolibro=lib.codigo
+                            WHERE lib_cuent.cuenta_codigocuenta=:Codigo");
+                            $stmt->bindValue(":Codigo", $codigo->getCuenta(), PDO::PARAM_STR);
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+                            foreach ($datos as $row) {
+
+                                $insLibroCuenta = new LibroCuenta();
+                                $insLibro = new Libro();
+                                $insLibro->setIdLibro($row['idlibro']);
+                                $insLibro->setCodigo($row['codigo']);
+                                $insLibro->setNombre($row['nombre']);
+                                $insLibro->setDescripcion($row['descripcion']);
+                                $insLibro->setImagen($row['imagen']);
+
+                                $insLibroCuenta->setLibro($insLibro->__toString());
+                                $insBeanPagination->setList($insLibroCuenta->__toString());
+                            }
+                        }
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 case "unico":
 
                     foreach ($datos as $row) {

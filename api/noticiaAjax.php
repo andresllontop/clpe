@@ -1,7 +1,10 @@
 <?php
+
 require_once './api/security/filter.php';
 $insFilter = new SecurityFilter();
+
 $RESULTADO_token = $insFilter->HeaderToken();
+
 if (!empty($RESULTADO_token)) {
     require_once './classes/principal/noticia.php';
     require_once './controladores/noticiaControlador.php';
@@ -16,6 +19,7 @@ if (!empty($RESULTADO_token)) {
                         header('Content-Type: application/json; charset=utf-8');
                         echo json_encode($insnoticia->bean_paginador_noticia_controlador($_GET['pagina'], $_GET['registros']));
                     } else if ($accion == "obtener") {
+
                         require_once './classes/utilities/plataforma.php';
                         require_once './classes/principal/visita.php';
                         require_once './controladores/visitaControlador.php';

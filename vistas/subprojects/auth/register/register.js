@@ -146,6 +146,10 @@ function processAjaxRegister() {
 }
 
 var validarFormularioRegister = () => {
+    if (paisSelected == undefined) {
+        showAlertTopEnd("info", "Vacío", "Seleccione el País");
+        return false;
+    }
     let radioButTrat = document.getElementsByName("radioTipoComunicacionRegister");
     let valorRadio = 0;
     for (var i = 0; i < radioButTrat.length; i++) {

@@ -1,0 +1,50 @@
+<!--contenido de la pagina  -->
+
+<div class="container-fluid py-2" id="cursoHTML">
+  <div class="form-row">
+    <div class="dropdown col-2">
+      <input type="hidden" id="pageCurso_c" value="1">
+      <select id="sizePageCurso_c" class="form-control">
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+    <h2 class="text-center all-tittles col-8" id="titleManagerCurso_c">Lista de Libros</h2>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover text-center">
+      <thead>
+        <tr>
+          <th class="text-center">TITULO</th>
+          <th class="text-center">IMAGEN</th>
+          <th class="text-center" id="tipoOpcionHeaderCurso">TAREAS</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyCurso_c"></tbody>
+    </table>
+  </div>
+  <nav class="border-top  text-center" aria-label="Page navigation example">
+    <ul id="paginationCurso_c" class="pagination pagination-sm justify-content-center">
+    </ul>
+  </nav>
+  <!-- /pagination BLOG -->
+</div>
+
+
+
+<div class="modal fade" id="modalCargandoCurso_c" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Curso_c. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

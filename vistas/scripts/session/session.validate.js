@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
   if (Cookies.get("clpe_token") === undefined) {
     location.href = contextPah + "index";
   } else if (parseJwt(Cookies.get("clpe_token"))) {
+    if (JSON.parse(Cookies.get("clpe_user")).libroCode === undefined) {
+      closeSession();
+      return;
+    }
     //CARGAMOS LOS DATOS DEL USUARIO
     user_session = Cookies.getJSON('clpe_user');
     let user = user_session;
@@ -52,8 +56,14 @@ function addMenus() {
       createHTML_CLPE((user_session.perfil).toString());
       break;
     case 2:
-      //AULA
-      createHTML_AULA(parseInt(user_session.tipo_usuario));
+      if (Cookies.get("clpe_libro") == undefined) {
+        //AULA
+        createHTML_AULA(parseInt(0));
+      } else {
+        //AULA
+        createHTML_AULA(parseInt(user_session.tipo_usuario));
+      }
+
       break;
 
     default:
@@ -240,19 +250,13 @@ function createHTML_CLPE(typeProfile) {
             <ul class="list-unstyled dt-side-nav__sub-menu" >
               <li class="dt-side-nav__item">
                 <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow" title="ventas">
-                <i class="zmdi zmdi-assignment-o zmdi-hc-fw"></i>&nbsp;&nbsp;PIENSE Y HAGASE RICO
+                <i class="zmdi zmdi-assignment-o zmdi-hc-fw"></i>&nbsp;&nbsp;CURSOS
                 <i class="zmdi zmdi-chevron-down pull-right zmdi-hc-fw"></i>
                </a>
-                <ul class="list-unstyled dt-side-nav__sub-menu">
-                <li class="dt-side-nav__item">
-                <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow" title="PRIMER NIVEL">
-                &nbsp;&nbsp;
-                  <i class="zmdi zmdi-assignment-o zmdi-hc-fw"></i>&nbsp;&nbsp;PRIMER NIVEL
-                  <i class="zmdi zmdi-chevron-down pull-right zmdi-hc-fw"></i></a>
                       <ul class="list-unstyled dt-side-nav__sub-menu">
                         <li class="dt-side-nav__item">
                         <a href="${contextPah}app/clientes/activo" class="dt-side-nav__link">&nbsp;<i
-                          class="zmdi zmdi-accounts-alt zmdi-hc-fw "></i>&nbsp;ALUMNOS INSCRITOS N01
+                          class="zmdi zmdi-accounts-alt zmdi-hc-fw "></i>&nbsp;ALUMNOS INSCRITOS 
                         
                         </a>
                         </li>
@@ -271,20 +275,20 @@ function createHTML_CLPE(typeProfile) {
     row +=
       `<li class="dt-side-nav__item">
                       <a href="${contextPah}app/lecciones" class="dt-side-nav__link"><i class="zmdi zmdi-account-box zmdi-hc-fw"></i>&nbsp;
-                      TAREAS ALUMNOS N01</a>
+                      TAREAS ALUMNOS </a>
                       </li>
                       `;
     /*
 row +=
 `<li class="dt-side-nav__item">
                     <a href="${contextPah}app/lecciones/grafica" class="dt-side-nav__link"><i class="zmdi zmdi-account-box zmdi-hc-fw"></i>&nbsp;
-                   GRÁFICA DE TAREA ALUMNOS N01</a>
+                   GRÁFICA DE TAREA ALUMNOS </a>
                     </li>
                     `;*/
     row +=
       `<li class="dt-side-nav__item">
                                       <a href="${contextPah}app/lecciones/finalizado" class="dt-side-nav__link"><i class="zmdi zmdi-account-box zmdi-hc-fw"></i>&nbsp;
-                                      ALUMNOS TERMINADOS N01</a>
+                                      ALUMNOS TERMINADOS </a>
                                       </li>
                                       `;
   }
@@ -298,7 +302,7 @@ row +=
                       </li>
                       <li class="dt-side-nav__item">
                       <a href="${contextPah}app/recursos" class="dt-side-nav__link"><i class="zmdi zmdi-label zmdi-hc-fw"></i>&nbsp;
-                        RECURSOS N01</a>
+                        RECURSOS</a>
                       </li>
                       `;
   }
@@ -307,7 +311,7 @@ row +=
     row +=
       `
                       <li class="dt-side-nav__item">
-                      <a href="${contextPah}app/mensajes" class="Noti-Mensaje dt-side-nav__link"><i class="zmdi zmdi-email zmdi-hc-fw"></i>&nbsp;MENSAJERÍA N01</a>
+                      <a href="${contextPah}app/mensajes" class="Noti-Mensaje dt-side-nav__link"><i class="zmdi zmdi-email zmdi-hc-fw"></i>&nbsp;MENSAJERÍA</a>
                       <!-- <span class="label label-danger pull-right label-mhover"
                       >7</span> -->
                       </li>
@@ -318,13 +322,12 @@ row +=
     row +=
       `
   <li class="dt-side-nav__item">
-  <a href="${contextPah}app/album" class="Noti-Mensaje dt-side-nav__link"><i class="zmdi zmdi-label zmdi-hc-fw"></i>&nbsp;INICIO ALUMNOS N01</a>
+  <a href="${contextPah}app/album" class="Noti-Mensaje dt-side-nav__link"><i class="zmdi zmdi-label zmdi-hc-fw"></i>&nbsp;INICIO ALUMNOS </a>
   </li>
   <li class="dt-side-nav__item">
-  <a href="${contextPah}app/certificados" class="Noti-Mensaje dt-side-nav__link"><i class="zmdi zmdi-label zmdi-hc-fw"></i>&nbsp;CERTIFICADOS N01</a>
+  <a href="${contextPah}app/certificados" class="Noti-Mensaje dt-side-nav__link"><i class="zmdi zmdi-label zmdi-hc-fw"></i>&nbsp;CERTIFICADOS </a>
   </li>
-</ul>
-</li>
+
 </ul>
 </li>
 <li class="dt-side-nav__item">
@@ -356,10 +359,15 @@ row +=
           >
         </li> -->
           <li class="dt-side-nav__item">
-            <a href="${contextPah}app/visitas"><i
+            <a href="${contextPah}app/indicadores/tarea"><i
                 class="zmdi zmdi-male-female zmdi-hc-fw"></i>&nbsp;&nbsp;
-              VISITANTES</a>
+              RESUMEN GENERAL</a>
           </li>
+          <li class="dt-side-nav__item">
+          <a href="${contextPah}app/visitas"><i
+              class="zmdi zmdi-male-female zmdi-hc-fw"></i>&nbsp;&nbsp;
+            VISITANTES</a>
+        </li>
           <li class="dt-side-nav__item">
             <a href="${contextPah}app/bitacoras/activos"><i
                 class="zmdi zmdi-accounts-alt zmdi-hc-fw"></i>&nbsp;&nbsp;ALUMNOS ACTIVOS</a>
@@ -427,11 +435,29 @@ row +=
 }
 
 function createHTML_AULA(typeProfile) {
+
+  if (typeProfile == 0) {
+    document.querySelector("#menus_aula").innerHTML +=
+      `
+      <li class="tooltips-general" style="float: left !important;">
+        <a href="${contextPah}aula/mensajes" class="py-2"><i class="zmdi zmdi-email zmdi-hc-fw"></i>MENSAJERÍA</a>
+      </li>
+      <li class="tooltips-general" style="float: left !important;">
+        <a href="https://web.whatsapp.com/send?phone=${user_session.empresa.telefono}" class="py-2" class="telefono-usuario" target="blank">
+          <i class="zmdi zmdi-whatsapp zmdi-hc-fw"></i> +${user_session.empresa.telefono}
+        </a>
+      </li>
+      <li class="tooltips-general" style="float: left !important;">
+      <a href="${contextPah}aula/conferencias" class="py-2"><i class="zmdi zmdi-cast zmdi-hc-fw"></i>CONFERENCIAS</a>
+    </li>
+
+        `;
+  }
   //SERVICIOS
   if (typeProfile == 2) {
     document.querySelector("#menus_aula").innerHTML +=
       `<li class="tooltips-general" style="float: left !important;">
-        <a href="${contextPah}aula/index" class="py-2"><i class="zmdi zmdi-home zmdi-hc-fw"></i>INICIO</a>
+        <a href="${contextPah}aula/home" class="py-2"><i class="zmdi zmdi-home zmdi-hc-fw"></i>INICIO</a>
       </li>
       <li class="tooltips-general" style="float: left !important;">
       <a href="${contextPah}aula/libro" class="py-2"><i class="zmdi zmdi-book zmdi-hc-fw"></i>CURSO</a>
@@ -444,7 +470,7 @@ function createHTML_AULA(typeProfile) {
         <a href="${contextPah}aula/lecciones" class="py-2"><i class="zmdi zmdi-videocam zmdi-hc-fw"></i>LECCIONES
           REALIZADAS</a>
       </li>
-      <li class="tooltips-general" style="float: left !important;">
+      <li class="tooltips-general d-none" style="float: left !important;">
         <a href="${contextPah}aula/mensajes" class="py-2"><i class="zmdi zmdi-email zmdi-hc-fw"></i>MENSAJERÍA</a>
       </li>
       <li class="tooltips-general" style="float: left !important;">
@@ -457,6 +483,15 @@ function createHTML_AULA(typeProfile) {
     </li> 
         `;
   }
+  document.querySelector("#menus_aula").innerHTML +=
+    `
+    <li class="tooltips-general" style="float: left !important;">
+    <a href="${contextPah}aula/index" class="py-2"><i class="zmdi zmdi-book zmdi-hc-fw"></i>LIBROS</a>
+    </li>
+  <li class="tooltips-general" style="float: left !important;">
+  <a href="${contextPah}aula/matricula" class="py-2"><i class="zmdi zmdi-shopping-cart zmdi-hc-fw"></i>COMPRAR</a>
+</li> 
+    `;
 
   include_script(getHostFrontEnd() + "vistas/js/main.js?v=0.22");
 

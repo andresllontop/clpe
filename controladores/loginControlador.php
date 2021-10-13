@@ -4,6 +4,7 @@ require_once './modelos/loginModelo.php';
 require_once './classes/other/beanCrud.php';
 require_once './classes/principal/bitacora.php';
 require_once './classes/principal/empresa.php';
+require_once './classes/principal/librocuenta.php';
 require_once './classes/other/beanPagination.php';
 class loginControlador extends loginModelo
 {
@@ -140,7 +141,9 @@ class loginControlador extends loginModelo
         try {
 
             $Cuenta->setClave(mainModel::limpiar_cadena($Cuenta->getClave()));
+
             $clave = mainModel::encryption($Cuenta->getClave());
+
             if ($clave != null) {
                 $Cuenta->setClave($clave);
                 $Cuenta->setEmail(mainModel::limpiar_cadena($Cuenta->getEmail()));
@@ -148,11 +151,12 @@ class loginControlador extends loginModelo
                 $resultado = loginModelo::datos_login_modelo($this->conexion_db, $Cuenta);
 
                 if ($resultado['countFilter'] > 0) {
-                    if ($resultado['list'][0]['verificacion'] != "") {
+                    if ($resultado['list'][0]['cuenta']['verificacion'] != "") {
                         $insBeanCrud->setMessageServer("Se envió un código de confirmación a su Correo Electrónico para confirmar su matricula al curso.");
                     } else {
                         $insEmpresa = new Empresa();
-                        if ($resultado['list'][0]['tipo'] == 2) {
+                        $listLibro = array();
+                        if ($resultado['list'][0]['cuenta']['tipo'] == 2) {
                             $stmt = $this->conexion_db->query("SELECT * FROM `empresa` LIMIT 0,1 ");
                             $datos = $stmt->fetchAll();
                             foreach ($datos as $row) {
@@ -164,11 +168,17 @@ class loginControlador extends loginModelo
                                 $insEmpresa->setFacebook($row['facebook']);
 
                             }
+                            //regresar codigo del libro
+                            foreach ($resultado['list'] as $rowlibro) {
+                                array_push($listLibro, $rowlibro['libro']);
+                            }
+
                         }
                         $insBeanCrud->setMessageServer("ok");
                         $insBeanCrud->setBeanPagination(array(
                             "empresa" => $insEmpresa->__toString(),
-                            "principal" => $resultado));
+                            "libros" => $listLibro,
+                            "cuenta" => $resultado['list'][0]['cuenta']));
                     }
 
                 } else {

@@ -147,21 +147,23 @@ class testControlador extends testModelo
         return $insBeanCrud->__toString();
 
     }
-    public function paginador_test_controlador($conexion, $inicio, $registros, $tipo)
+    public function paginador_test_controlador($conexion, $inicio, $registros, $tipo, $libro)
     {
         $insBeanPagination = new BeanPagination();
         try {
-            $stmt = $conexion->prepare("SELECT COUNT(idtest) AS CONTADOR FROM `test` WHERE tipo=?");
+            $stmt = $conexion->prepare("SELECT COUNT(idtest) AS CONTADOR FROM `test` WHERE tipo=?  AND (codigotitulo LIKE CONCAT('%',?,'%'))");
             $stmt->bindValue(1, $tipo, PDO::PARAM_INT);
+            $stmt->bindValue(2, $libro, PDO::PARAM_STR);
             $stmt->execute();
             $datos = $stmt->fetchAll();
             foreach ($datos as $row) {
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                 if ($row['CONTADOR'] > 0) {
-                    $stmt = $conexion->prepare("SELECT t.*,ti.tituloNombre,ti.idtitulo FROM `test` as t inner join `titulo` as ti ON t.codigotitulo=ti.codigoTitulo  WHERE t.tipo=? ORDER BY t.codigotitulo ASC LIMIT ?,?");
+                    $stmt = $conexion->prepare("SELECT t.*,ti.tituloNombre,ti.idtitulo FROM `test` as t inner join `titulo` as ti ON t.codigotitulo=ti.codigoTitulo  WHERE t.tipo=? AND (t.codigotitulo LIKE CONCAT('%',?,'%'))  ORDER BY t.codigotitulo ASC LIMIT ?,?");
                     $stmt->bindValue(1, $tipo, PDO::PARAM_INT);
-                    $stmt->bindValue(2, $inicio, PDO::PARAM_INT);
-                    $stmt->bindValue(3, $registros, PDO::PARAM_INT);
+                    $stmt->bindValue(2, $libro, PDO::PARAM_STR);
+                    $stmt->bindValue(3, $inicio, PDO::PARAM_INT);
+                    $stmt->bindValue(4, $registros, PDO::PARAM_INT);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
 
@@ -200,16 +202,17 @@ class testControlador extends testModelo
         return $insBeanPagination->__toString();
 
     }
-    public function bean_paginador_test_controlador($pagina, $registros, $tipo)
+    public function bean_paginador_test_controlador($pagina, $registros, $tipo, $libro)
     {
         $insBeanCrud = new BeanCrud();
         try {
             $pagina = mainModel::limpiar_cadena($pagina);
             $registros = mainModel::limpiar_cadena($registros);
             $tipo = mainModel::limpiar_cadena($tipo);
+            $libro = mainModel::limpiar_cadena($libro);
             $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
             $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-            $insBeanCrud->setBeanPagination(self::paginador_test_controlador($this->conexion_db, $inicio, $registros, $tipo));
+            $insBeanCrud->setBeanPagination(self::paginador_test_controlador($this->conexion_db, $inicio, $registros, $tipo, $libro));
 
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";

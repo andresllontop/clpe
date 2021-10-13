@@ -48,7 +48,7 @@ class leccionesControlador extends leccionesModelo
                             $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otro video");
                         } else {
                             //500 MB
-                            $resultado_guardado = mainModel::archivo(array("video/mp4", "video/ogg", "video/webm", "video/quicktime"), 500 * 1024, $original, $nombre, "./adjuntos/video-usuarios/");
+                            $resultado_guardado = mainModel::archivo(array("video/mp4", "video/ogg", "video/webm", "video/quicktime", "video/mov"), 500 * 1024, $original, $nombre, "./adjuntos/video-usuarios/");
                             if ($resultado_guardado != "") {
                                 $Leccion->setVideo($resultado_guardado);
                                 $stmt = leccionesModelo::agregar_lecciones_modelo($this->conexion_db, $Leccion);
@@ -1148,7 +1148,7 @@ class leccionesControlador extends leccionesModelo
                     $leccion->setSubTitulo($array[0] . "." . $array[1] . "." . $array[2] . "." . $numerofinal);
 
                     //BUSCAR EL MAXIMO SUBTIULO PARA SABER SI CULMINO EL LIBRO
-                    $stmt = $this->conexion_db->prepare("SELECT MAX(codigo_subtitulo) AS MAXIMO FROM `subtitulo` WHERE codigo_subtitulo like concat('%',:IDlibro,'%')");
+                    $stmt = $this->conexion_db->prepare("SELECT MAX(codigo_subtitulo) AS MAXIMO FROM `subtitulo` WHERE codigo_subtitulo LIKE concat('%',:IDlibro,'%')");
                     $stmt->bindValue(":IDlibro", $array[0], PDO::PARAM_STR);
                     $stmt->execute();
                     $variable = $stmt->fetchAll();
@@ -1304,7 +1304,7 @@ class leccionesControlador extends leccionesModelo
 
                         } else {
                             //BUSCAR EL MAXIMO SUBTIULO PARA SABER EL EXAMEN DEL CAPITULO
-                            $stmt = $this->conexion_db->prepare("SELECT MAX(codigo_subtitulo) AS CONTADOR FROM `subtitulo` WHERE codigo_subtitulo like concat('%',:IDlibro,'%')");
+                            $stmt = $this->conexion_db->prepare("SELECT MAX(codigo_subtitulo) AS CONTADOR FROM `subtitulo` WHERE codigo_subtitulo like CONCAT('%',:IDlibro,'%')");
                             $stmt->bindValue(":IDlibro", $array[0] . "." . $array[1] . "." . $array[2], PDO::PARAM_STR);
                             $stmt->execute();
                             $datos1 = $stmt->fetchAll();
@@ -1744,6 +1744,7 @@ class leccionesControlador extends leccionesModelo
 
         try {
             $variable = leccionesModelo::datos_lecciones_modelo($this->conexion_db, $tipo, $codigo);
+
             if ($variable['countFilter'] > 0) {
                 $titulo = "TAREAS DE ALUMNOS";
                 $row = "<table border='1'>

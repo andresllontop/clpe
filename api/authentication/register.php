@@ -6,6 +6,7 @@ if (isset($_SERVER['CONTENT_TYPE'])) {
         $accion = $values_path[sizeof($values_path) - 1];
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'POST':
+
                 if ($accion == "register") {
                     if (isset($_POST["nombreRegister"]) && isset($_POST["apellidoRegister"]) && isset($_POST["oficioRegister"]) && isset($_POST["emailRegister"]) && isset($_POST["passRegister"]) && isset($_POST["telefonoRegister"]) && isset($_POST["countryRegister"])) {
                         require_once './core/configAPP.php';
@@ -13,6 +14,7 @@ if (isset($_SERVER['CONTENT_TYPE'])) {
                         require_once './classes/principal/cuenta.php';
                         require_once './controladores/clienteControlador.php';
                         $inscliente = new clienteControlador();
+
                         $insClienteClass = new Cliente();
                         $insClienteClass->setNombre($_POST["nombreRegister"]);
                         $insClienteClass->setApellido($_POST["apellidoRegister"]);
@@ -25,7 +27,6 @@ if (isset($_SERVER['CONTENT_TYPE'])) {
                         $insCuentaClass->setEmail($_POST["emailRegister"]);
                         $insCuentaClass->setUsuario($_POST["nombreRegister"]);
                         $insCuentaClass->setClave($_POST["passRegister"]);
-                        $insCuentaClass->setPrecio(0);
                         $insClienteClass->setCuenta((object) $insCuentaClass->__toString());
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');

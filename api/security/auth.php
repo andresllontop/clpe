@@ -20,15 +20,26 @@ class Auth implements IAuth
         } else if (empty($usuario->getId())) {
             throw new Exception("Fallo autenticación");
         }
-
-        $extraParaElToken = array(
-            "idusuario" => $usuario->getId(),
-            "usuario" => $usuario->getUsuario(),
-            "tipo" => $usuario->getTipo(),
-            "codigo" => $usuario->getCodigo(),
-            "accion" => "",
-            "tiempo" => (time() + (3600 * $this->tiempo)),
-        );
+        if ($usuario->getTipo() == 1) {
+            $extraParaElToken = array(
+                "idusuario" => $usuario->getId(),
+                "usuario" => $usuario->getUsuario(),
+                "tipo" => $usuario->getTipo(),
+                "codigo" => $usuario->getCodigo(),
+                "accion" => "",
+                "tiempo" => (time() + (3600 * $this->tiempo)),
+            );
+        } elseif ($usuario->getTipo() == 2) {
+            $extraParaElToken = array(
+                "idusuario" => $usuario->getId(),
+                "usuario" => $usuario->getUsuario(),
+                "tipo" => $usuario->getTipo(),
+                "codigo" => $usuario->getCodigo(),
+                "libro" => $usuario->getLibroCode(),
+                "accion" => "",
+                "tiempo" => (time() + (3600 * $this->tiempo)),
+            );
+        }
 
         $json = array(
             $this->cookie => $usuario->__toString(),

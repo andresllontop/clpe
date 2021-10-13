@@ -50,7 +50,7 @@ if (!empty($RESULTADO_token)) {
                 } else if ($accion == "paginate") {
                     header("HTTP/1.1 200");
                     header('Content-Type: application/json; charset=utf-8');
-                    echo json_encode($instest->bean_paginador_test_controlador($_GET['pagina'], $_GET['registros'], $_GET['filtro']));
+                    echo json_encode($instest->bean_paginador_test_controlador($_GET['pagina'], $_GET['registros'], $_GET['filtro'], $_GET['libro']));
                 } else if ($accion == "obtener") {
                     header("HTTP/1.1 200");
                     header('Content-Type: application/json; charset=utf-8');

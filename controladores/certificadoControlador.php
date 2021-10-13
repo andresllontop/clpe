@@ -79,23 +79,23 @@ class certificadoControlador extends certificadoModelo
         return $insBeanCrud->__toString();
 
     }
-    public function paginador_certificado_controlador($conexion, $inicio, $registros, $estado, $filtro)
+    public function paginador_certificado_controlador($conexion, $inicio, $registros, $estado, $filtro, $libro)
     {
         $insBeanPagination = new BeanPagination();
         try {
             $contador = 0;
             if ($estado == 0) {
-                $stmt = $conexion->prepare("SELECT admmini.id,admmini.AdminNombre,admmini.AdminOcupacion, admmini.AdminApellido, admmini.AdminTelefono,cuent.foto,cuent.email,cer.estado,cer.fecha,cuent.CuentaCodigo FROM `administrador`  as admmini inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE (cer.estado is null) and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) ORDER BY admmini.AdminNombre ASC LIMIT ?,?");
+                $stmt = $conexion->prepare("SELECT admmini.id,admmini.AdminNombre,admmini.AdminOcupacion, admmini.AdminApellido, admmini.AdminTelefono,cuent.foto,cuent.email,cer.estado,cer.fecha,cuent.CuentaCodigo FROM `administrador`  as admmini inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo inner join `librocuenta` as licuent ON cuent.CuentaCodigo=licuent.cuenta_codigocuenta left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE (licuent.libro_codigoLibro like CONCAT('%',?,'%')) and (cer.estado is null) and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) ORDER BY admmini.AdminNombre ASC LIMIT ?,?");
             } else {
-                $stmt = $conexion->prepare("SELECT admmini.id,admmini.AdminOcupacion,admmini.AdminNombre, admmini.AdminApellido, admmini.AdminTelefono,cuent.email,cuent.foto,cer.estado,cer.fecha,cuent.CuentaCodigo FROM `administrador`  as admmini inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE (cer.estado is not null) and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) ORDER BY admmini.AdminNombre ASC LIMIT ?,?");
+                $stmt = $conexion->prepare("SELECT admmini.id,admmini.AdminOcupacion,admmini.AdminNombre, admmini.AdminApellido, admmini.AdminTelefono,cuent.email,cuent.foto,cer.estado,cer.fecha,cuent.CuentaCodigo FROM `administrador`  as admmini inner join `cuenta` as cuent ON cuent.CuentaCodigo=admmini.Cuenta_Codigo inner join `librocuenta` as licuent ON cuent.CuentaCodigo=licuent.cuenta_codigocuenta left join `certificado` as cer ON cer.cuenta=admmini.Cuenta_Codigo WHERE (licuent.libro_codigoLibro like CONCAT('%',?,'%')) and (cer.estado is not null) and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) ORDER BY admmini.AdminNombre ASC LIMIT ?,?");
             }
-
-            $stmt->bindValue(1, $filtro, PDO::PARAM_STR);
+            $stmt->bindValue(1, $libro, PDO::PARAM_STR);
             $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
             $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
             $stmt->bindValue(4, $filtro, PDO::PARAM_STR);
-            $stmt->bindValue(5, $inicio, PDO::PARAM_INT);
-            $stmt->bindValue(6, $registros, PDO::PARAM_INT);
+            $stmt->bindValue(5, $filtro, PDO::PARAM_STR);
+            $stmt->bindValue(6, $inicio, PDO::PARAM_INT);
+            $stmt->bindValue(7, $registros, PDO::PARAM_INT);
             $stmt->execute();
             $datos = $stmt->fetchAll();
             foreach ($datos as $row) {
@@ -127,7 +127,7 @@ class certificadoControlador extends certificadoModelo
         }
         return $insBeanPagination->__toString();
     }
-    public function bean_paginador_certificado_controlador($pagina, $registros, $estado, $filtro)
+    public function bean_paginador_certificado_controlador($pagina, $registros, $estado, $filtro, $libro)
     {
         $insBeanCrud = new BeanCrud();
         try {
@@ -135,9 +135,10 @@ class certificadoControlador extends certificadoModelo
             $estado = mainModel::limpiar_cadena($estado);
             $filtro = mainModel::limpiar_cadena($filtro);
             $registros = mainModel::limpiar_cadena($registros);
+            $libro = mainModel::limpiar_cadena($libro);
             $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
             $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-            $insBeanCrud->setBeanPagination(self::paginador_certificado_controlador($this->conexion_db, $inicio, $registros, $estado, $filtro));
+            $insBeanCrud->setBeanPagination(self::paginador_certificado_controlador($this->conexion_db, $inicio, $registros, $estado, $filtro, $libro));
 
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";

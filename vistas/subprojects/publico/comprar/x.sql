@@ -1,9 +1,0 @@
-INSERT INTO `tarea`(tipo,fecha,codigo_subtitulo,cuenta,estado) 
-VALUES (1,"2021-01-22 07:15:39","L01.N01.01.11","AC8866688200",0),
-(1,"2021-02-07 20:55:06","L01.N01.02.13","AC8866688200",0),
- (1,"2021-01-26 22:02:05","L01.N01.03.09","AC8866688200",0),
- (1,"2021-01-21 23:10:21","L01.N01.04.05","AC8866688200",0)
-;
-
-SELECT * FROM `respuesta` WHERE codigo_cuenta="AC8866688200"
-SELECT * FROM `tarea` WHERE cuenta="AC8866688200" and tipo=1
