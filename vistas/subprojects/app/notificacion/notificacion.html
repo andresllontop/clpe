@@ -1,6 +1,10 @@
 <!--contenido de la pagina  -->
-<div class="container-fluid page-header ">
+<div class="container-fluid page-header d-none" id="seccion-cliente">
   <div class="form-row">
+    <div class="col-2 text-center pb-2">
+      <button class="btn btn-dark float-left btn-regresar"><i class="zmdi zmdi-long-arrow-left zmdi-hc-2x"></i></button>
+    </div>
+    <h3 class="text-center all-tittles col-9 f-weight-600 text-primary pr-10" id="titleLibro"></h3>
     <div class="dropdown col-2">
       <input type="hidden" id="pageNotificacion" value="1">
       <select id="sizePageNotificacion" class="form-control">
@@ -9,7 +13,7 @@
         <option value="30">30</option>
       </select>
     </div>
-    <h2 class="text-center all-tittles col-8" id="titleManagerNotificacion">Lista de Notificaciones</h2>
+    <h3 class="text-center all-tittles col-8" id="titleManagerNotificacion">Lista de Notificaciones</h3>
 
     <div class="col-2 text-right">
       <button class="btn btn-primary" id="btnAbrirbook">
@@ -17,8 +21,7 @@
       </button>
     </div>
   </div>
-</div>
-<div class="container-fluid py-2">
+
   <div class="table-responsive">
     <table class="table table-hover text-center m-0">
       <thead>
@@ -38,8 +41,8 @@
     </ul>
   </nav>
   <!-- /pagination BLOG -->
-</div>
 
+</div>
 
 <div id="ventanaModalManNotificacion" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
   <div class="modal-dialog modal-md" role="document">

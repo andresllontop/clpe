@@ -24,17 +24,17 @@
   <title><?php echo COMPANY; ?></title>
   <link rel="Shortcut Icon" type="image/x-icon" href="<?php echo SERVERURL; ?>adjuntos/logos.png" />
   <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/material-design-iconic-font.min.css">
-  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/normalize.css?v=0.60">
-  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/bootstrap.min.css?v=0.60">
+  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/normalize.css?v=1.38">
+  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/bootstrap.min.css?v=1.38">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 
-  <link type="text/css" rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/recorder.css?v=0.60" />
-  <link type="text/css" rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/editor.css?v=0.60" />
+  <link type="text/css" rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/recorder.css?v=1.38" />
+  <link type="text/css" rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/editor.css?v=1.38" />
   <link rel="stylesheet" href="https://releases.flowplayer.org/7.2.7/skin/skin.css" />
   <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/jquery.mCustomScrollbar.css">
-  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/sweet-alert.css?v=0.60">
+  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/sweet-alert.css?v=1.38">
   <!-- /load styles -->
-  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/style.css?v=0.60">
+  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/style.css?v=1.38">
   <!-- /load styles -->
   <?php
 
@@ -160,33 +160,33 @@ if ($array_resource != "") {
 
 
 
-  <script>window.jQuery || document.write('<script src="<?php echo SERVERURL; ?>vistas/js/jquery-1.11.2.min.js?v=0.60"><\/script>')</script>
+  <script>window.jQuery || document.write('<script src="<?php echo SERVERURL; ?>vistas/js/jquery-1.11.2.min.js?v=1.38"><\/script>')</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-  <script src="<?php echo SERVERURL; ?>vistas/js/bootstrap.min.js?v=0.60"></script>
-  <script src="<?php echo SERVERURL; ?>vistas/js/sweet-alert.min.js?v=0.60"></script>
-  <script src="<?php echo SERVERURL; ?>vistas/js/modernizr.js?v=0.60"></script>
+  <script src="<?php echo SERVERURL; ?>vistas/js/bootstrap.min.js?v=1.38"></script>
+  <script src="<?php echo SERVERURL; ?>vistas/js/sweet-alert.min.js?v=1.38"></script>
+  <script src="<?php echo SERVERURL; ?>vistas/js/modernizr.js?v=1.38"></script>
 
 
-  <script src="<?php echo SERVERURL; ?>vistas/js/jquery.mCustomScrollbar.concat.min.js?v=0.60"></script>
+  <script src="<?php echo SERVERURL; ?>vistas/js/jquery.mCustomScrollbar.concat.min.js?v=1.38"></script>
   <script type="text/javascript"
-    src="<?php echo (SERVERURL); ?>plugins/jquery-pagination/jquery.Pagination.min.js?v=0.60"></script>
+    src="<?php echo (SERVERURL); ?>plugins/jquery-pagination/jquery.Pagination.min.js?v=1.38"></script>
 
   <!--Scripts -->
   <!--script src="<%out.print(request.getContextPath());%>vistas/scripts/session/change.cookie.js"></script-->
-  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions.js?v=0.60"></script>
+  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions.js?v=1.38"></script>
   <script type="text/javascript"
-    src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_alerts.js?v=0.60"></script>
+    src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_alerts.js?v=1.38"></script>
   <script language="javascript"
-    src="<?php echo (SERVERURL); ?>vistas/scripts/util/configuration_api.js?v=0.60"></script>
+    src="<?php echo (SERVERURL); ?>vistas/scripts/util/configuration_api.js?v=1.38"></script>
   <script language="javascript"
-    src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_operational.js?v=0.60"></script>
-  <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/init_parameters.js?v=0.60"></script>
+    src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_operational.js?v=1.38"></script>
+  <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/init_parameters.js?v=1.38"></script>
   <!--Scripts -->
-  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/session/js.cookie.js?v=0.60"></script>
+  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/session/js.cookie.js?v=1.38"></script>
   <script type="text/javascript"
-    src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.js?v=0.60"></script>
+    src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.js?v=1.38"></script>
   <script type="text/javascript"
-    src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.init.js?v=0.60"></script>
+    src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.init.js?v=1.38"></script>
 
   <!--Scripts -->
   <?php

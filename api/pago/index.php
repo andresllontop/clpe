@@ -108,6 +108,7 @@ try {
                                                 "nombre_banco" => $authorization->dataMap->BRAND,
                                                 //"comision" => (($authorization->dataMap->AMOUNT) * 26.05) / 100,
                                                 "comision" => 0,
+                                                "libro" => $compraData->curso,
                                                 "moneda" => $authorization->order->currency,
                                                 "precio" => $authorization->dataMap->AMOUNT,
                                                 "tipo" => 1,
@@ -166,6 +167,26 @@ try {
                                 $insCuentaClass->setVerificacion(0);
 
                                 echo $inscliente->agregar_libro_publico_cliente_otro_medio_controlador($insCuentaClass);
+                            } else if ($respuestaValidar->messageServer == "ok") {
+                                $inscliente = new clienteControlador();
+                                $insClienteClass = new Cliente();
+                                $insClienteClass->setNombre($compraData->nombre);
+                                $insClienteClass->setApellido($compraData->apellido);
+                                $insClienteClass->setTelefono($compraData->telefono);
+                                $insClienteClass->setOcupacion($compraData->profesion);
+                                $insClienteClass->setPais($compraData->pais);
+                                $insClienteClass->setVendedor($compraData->vendedor);
+                                $insClienteClass->setTipoMedio($compraData->tipomedio);
+                                $insCuentaClass = new Cuenta();
+                                $insCuentaClass->setEmail($compraData->address);
+                                $insCuentaClass->setUsuario($compraData->nombre);
+                                $insCuentaClass->setClave($compraData->pass);
+                                //curso
+                                $insCuentaClass->setPerfil($compraData->curso);
+                                //precio
+                                $insCuentaClass->setVerificacion(0);
+                                $insClienteClass->setCuenta((object) $insCuentaClass->__toString());
+                                echo $inscliente->agregar_publico_cliente_otro_medio_controlador($insClienteClass);
                             } else {
                                 echo (json_encode($respuestaValidar));
                             }

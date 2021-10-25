@@ -293,12 +293,6 @@ function getRequest($url)
     //curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
     $data = curl_exec($curl);
-    curl_close($ch);
-    $curl_errno = curl_errno($curl);
-    $curl_error = curl_error($curl);
     curl_close($curl);
-    if ($curl_errno > 0) {
-        echo "cURL Error ($curl_errno): $curl_error\n";
-    }
     return $data;
 }

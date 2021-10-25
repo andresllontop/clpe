@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(getHostAPI() + beanRequestLibro.entity_api + "/" + beanRequestLibro.operation +
             "?filtro=" + '&pagina=1&registros=1', fetOptions),
         fetch(getHostAPI() + "notificacion/obtener" +
-            "", fetOptions)
+            "?libro=" + Cookies.get("clpe_libro"), fetOptions)
     ])
         .then(responses => Promise.all(responses.map((res) => res.json())))
         .then(json => {

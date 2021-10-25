@@ -11,8 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestNotificacion.operation = 'paginate';
         $('#modalCargandoNotificacion').modal('show');
     });
+    document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "NOTIFICACIONES";
+    $('#modalCargandoCurso_c').modal('show');
 
-    $('#modalCargandoNotificacion').modal('show');
+    // $('#modalCargandoNotificacion').modal('show');
 
     $("#modalCargandoNotificacion").on('shown.bs.modal', function () {
         processAjaxNotificacion();
@@ -48,9 +50,64 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#modalCargandoNotificacion').modal('show');
         }
     });
-
+    document.querySelectorAll('.btn-regresar').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            document.querySelector('#cursoHTML').classList.remove("d-none");
+            document.querySelector('#seccion-cliente').classList.add("d-none");
+        };
+    });
 });
+function addEventsButtonsCurso_c() {
+    document.querySelectorAll('.detalle-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.parentElement.parentElement.getAttribute('idlibro')
+            );
 
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestNotificacion.type_request = 'GET';
+                beanRequestNotificacion.operation = 'paginate';
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                $('#modalCargandoNotificacion').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+    document.querySelectorAll('.detalle-other-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.getAttribute('idlibro')
+            );
+
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestNotificacion.type_request = 'GET';
+                beanRequestNotificacion.operation = 'paginate';
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                $('#modalCargandoNotificacion').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+}
 function processAjaxNotificacion() {
     let form_data = new FormData();
 
@@ -65,7 +122,8 @@ function processAjaxNotificacion() {
             rango_inicial: document.querySelector("#textRangoInicialNotificacion").value,
             rango_final: document.querySelector("#textRangoFinalNotificacion").value,
             descripcion: $("#txtDescripcionNotificacion").Editor("getText"),
-            tipo: 1
+            tipo: 1,
+            libro: curso_cSelected.codigo
 
         };
 
@@ -93,6 +151,8 @@ function processAjaxNotificacion() {
 
             parameters_pagination +=
                 '?filtro=';
+            parameters_pagination +=
+                '&libro=' + curso_cSelected.codigo;
             parameters_pagination +=
                 '&pagina=' + document.querySelector("#pageNotificacion").value.trim();
             parameters_pagination +=

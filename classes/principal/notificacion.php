@@ -3,6 +3,7 @@
 class Notificacion
 {
     private $idnotificacion;
+    private $libro;
     private $rangoInicial;
     private $rangoFinal;
     private $descripcion;
@@ -66,11 +67,19 @@ class Notificacion
     {
         return $this->fecha;
     }
-
+    public function setLibro($libro)
+    {
+        $this->libro = $libro;
+    }
+    public function getLibro()
+    {
+        return $this->libro;
+    }
     public function __toString()
     {
         return
         array(
+            "libro" => $this->libro,
             "fecha" => $this->fecha,
             "cuenta" => $this->cuenta,
             "tipo" => $this->tipo,

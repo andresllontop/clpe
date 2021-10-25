@@ -20,7 +20,7 @@ if (!empty($RESULTADO_token)) {
 
                         $insNotificacionClass->setDescripcion($personData->descripcion);
                         $insNotificacionClass->setTipo($personData->tipo);
-
+                        $insNotificacionClass->setLibro($personData->libro);
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo $insnotificacion->agregar_notificacion_controlador($insNotificacionClass);
@@ -31,7 +31,7 @@ if (!empty($RESULTADO_token)) {
                         $insNotificacionClass->setIdNotificacion($personData->idnotificacion);
                         $insNotificacionClass->setRangoInicial($personData->rango_inicial);
                         $insNotificacionClass->setRangoFinal($personData->rango_final);
-
+                        $insNotificacionClass->setLibro($personData->libro);
                         $insNotificacionClass->setDescripcion($personData->descripcion);
                         $insNotificacionClass->setTipo($personData->tipo);
                         header("HTTP/1.1 200");
@@ -53,7 +53,7 @@ if (!empty($RESULTADO_token)) {
                     } else if ($accion == "paginate") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($insnotificacion->bean_paginador_notificacion_controlador($_GET['pagina'], $_GET['registros']));
+                        echo json_encode($insnotificacion->bean_paginador_notificacion_controlador($_GET['pagina'], $_GET['registros'], $_GET['libro']));
                     } else if ($accion == "obtener") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
@@ -82,6 +82,7 @@ if (!empty($RESULTADO_token)) {
                     if ($accion == "obtener") {
                         $insNotificacionClass = new Notificacion();
                         $insNotificacionClass->setCuenta($RESULTADO_token->codigo);
+                        $insNotificacionClass->setLibro($RESULTADO_token->libro);
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo json_encode($insnotificacion->datos_notificacion_controlador("tarea", $insNotificacionClass));

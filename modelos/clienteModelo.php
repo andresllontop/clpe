@@ -13,7 +13,7 @@ class clienteModelo extends mainModel
     protected function agregar_historial_economico_modelo($conexion, $cliente, $culqi, $imagen = null)
     {
 
-        $sql = $conexion->prepare("INSERT INTO `historial_economico`(nombres,apellidos,telefono,pais,nombre_banco,moneda,comision,precio,tipo,fecha,voucher) VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+        $sql = $conexion->prepare("INSERT INTO `historial_economico`(nombres,apellidos,telefono,pais,nombre_banco,moneda,comision,precio,tipo,fecha,voucher,codelibro) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
         $sql->bindValue(1, $cliente->getNombre(), PDO::PARAM_STR);
         $sql->bindValue(2, $cliente->getApellido(), PDO::PARAM_STR);
         $sql->bindValue(3, $cliente->getTelefono(), PDO::PARAM_STR);
@@ -25,6 +25,7 @@ class clienteModelo extends mainModel
         $sql->bindValue(9, $culqi->tipo, PDO::PARAM_INT);
         $sql->bindValue(10, $culqi->fecha);
         $sql->bindValue(11, $imagen);
+        $sql->bindValue(12, $culqi->libro);
 
         return $sql;
 
@@ -177,50 +178,50 @@ class clienteModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
-                    
-                    case "cuenta-libro-other":
-                        $stmt = $conexion->prepare("SELECT COUNT(idlibroCuenta) AS CONTADOR FROM `librocuenta` WHERE cuenta_codigocuenta=:Cuenta");
-                        $stmt->bindValue(":Cuenta", $cliente->getCuenta()['cuentaCodigo'], PDO::PARAM_STR);
-                        $stmt->execute();
-                        $datos = $stmt->fetchAll();
-                        foreach ($datos as $row) {
-                            $insBeanPagination->setCountFilter($row['CONTADOR']);
-                            if ($row['CONTADOR'] > 0) {
-                                $stmt = $conexion->prepare("SELECT * FROM `administrador` AS adm INNER JOIN `cuenta` AS cuen ON cuen.CuentaCodigo=adm.Cuenta_Codigo INNER JOIN `librocuenta` AS libcuen ON libcuen.cuenta_codigocuenta=adm.Cuenta_Codigo  WHERE adm.Cuenta_Codigo=:Cuenta ");
-                                $stmt->bindValue(":Cuenta", $cliente->getCuenta()['cuentaCodigo'], PDO::PARAM_STR);
-                                
-                                $stmt->execute();
-                                $datos = $stmt->fetchAll();
-                                foreach ($datos as $row) {
-                                    $insCuenta = new Cuenta();
-                                    $insCuenta->setIdCuenta($row['idcuenta']);
-                                    $insCuenta->setFoto($row['foto']);
-                                    $insCuenta->setCuentaCodigo($row['Cuenta_Codigo']);
-                                    $insCuenta->setUsuario($row['usuario']);
-                                    $insCuenta->setEmail($row['email']);
-                                    $insCuenta->setEstado($row['estado']);
-                                    $insCuenta->setClave($row['clave']);
-                                    $insLibroCuenta = new LibroCuenta();
-                                    $insLibroCuenta->setIdlibroCuenta($row['idlibroCuenta']);
-                                    $insLibroCuenta->setLibro($row['libro_codigoLibro']);
-                                    $insLibroCuenta->setMonto($row['monto']);
-                                    $insLibroCuenta->setImagen($row['imagen']);
-                                    $insLibroCuenta->setCuenta($insCuenta->__toString());
-                                    $insCliente = new Cliente();
-                                    $insCliente->setNombre($row['AdminNombre']);
-                                    $insCliente->setApellido($row['AdminApellido']);
-                                    $insCliente->setTelefono($row['AdminTelefono']);
-                                    $insCliente->setOcupacion($row['AdminOcupacion']);
-                                    $insCliente->setPais($row['pais']);
-    
-                                    $insCliente->setCuenta($insLibroCuenta->__toString());
-                                    $insBeanPagination->setList($insCliente->__toString());
-                                }
+
+                case "cuenta-libro-other":
+                    $stmt = $conexion->prepare("SELECT COUNT(idlibroCuenta) AS CONTADOR FROM `librocuenta` WHERE cuenta_codigocuenta=:Cuenta");
+                    $stmt->bindValue(":Cuenta", $cliente->getCuenta()['cuentaCodigo'], PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $conexion->prepare("SELECT * FROM `administrador` AS adm INNER JOIN `cuenta` AS cuen ON cuen.CuentaCodigo=adm.Cuenta_Codigo INNER JOIN `librocuenta` AS libcuen ON libcuen.cuenta_codigocuenta=adm.Cuenta_Codigo  WHERE adm.Cuenta_Codigo=:Cuenta ");
+                            $stmt->bindValue(":Cuenta", $cliente->getCuenta()['cuentaCodigo'], PDO::PARAM_STR);
+
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+                            foreach ($datos as $row) {
+                                $insCuenta = new Cuenta();
+                                $insCuenta->setIdCuenta($row['idcuenta']);
+                                $insCuenta->setFoto($row['foto']);
+                                $insCuenta->setCuentaCodigo($row['Cuenta_Codigo']);
+                                $insCuenta->setUsuario($row['usuario']);
+                                $insCuenta->setEmail($row['email']);
+                                $insCuenta->setEstado($row['estado']);
+                                $insCuenta->setClave($row['clave']);
+                                $insLibroCuenta = new LibroCuenta();
+                                $insLibroCuenta->setIdlibroCuenta($row['idlibroCuenta']);
+                                $insLibroCuenta->setLibro($row['libro_codigoLibro']);
+                                $insLibroCuenta->setMonto($row['monto']);
+                                $insLibroCuenta->setImagen($row['imagen']);
+                                $insLibroCuenta->setCuenta($insCuenta->__toString());
+                                $insCliente = new Cliente();
+                                $insCliente->setNombre($row['AdminNombre']);
+                                $insCliente->setApellido($row['AdminApellido']);
+                                $insCliente->setTelefono($row['AdminTelefono']);
+                                $insCliente->setOcupacion($row['AdminOcupacion']);
+                                $insCliente->setPais($row['pais']);
+
+                                $insCliente->setCuenta($insLibroCuenta->__toString());
+                                $insBeanPagination->setList($insCliente->__toString());
                             }
                         }
-                        $stmt->closeCursor();
-                        $stmt = null;
-                        break;
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 case "perfil":
                     $stmt = $conexion->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE  CuentaCodigo=:IDadministrador");
                     $stmt->bindValue(":IDadministrador", $cliente->getCuenta(), PDO::PARAM_STR);
@@ -296,6 +297,54 @@ class clienteModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+                case "cliente-libro":
+
+                    $stmt = $conexion->prepare("SELECT COUNT(cuen.idlibroCuenta) AS CONTADOR FROM `librocuenta` AS cuen WHERE cuen.libro_codigoLibro=:Codigo");
+                    $stmt->bindValue(":Codigo", $cliente->getCuentaCodigo(), PDO::PARAM_STR);
+
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $conexion->prepare("SELECT adm.*,cuen.* FROM `administrador` AS adm INNER JOIN `cuenta` AS cuen ON cuen.CuentaCodigo=adm.Cuenta_Codigo INNER JOIN `librocuenta` AS libcuen ON cuen.CuentaCodigo=libcuen.cuenta_codigocuenta WHERE libcuen.libro_codigoLibro=:Codigo and cuen.idcuenta!=1 and cuen.tipo=2");
+                            $stmt->bindValue(":Codigo", $cliente->getCuentaCodigo(), PDO::PARAM_STR);
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+
+                            foreach ($datos as $row) {
+                                $insCuenta = new Cuenta();
+                                $insCuenta->setIdCuenta($row['idcuenta']);
+                                $insCuenta->setFoto($row['foto']);
+                                $insCuenta->setCuentaCodigo($row['Cuenta_Codigo']);
+                                $insCuenta->setUsuario($row['usuario']);
+                                $insCuenta->setEmail($row['email']);
+                                $insCuenta->setEstado($row['estado']);
+
+                                $insCliente = new Cliente();
+                                $insCliente->setNombre($row['AdminNombre']);
+                                $insCliente->setApellido($row['AdminApellido']);
+                                $insCliente->setTelefono($row['AdminTelefono']);
+                                $insCliente->setOcupacion($row['AdminOcupacion']);
+                                $insCliente->setPais($row['pais']);
+                                $insCliente->setCuenta($insCuenta->__toString());
+                                $insBeanPagination->setList($insCliente->__toString());
+                            }
+
+                        }
+                    }
+                    $stmt = $conexion->prepare("SELECT * FROM `libro` WHERE codigo=:Codigo");
+                    $stmt->bindValue(":Codigo", $cliente->getCuentaCodigo(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos2 = $stmt->fetchAll();
+                    foreach ($datos2 as $row2) {
+                        $insBeanPagination->setList(array(
+                            "libro" => $row2['nombre'],
+                        ));
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 case "tipo-cuenta":
                     if ($cliente->getCuenta()->getEstado() > -1) {
                         $stmt = $conexion->prepare("SELECT COUNT(cuen.idcuenta) AS CONTADOR FROM `cuenta` AS cuen WHERE cuen.tipo=:Tipo  AND cuen.estado=:Estado and cuen.idcuenta!=1");
@@ -347,7 +396,6 @@ class clienteModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
-
                 case "conteo":
                     $stmt = $conexion->prepare("SELECT COUNT(idadministrador) AS CONTADOR FROM `administrador`");
                     $stmt->execute();

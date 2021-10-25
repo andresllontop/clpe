@@ -65,7 +65,30 @@ function addEventsButtonsCurso_c() {
             }
         };
     });
+    document.querySelectorAll('.detalle-other-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.getAttribute('idlibro')
+            );
 
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestCliente.type_request = 'GET';
+                beanRequestCliente.operation = 'terminado';
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                $('#modalCargandoCliente').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
 }
 function processAjaxCliente() {
     let form_data = new FormData();

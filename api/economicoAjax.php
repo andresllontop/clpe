@@ -63,7 +63,7 @@ if (!empty($RESULTADO_token)) {
                     } else if ($accion == "paginate") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($inseconomico->bean_paginador_economico_controlador($_GET['pagina'], $_GET['registros']));
+                        echo json_encode($inseconomico->bean_paginador_economico_controlador($_GET['pagina'], $_GET['registros'], $_GET['libro']));
                     } else if ($accion == "general") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
@@ -76,6 +76,14 @@ if (!empty($RESULTADO_token)) {
                         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
                         header("Cache-Control: private", false);
                         echo mb_convert_encoding($inseconomico->reporte_economico_controlador("moneda", $insEconomicoClass), 'UTF-16LE', 'UTF-8');
+                    } else if ($accion == "libroreport") {
+                        $insEconomicoClass = new Economico();
+                        $insEconomicoClass->setLibro($_GET['libro']);
+                         header("Content-Type: application/vnd.ms-excel; charset=UTF-16LE");
+                        header("Expires: 0");
+                        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+                        header("Cache-Control: private", false);
+                        echo mb_convert_encoding($inseconomico->reporte_economico_libro_controlador("moneda-libro", $insEconomicoClass), 'UTF-16LE', 'UTF-8');
                     } else if ($accion == "generalfecha") {
                         $insEconomicoClass = new Economico();
                         $insEconomicoClass->setFecha(array("fechai" => $_GET['fechai'],

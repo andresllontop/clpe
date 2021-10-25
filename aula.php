@@ -23,11 +23,11 @@
 <!-- Fontawesome CSS styles -->
 <link href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/font-awesome.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/normalize.css">
-  <link type="text/css" rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/style.css?v=0.54" />
-  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/bootstrap.min.css?v=0.54">
+  <link type="text/css" rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/publico/Dale/css/style.css?v=1.38" />
+  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/bootstrap.min.css?v=1.38">
   <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/jquery.mCustomScrollbar.css">
-  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/style1.css?v=0.54">
-  <link type="text/css" rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/recorder.css?v=0.54" />
+  <link rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/style1.css?v=1.38">
+  <link type="text/css" rel="stylesheet" href="<?php echo SERVERURL; ?>vistas/css/recorder.css?v=1.38" />
 
 
 
@@ -132,36 +132,36 @@ if ($array_resource != "") {
   <!-- /root -->
 
   <!-- Flowplayer library -->
-  <!--script src="<?php echo SERVERURL; ?>vistas/js/flowplayer.min.js?v=0.54"></script -->
-  <script src="<?php echo SERVERURL; ?>vistas/js/jquery-1.11.2.min.js?v=0.54"></script>
-  <script src="<?php echo SERVERURL; ?>vistas/js/sweet-alert.min.js?v=0.54"></script>
+  <!--script src="<?php echo SERVERURL; ?>vistas/js/flowplayer.min.js?v=1.38"></script -->
+  <script src="<?php echo SERVERURL; ?>vistas/js/jquery-1.11.2.min.js?v=1.38"></script>
+  <script src="<?php echo SERVERURL; ?>vistas/js/sweet-alert.min.js?v=1.38"></script>
 
-  <script src="<?php echo SERVERURL; ?>vistas/js/modernizr.js?v=0.54"></script>
-  <script src="<?php echo SERVERURL; ?>vistas/js/bootstrap.min.js?v=0.54"></script>
+  <script src="<?php echo SERVERURL; ?>vistas/js/modernizr.js?v=1.38"></script>
+  <script src="<?php echo SERVERURL; ?>vistas/js/bootstrap.min.js?v=1.38"></script>
   <!-- Easing core JavaScript -->
   <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery.easing.1.3.js?v=0.23"></script>
-  <script src="<?php echo SERVERURL; ?>vistas/js/jquery.mCustomScrollbar.concat.min.js?v=0.54"></script>
+  <script src="<?php echo SERVERURL; ?>vistas/js/jquery.mCustomScrollbar.concat.min.js?v=1.38"></script>
 
   <script language="Javascript">
 // document.oncontextmenu = function(){return false}
   </script>
   <script type="text/javascript"
-    src="<?php echo (SERVERURL); ?>plugins/jquery-pagination/jquery.Pagination.min.js?v=0.54"></script>
+    src="<?php echo (SERVERURL); ?>plugins/jquery-pagination/jquery.Pagination.min.js?v=1.38"></script>
 
-  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions.js?v=0.54"></script>
-  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_alerts.js?v=0.54"></script>
-  <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/configuration_api.js?v=0.54"></script>
-  <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_operational.js?v=0.54"></script>
-  <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/init_parameters.js?v=0.54"></script>
+  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions.js?v=1.38"></script>
+  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_alerts.js?v=1.38"></script>
+  <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/configuration_api.js?v=1.38"></script>
+  <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/util/functions_operational.js?v=1.38"></script>
+  <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/init_parameters.js?v=1.38"></script>
 
   <!--Scripts SESION-->
 
-  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/session/js.cookie.js?v=0.54"></script>
+  <script type="text/javascript" src="<?php echo (SERVERURL); ?>vistas/scripts/session/js.cookie.js?v=1.38"></script>
   <script type="text/javascript"
-    src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.js?v=0.54"></script>
+    src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.js?v=1.38"></script>
   <script type="text/javascript"
-    src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.init.js?v=0.54"></script>
-    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/main.js?v=0.54"></script>
+    src="<?php echo (SERVERURL); ?>vistas/scripts/session/session.validate.init.js?v=1.38"></script>
+    <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/main.js?v=1.38"></script>
   <!--Scripts -->
 
   <?php

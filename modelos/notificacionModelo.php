@@ -13,13 +13,13 @@ class notificacionModelo extends mainModel
     protected function agregar_notificacion_modelo($conexion, $Notificacion)
     {
         $sql = $conexion->prepare("INSERT INTO `notificacion`
-        (descripcion,rango_inicial,rango_final,tipo)
-         VALUES(?,?,?,?)");
+        (descripcion,rango_inicial,rango_final,tipo,codelibro)
+         VALUES(?,?,?,?,?)");
         $sql->bindValue(1, $Notificacion->getDescripcion(), PDO::PARAM_STR);
         $sql->bindValue(2, $Notificacion->getRangoInicial(), PDO::PARAM_INT);
         $sql->bindValue(3, $Notificacion->getRangoFinal(), PDO::PARAM_INT);
         $sql->bindValue(4, $Notificacion->getTipo(), PDO::PARAM_INT);
-
+        $sql->bindValue(5, $Notificacion->getLibro(), PDO::PARAM_STR);
         return $sql;
 
     }
@@ -48,6 +48,7 @@ class notificacionModelo extends mainModel
                                 $insNotificacion->setRangoFinal($row['rango_final']);
                                 $insNotificacion->setDescripcion($row['descripcion']);
                                 $insNotificacion->setTipo($row['tipo']);
+                                $insNotificacion->setLibro($row['codelibro']);
                                 $insBeanPagination->setList($insNotificacion->__toString());
                             }
                         }
@@ -72,6 +73,7 @@ class notificacionModelo extends mainModel
                                 $insNotificacion->setRangoFinal($row['rango_final']);
                                 $insNotificacion->setDescripcion($row['descripcion']);
                                 $insNotificacion->setTipo($row['tipo']);
+                                $insNotificacion->setLibro($row['codelibro']);
                                 $insBeanPagination->setList($insNotificacion->__toString());
                             }
                         }
@@ -118,8 +120,9 @@ class notificacionModelo extends mainModel
                     //CONFERENCIA
                     $hoy = date('Y-m-d H:i:s');
 
-                    $stmt = $conexion->prepare("SELECT *,MIN(fecha) FROM `notificacion` WHERE fecha >= ? and tipo=2");
+                    $stmt = $conexion->prepare("SELECT *,MIN(fecha) FROM `notificacion` WHERE fecha >= ? and codelibro=? and tipo=2");
                     $stmt->bindValue(1, $hoy);
+                    $stmt->bindValue(2, $notificacion->getLibro());
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
@@ -131,20 +134,23 @@ class notificacionModelo extends mainModel
                             $insNotificacion->setTipo($row['tipo']);
                             $insNotificacion->setRangoInicial($row['rango_inicial']);
                             $insNotificacion->setRangoFinal($row['rango_final']);
+                            $insNotificacion->setLibro($row['codelibro']);
                             $insBeanPagination->setList($insNotificacion->__toString());
                         }
 
                     }
                     //NOTIFICACION
-                    $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR FROM `tarea` WHERE  cuenta=:CuentaCodigo");
+                    $stmt = $conexion->prepare("SELECT COUNT(idtarea) AS CONTADOR FROM `tarea` WHERE  cuenta=:CuentaCodigo and (codigo_subtitulo like CONCAT('%',:Libro,'%') )");
                     $stmt->bindValue(":CuentaCodigo", $notificacion->getCuenta(), PDO::PARAM_STR);
+                    $stmt->bindValue(":Libro", $notificacion->getLibro());
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
 
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT MAX(idtarea),DATE(fecha) AS fecha FROM `tarea` WHERE  cuenta=:CuentaCodigo");
+                            $stmt = $conexion->prepare("SELECT MAX(idtarea),DATE(fecha) AS fecha FROM `tarea` WHERE  cuenta=:CuentaCodigo and (codigo_subtitulo like CONCAT('%',:Libro,'%') )");
                             $stmt->bindValue(":CuentaCodigo", $notificacion->getCuenta(), PDO::PARAM_STR);
+                            $stmt->bindValue(":Libro", $notificacion->getLibro());
                             $stmt->execute();
                             $datos = $stmt->fetchAll();
                             foreach ($datos as $row) {
@@ -158,8 +164,9 @@ class notificacionModelo extends mainModel
                                     foreach ($datos2 as $row2) {
                                         $insBeanPagination->setCountFilter($row2['CONTADOR']);
                                         if ($row2['CONTADOR'] > 0) {
-                                            $stmt = $conexion->prepare("SELECT * FROM `notificacion` WHERE (? BETWEEN rango_inicial AND rango_final) and tipo=1");
+                                            $stmt = $conexion->prepare("SELECT * FROM `notificacion` WHERE (? BETWEEN rango_inicial AND rango_final) and codelibro=? and tipo=1");
                                             $stmt->bindValue(1, $valorRango, PDO::PARAM_INT);
+                                            $stmt->bindValue(2, $notificacion->getLibro(), PDO::PARAM_STR);
                                             $stmt->execute();
                                             $datos = $stmt->fetchAll();
                                             foreach ($datos as $row) {
@@ -179,13 +186,15 @@ class notificacionModelo extends mainModel
                             }
                         } else {
 
-                            $stmt = $conexion->prepare("SELECT COUNT(idnotificacion) AS CONTADOR FROM `notificacion` WHERE  (  rango_inicial<0 OR rango_final<0 )  and tipo=1");
+                            $stmt = $conexion->prepare("SELECT COUNT(idnotificacion) AS CONTADOR FROM `notificacion` WHERE  ( rango_inicial<0 OR rango_final<0 ) and codelibro=?   and tipo=1");
+                            $stmt->bindValue(1, $notificacion->getLibro(), PDO::PARAM_STR);
                             $stmt->execute();
                             $datos2 = $stmt->fetchAll();
                             foreach ($datos2 as $row2) {
                                 $insBeanPagination->setCountFilter($row2['CONTADOR']);
                                 if ($row2['CONTADOR'] > 0) {
-                                    $stmt = $conexion->prepare("SELECT * FROM `notificacion` WHERE (  rango_inicial<0 OR rango_final<0 )  and tipo=1");
+                                    $stmt = $conexion->prepare("SELECT * FROM `notificacion` WHERE (  rango_inicial<0 OR rango_final<0 ) and codelibro=?  and tipo=1");
+                                    $stmt->bindValue(1, $notificacion->getLibro(), PDO::PARAM_STR);
                                     $stmt->execute();
                                     $datos = $stmt->fetchAll();
                                     foreach ($datos as $row) {
@@ -195,6 +204,7 @@ class notificacionModelo extends mainModel
                                         $insNotificacion->setRangoFinal($row['rango_final']);
                                         $insNotificacion->setDescripcion($row['descripcion']);
                                         $insNotificacion->setTipo($row['tipo']);
+                                        $insNotificacion->setLibro($row['codelibro']);
                                         $insBeanPagination->setList($insNotificacion->__toString());
                                     }
 
@@ -227,12 +237,14 @@ class notificacionModelo extends mainModel
     }
     protected function actualizar_notificacion_modelo($conexion, $Notificacion)
     {
-        $sql = $conexion->prepare("UPDATE `notificacion` SET descripcion=?, rango_inicial=?, rango_final=?, tipo=?  WHERE idnotificacion=?");
+        $sql = $conexion->prepare("UPDATE `notificacion` SET descripcion=?, rango_inicial=?, rango_final=?, tipo=?, codelibro=?  WHERE idnotificacion=?");
         $sql->bindValue(1, $Notificacion->getDescripcion(), PDO::PARAM_STR);
         $sql->bindValue(2, $Notificacion->getRangoInicial(), PDO::PARAM_INT);
         $sql->bindValue(3, $Notificacion->getRangoFinal(), PDO::PARAM_INT);
         $sql->bindValue(4, $Notificacion->getTipo(), PDO::PARAM_INT);
-        $sql->bindValue(5, $Notificacion->getIdNotificacion(), PDO::PARAM_INT);
+        $sql->bindValue(5, $Notificacion->getLibro(), PDO::PARAM_STR);
+        $sql->bindValue(6, $Notificacion->getIdNotificacion(), PDO::PARAM_INT);
+
         return $sql;
 
     }

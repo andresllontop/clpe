@@ -15,12 +15,12 @@ class notificacionControlador extends notificacionModelo
             $Notificacion->setRangoInicial(mainModel::limpiar_cadena($Notificacion->getRangoInicial()));
             $Notificacion->setRangoFinal(mainModel::limpiar_cadena($Notificacion->getRangoFinal()));
             $Notificacion->setTipo(mainModel::limpiar_cadena($Notificacion->getTipo()));
-
+            $Notificacion->setLibro(mainModel::limpiar_cadena($Notificacion->getLibro()));
             $stmt = notificacionModelo::agregar_notificacion_modelo($this->conexion_db, $Notificacion);
             if ($stmt->execute()) {
                 $this->conexion_db->commit();
                 $insBeanCrud->setMessageServer('ok');
-                $insBeanCrud->setBeanPagination(self::paginador_notificacion_controlador($this->conexion_db, 0, 20));
+                $insBeanCrud->setBeanPagination(self::paginador_notificacion_controlador($this->conexion_db, 0, 20, $Notificacion->getLibro()));
 
             } else {
                 $insBeanCrud->setMessageServer('No se ha ppodido enviar el notificacion');
@@ -61,19 +61,22 @@ class notificacionControlador extends notificacionModelo
         return $insBeanCrud->__toString();
 
     }
-    public function paginador_notificacion_controlador($conexion, $inicio, $registros)
+    public function paginador_notificacion_controlador($conexion, $inicio, $registros, $libro)
     {
         $insBeanPagination = new BeanPagination();
         try {
 
-            $stmt = $conexion->query("SELECT COUNT(idnotificacion) AS CONTADOR FROM `notificacion` where tipo=1");
+            $stmt = $conexion->prepare("SELECT COUNT(idnotificacion) AS CONTADOR FROM `notificacion` where tipo=1  and (codelibro like CONCAT('%',?,'%'))");
+            $stmt->bindValue(1, $libro, PDO::PARAM_STR);
+            $stmt->execute();
             $datos = $stmt->fetchAll();
             foreach ($datos as $row) {
                 $insBeanPagination->setCountFilter($row["CONTADOR"]);
                 if ($row["CONTADOR"] > 0) {
-                    $stmt = $conexion->prepare("SELECT * FROM `notificacion` where tipo=1 ORDER BY idnotificacion ASC LIMIT ?,?");
-                    $stmt->bindValue(1, $inicio, PDO::PARAM_INT);
-                    $stmt->bindValue(2, $registros, PDO::PARAM_INT);
+                    $stmt = $conexion->prepare("SELECT * FROM `notificacion` where tipo=1 and (codelibro like CONCAT('%',?,'%')) ORDER BY idnotificacion ASC LIMIT ?,?");
+                    $stmt->bindValue(1, $libro, PDO::PARAM_STR);
+                    $stmt->bindValue(2, $inicio, PDO::PARAM_INT);
+                    $stmt->bindValue(3, $registros, PDO::PARAM_INT);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
@@ -82,6 +85,7 @@ class notificacionControlador extends notificacionModelo
                         $insNotificacion->setRangoInicial($row['rango_inicial']);
                         $insNotificacion->setRangoFinal($row['rango_final']);
                         $insNotificacion->setDescripcion($row['descripcion']);
+                        $insNotificacion->setLibro($row['codelibro']);
                         $insNotificacion->setTipo($row['tipo']);
                         $insBeanPagination->setList($insNotificacion->__toString());
                     }
@@ -99,15 +103,16 @@ class notificacionControlador extends notificacionModelo
         return $insBeanPagination->__toString();
 
     }
-    public function bean_paginador_notificacion_controlador($pagina, $registros)
+    public function bean_paginador_notificacion_controlador($pagina, $registros, $libro)
     {
         $insBeanCrud = new BeanCrud();
         try {
             $pagina = mainModel::limpiar_cadena($pagina);
             $registros = mainModel::limpiar_cadena($registros);
+            $libro = mainModel::limpiar_cadena($libro);
             $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
             $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-            $insBeanCrud->setBeanPagination(self::paginador_notificacion_controlador($this->conexion_db, $inicio, $registros));
+            $insBeanCrud->setBeanPagination(self::paginador_notificacion_controlador($this->conexion_db, $inicio, $registros, $libro));
 
         } catch (Exception $th) {
             print '¡Error!: ' . $th->getMessage() . '<br/>';
@@ -128,7 +133,7 @@ class notificacionControlador extends notificacionModelo
             $Notificacion->setIdNotificacion(mainModel::limpiar_cadena($Notificacion->getIdNotificacion()));
             $notificacion = notificacionModelo::datos_notificacion_modelo($this->conexion_db, 'unico', $Notificacion);
             if ($notificacion['countFilter'] == 0) {
-                $insBeanCrud->setMessageServer('No se encuentra el notificacion');
+                $insBeanCrud->setMessageServer('No se encuentra la notificación');
             } else {
                 $stmt = notificacionModelo::eliminar_notificacion_modelo($this->conexion_db, $Notificacion->getIdNotificacion());
 
@@ -171,6 +176,7 @@ class notificacionControlador extends notificacionModelo
             $Notificacion->setRangoInicial(mainModel::limpiar_cadena($Notificacion->getRangoInicial()));
             $Notificacion->setRangoFinal(mainModel::limpiar_cadena($Notificacion->getRangoFinal()));
             $Notificacion->setTipo(mainModel::limpiar_cadena($Notificacion->getTipo()));
+            $Notificacion->setLibro(mainModel::limpiar_cadena($Notificacion->getLibro()));
             $notificacion = notificacionModelo::datos_notificacion_modelo($this->conexion_db, 'unico', $Notificacion);
             if ($notificacion['countFilter'] == 0) {
                 $insBeanCrud->setMessageServer('No se encuentra el notificacion');

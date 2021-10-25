@@ -231,6 +231,31 @@ function addEventsButtonsCurso_c() {
             }
         };
     });
+    document.querySelectorAll('.detalle-other-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.getAttribute('idlibro')
+            );
+
+            if (curso_cSelected != undefined) {
+
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                beanRequestCliente.type_request = 'GET';
+                beanRequestCliente.operation = 'paginate';
+                $('#modalCargandoCliente').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
 
 }
 function listaCliente(beanPagination) {
@@ -254,7 +279,7 @@ function listaCliente(beanPagination) {
 
         row += `<tr  idcliente="${cliente.idcliente}">
         
-<td class="text-center" >${cliente.fecha == null ? '' : cliente.fecha.split(" ")[0].split("-")[2] + '-' + cliente.fecha.split(" ")[0].split("-")[1] + '-' + cliente.fecha.split(" ")[0].split("-")[0]}</br>${cliente.fecha == null ? '' : cliente.fecha.split(" ")[1]}</td>
+<td class="text-center" >${cliente.cuenta.fecha == null ? '' : cliente.cuenta.fecha.split(" ")[0].split("-")[2] + '-' + cliente.cuenta.fecha.split(" ")[0].split("-")[1] + '-' + cliente.cuenta.fecha.split(" ")[0].split("-")[0]}</br>${cliente.cuenta.fecha == null ? '' : cliente.cuenta.fecha.split(" ")[1]}</td>
 <td class="text-center px-1" >${cliente.nombre}<br> ${cliente.apellido}</td>
 <td class="text-center px-1" >${cliente.telefono}</td>
 <td class="text-center px-1" >${cliente.cuenta.cuenta.email}</td>

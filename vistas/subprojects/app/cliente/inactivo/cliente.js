@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
         beanRequestCliente.type_request = 'POST';
         document.querySelector("#btnSubmit").innerHTML = "REGISTRAR";
         addClass(document.querySelector("#viewDatoMonetario"), "d-none");
+        removeClass(document.querySelector("#htmlHeaderOption"), "d-none");
+
         addClass(document.querySelector("#txtTipoInscripcionCliente").parentElement.parentElement, "d-none");
 
         removeClass(document.querySelector("#viewCliente"), "d-none");
@@ -158,6 +160,7 @@ function processAjaxCliente() {
                     precio: document.querySelector("#txtMontoCliente").value,
                     tipo: 2,
                     fecha: date + ' ' + time,
+                    libro: document.querySelector("#txtLibroCliente").value
 
                 }
             };
@@ -387,7 +390,7 @@ function listaCliente(beanPagination) {
     beanPagination.list.forEach((cliente) => {
 
         row += `<tr  idcliente="${cliente.idcliente}">
-<td class="text-center" >${cliente.fecha == null ? '' : cliente.fecha.split(" ")[0].split("-")[2] + '-' + cliente.fecha.split(" ")[0].split("-")[1] + '-' + cliente.fecha.split(" ")[0].split("-")[0]}</br>${cliente.fecha == null ? '' : cliente.fecha.split(" ")[1]}</td>
+<td class="text-center" >${cliente.cuenta.fecha == null ? '' : cliente.cuenta.fecha.split(" ")[0].split("-")[2] + '-' + cliente.cuenta.fecha.split(" ")[0].split("-")[1] + '-' + cliente.cuenta.fecha.split(" ")[0].split("-")[0]}</br>${cliente.cuenta.fecha == null ? '' : cliente.cuenta.fecha.split(" ")[1]}</td>
 <td class="text-center" >${cliente.nombre} <br> ${cliente.apellido}</td>
 <td class="text-center" >${cliente.telefono}</td>
 <td class="text-center" >${cliente.cuenta.cuenta.email}</td>
@@ -455,6 +458,7 @@ function addEventsButtonsAdmin() {
             );
 
             if (clienteSelected != undefined) {
+                addClass(document.querySelector("#htmlHeaderOption"), "d-none");
                 addClass(document.querySelector("#viewDatoMonetario"), "d-none");
                 document.querySelector("#btnSubmit").innerHTML = "INSCRIBIR";
                 addCliente(clienteSelected);
@@ -477,6 +481,7 @@ function addEventsButtonsAdmin() {
             );
 
             if (clienteSelected != undefined) {
+                addClass(document.querySelector("#htmlHeaderOption"), "d-none");
                 removeClass(document.querySelector("#viewDatoMonetario"), "d-none");
                 removeClass(document.querySelector("#txtTipoInscripcionCliente").parentElement.parentElement, "d-none");
 

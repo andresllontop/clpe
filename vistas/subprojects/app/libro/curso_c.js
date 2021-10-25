@@ -91,7 +91,7 @@ function listaCurso_c(beanPagination) {
     document.querySelector('#tbodyCurso_c').innerHTML += row;
     beanPagination.list.forEach((curso_c) => {
 
-        row += `<tr  idlibro="${curso_c.idlibro}">
+        row += `<tr  idlibro="${curso_c.idlibro}" class="detalle-other-curso" style="cursor:pointer">
 <td class="text-center">${curso_c.nombre}</td>
 <td  class="text-center"><img  
   src="${getHostFrontEnd()}adjuntos/libros/${curso_c.imagen}"
@@ -99,7 +99,7 @@ function listaCurso_c(beanPagination) {
   class="img-responsive center-box"style="width:65px;height:75px;"
   /></td>
 <td class="text-center">
-<button class="btn btn-info detalle-curso" >${parametro == undefined ? '<i class="zmdi zmdi-refresh"></i>' : curso_c.descripcion}</button>
+<button class="btn btn-primary detalle-curso" >${parametro == undefined ? '<i class="zmdi zmdi-collection-bookmark"></i>' : curso_c.descripcion}</button>
 </td>
 
 </tr>`;

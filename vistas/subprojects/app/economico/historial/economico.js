@@ -12,8 +12,9 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoEconomico').modal('show');
     });
 
-
-    $('#modalCargandoEconomico').modal('show');
+    document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "CONTROL ECONÓMICO";
+    $('#modalCargandoCurso_c').modal('show');
+    // $('#modalCargandoEconomico').modal('show');
 
     $("#modalCargandoEconomico").on('shown.bs.modal', function () {
         processAjaxEconomico();
@@ -37,10 +38,65 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#modalCargandoEconomico').modal('show');
         }
     });
-
+    document.querySelectorAll('.btn-regresar').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            document.querySelector('#cursoHTML').classList.remove("d-none");
+            document.querySelector('#seccion-cliente').classList.add("d-none");
+        };
+    });
 
 });
+function addEventsButtonsCurso_c() {
+    document.querySelectorAll('.detalle-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.parentElement.parentElement.getAttribute('idlibro')
+            );
 
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestEconomico.type_request = 'GET';
+                beanRequestEconomico.operation = 'paginate';
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                $('#modalCargandoEconomico').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+    document.querySelectorAll('.detalle-other-curso').forEach((btn) => {
+        //AGREGANDO EVENTO CLICK
+        btn.onclick = function () {
+            curso_cSelected = findByCurso_c(
+                btn.getAttribute('idlibro')
+            );
+
+            if (curso_cSelected != undefined) {
+                addClass(
+                    document.querySelector("#cursoHTML"), "d-none");
+                removeClass(
+                    document.querySelector("#seccion-cliente"), "d-none");
+                beanRequestEconomico.type_request = 'GET';
+                beanRequestEconomico.operation = 'paginate';
+                document.querySelector("#titleLibro").innerHTML = curso_cSelected.nombre;
+                $('#modalCargandoEconomico').modal('show');
+            } else {
+                console.log(
+                    'warning',
+                    'No se encontró el Almacen para poder editar'
+                );
+            }
+        };
+    });
+}
 function processAjaxEconomico() {
     let form_data = new FormData();
 
@@ -61,9 +117,8 @@ function processAjaxEconomico() {
             banco: document.querySelector("#txtNombreBancoEconomico").value,
             moneda: document.querySelector("#txtTipoMonedaEconomico").value,
             comision: document.querySelector("#txtComisionEconomico").value,
-            precio: document.querySelector("#txtMontoEconomico").value
-
-
+            precio: document.querySelector("#txtMontoEconomico").value,
+            libro: curso_cSelected.codigo
         };
 
 
@@ -103,6 +158,8 @@ function processAjaxEconomico() {
 
             parameters_pagination +=
                 '?filtro=';
+            parameters_pagination +=
+                '&libro=' + curso_cSelected.codigo;
             parameters_pagination +=
                 '&pagina=' + document.querySelector("#pageEconomico").value.trim();
             parameters_pagination +=

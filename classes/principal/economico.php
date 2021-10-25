@@ -14,6 +14,7 @@ class Economico
     private $tipo;
     private $fecha;
     private $voucher;
+    private $libro;
 
     public function setIdeconomico($ideconomico)
     {
@@ -113,7 +114,14 @@ class Economico
     {
         return $this->voucher;
     }
-
+    public function setLibro($libro)
+    {
+        $this->libro = $libro;
+    }
+    public function getLibro()
+    {
+        return $this->libro;
+    }
     public function __toString()
     {
         return
@@ -122,6 +130,7 @@ class Economico
             "moneda" => $this->moneda,
             "precio" => $this->precio,
             "tipo" => $this->tipo,
+            "libro" => $this->libro,
             "voucher" => $this->voucher,
             "fecha" => $this->fecha,
             "comision" => $this->comision,

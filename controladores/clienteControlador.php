@@ -1059,13 +1059,71 @@ class clienteControlador extends clienteModelo
         }
         return $row;
     }
+    public function reporte_cliente_libro_controlador($tipo, $codigo)
+    {
+        $row = "";
+
+        try {
+            $variable = clienteModelo::datos_cliente_modelo($this->conexion_db, mainModel::limpiar_cadena($tipo), $codigo);
+       
+            if ($variable['countFilter'] > 0) {
+                $titulo = "ALUMNOS " . strtoupper(($variable['list'][1]['libro']));
+
+                $row = "<table border='1'>
+        <thead>
+        <tr>
+        <th colspan='8'> LISTA DE $titulo </th>
+        </tr>
+        <tr>
+          <th ></th>
+          <th >NOMBRES</th>
+          <th >APELLIDOS</th>
+          <th >OCUPACION/OFICIO</th>
+          <th >PAIS</th>
+          <th>TELEFONO</th>
+          <th >EMAIL</th>
+          <th >MONTO</th>
+        </tr>
+      </thead>
+      <tbody> ";
+                $contador = 1;
+                foreach ($variable['list'][0] as $value) {
+                    $row = $row . "
+            <tr>
+            <td>" . ($contador++) . "</td>
+              <td>" . $value['nombre'] . "</td>
+              <td>" . $value['apellido'] . "</td>
+              <td>" . $value['ocupacion'] . "</td>
+              <td>" . $value['pais'] . "</td>
+              <td>" . $value['telefono'] . "</td>
+              <td>" . $value['cuenta']['email'] . "</td>
+              <td>" . $value['cuenta']['voucher'] . "</td>
+            </tr>";
+                }
+                $row = $row . "</tbody> </table>";
+
+                 header("Content-Disposition:attachment;filename=$titulo.xls");
+
+            }
+
+        } catch (Exception $th) {
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            $this->conexion_db = null;
+        }
+        return $row;
+    }
     public function paginador_cliente_controlador($conexion, $inicio, $registros, $estado, $filtro, $libro = '')
     {
 
         $insBeanPagination = new BeanPagination();
         try {
             if ((int) $estado > -1) {
-                $stmt = $conexion->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE estado=? and tipo=2 and idcuenta!=1");
+                $stmt = $conexion->prepare("SELECT COUNT(cuen.idcuenta) AS CONTADOR FROM `cuenta` AS cuen INNER JOIN `librocuenta` AS cuenlib ON cuenlib.cuenta_codigocuenta=cuen.CuentaCodigo  WHERE cuenlib.estado=? and cuen.tipo=2 and cuen.idcuenta!=1");
                 $stmt->bindValue(1, $estado, PDO::PARAM_INT);
             } else {
                 $stmt = $conexion->prepare("SELECT COUNT(idcuenta) AS CONTADOR FROM `cuenta` WHERE tipo=2 and idcuenta!=1");
@@ -1077,7 +1135,7 @@ class clienteControlador extends clienteModelo
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                 if ($row['CONTADOR'] > 0) {
                     if ((int) $estado > -1) {
-                        $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,licuent.estado as estado_libro,licuent.idlibroCuenta,licuent.imagen AS libr_imagen,licuent.monto,licuent.fecha_compra,licuent.libro_codigoLibro,lib.nombre AS lib_nombre FROM `librocuenta` as licuent inner join `cuenta` as cuent ON cuent.CuentaCodigo=licuent.cuenta_codigocuenta inner join `administrador` as admmini ON licuent.cuenta_codigocuenta=admmini.Cuenta_Codigo inner join `libro` as lib ON lib.codigo=licuent.libro_codigoLibro WHERE licuent.estado=? and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) AND (licuent.libro_codigoLibro LIKE CONCAT('%',?,'%'))  ORDER BY admmini.id DESC LIMIT ?,?");
+                        $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,licuent.estado as estado_libro,licuent.idlibroCuenta,licuent.imagen AS libr_imagen,licuent.monto,licuent.fecha_compra,licuent.libro_codigoLibro,lib.nombre AS lib_nombre FROM `librocuenta` as licuent inner join `cuenta` as cuent ON cuent.CuentaCodigo=licuent.cuenta_codigocuenta inner join `administrador` as admmini ON licuent.cuenta_codigocuenta=admmini.Cuenta_Codigo inner join `libro` as lib ON lib.codigo=licuent.libro_codigoLibro WHERE licuent.estado=? and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) AND (licuent.libro_codigoLibro LIKE CONCAT('%',?,'%'))  ORDER BY licuent.fecha_compra DESC LIMIT ?,?");
                         $stmt->bindValue(1, $estado, PDO::PARAM_INT);
                         $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
                         $stmt->bindValue(3, $filtro, PDO::PARAM_STR);
@@ -1087,7 +1145,7 @@ class clienteControlador extends clienteModelo
                         $stmt->bindValue(7, $inicio, PDO::PARAM_INT);
                         $stmt->bindValue(8, $registros, PDO::PARAM_INT);
                     } else {
-                        $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,licuent.estado as estado_libro,licuent.idlibroCuenta,licuent.imagen AS libr_imagen,licuent.monto,licuent.fecha_compra,licuent.libro_codigoLibro,lib.nombre AS lib_nombre FROM `librocuenta`  as licuent inner join `cuenta` as cuent ON cuent.CuentaCodigo=licuent.cuenta_codigocuenta inner join `administrador` as admmini ON licuent.cuenta_codigocuenta=admmini.Cuenta_Codigo inner join `libro` as lib ON lib.codigo=licuent.libro_codigoLibro WHERE licuent.estado=? and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) AND (licuent.libro_codigoLibro LIKE CONCAT('%',?,'%'))  ORDER BY admmini.id DESC LIMIT ?,?");
+                        $stmt = $conexion->prepare("SELECT admmini.*,cuent.*,licuent.estado as estado_libro,licuent.idlibroCuenta,licuent.imagen AS libr_imagen,licuent.monto,licuent.fecha_compra,licuent.libro_codigoLibro,lib.nombre AS lib_nombre FROM `librocuenta`  as licuent inner join `cuenta` as cuent ON cuent.CuentaCodigo=licuent.cuenta_codigocuenta inner join `administrador` as admmini ON licuent.cuenta_codigocuenta=admmini.Cuenta_Codigo inner join `libro` as lib ON lib.codigo=licuent.libro_codigoLibro WHERE licuent.estado=? and cuent.tipo=2 and cuent.idcuenta!=1 and (admmini.AdminNombre like concat('%',?,'%') OR admmini.AdminApellido like concat('%',?,'%') OR admmini.AdminTelefono like concat('%',?,'%') OR cuent.email like concat('%',?,'%')) AND (licuent.libro_codigoLibro LIKE CONCAT('%',?,'%')) ORDER BY licuent.fecha_compra DESC LIMIT ?,?");
                         $stmt->bindValue(1, $filtro, PDO::PARAM_STR);
                         $stmt->bindValue(2, $filtro, PDO::PARAM_STR);
                         $stmt->bindValue(3, $filtro, PDO::PARAM_STR);

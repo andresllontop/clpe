@@ -15,7 +15,7 @@ class economicoControlador extends economicoModelo
             $Economico->setDescripcion(mainModel::limpiar_cadena($Economico->getDescripcion()));
             $Economico->setResumen(mainModel::limpiar_cadena($Economico->getResumen()));
             $Economico->setComentario(mainModel::limpiar_cadena($Economico->getComentario()));
-
+            $Economico->setLibro(mainModel::limpiar_cadena($Economico->getLibro()));
             if ($original['error'] > 0) {
                 $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
             } else {
@@ -26,7 +26,7 @@ class economicoControlador extends economicoModelo
                     if ($stmt->execute()) {
                         $this->conexion_db->commit();
                         $insBeanCrud->setMessageServer("ok");
-                        $insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, 0, 20));
+                        $insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, 0, 20, $Economico->getLibro()));
                     } else {
                         $insBeanCrud->setMessageServer("No hemos podido registrar el economico");
                     }
@@ -72,19 +72,22 @@ class economicoControlador extends economicoModelo
         return $insBeanCrud->__toString();
 
     }
-    public function paginador_economico_controlador($conexion, $inicio, $registros)
+    public function paginador_economico_controlador($conexion, $inicio, $registros, $libro)
     {
         $insBeanPagination = new BeanPagination();
         try {
 
-            $stmt = $conexion->query("SELECT COUNT(idhistorial_economico) AS CONTADOR FROM `historial_economico`");
+            $stmt = $conexion->prepare("SELECT COUNT(idhistorial_economico) AS CONTADOR FROM `historial_economico` WHERE codelibro like CONCAT('%',?,'%') ");
+            $stmt->bindValue(1, $libro, PDO::PARAM_STR);
+            $stmt->execute();
             $datos = $stmt->fetchAll();
             foreach ($datos as $row) {
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                 if ($row['CONTADOR'] > 0) {
-                    $stmt = $conexion->prepare("SELECT * FROM `historial_economico` ORDER BY fecha DESC LIMIT ?,?");
-                    $stmt->bindValue(1, $inicio, PDO::PARAM_INT);
-                    $stmt->bindValue(2, $registros, PDO::PARAM_INT);
+                    $stmt = $conexion->prepare("SELECT * FROM `historial_economico` WHERE (codelibro like CONCAT('%',?,'%')) ORDER BY fecha DESC LIMIT ?,?");
+                    $stmt->bindValue(1, $libro, PDO::PARAM_STR);
+                    $stmt->bindValue(2, $inicio, PDO::PARAM_INT);
+                    $stmt->bindValue(3, $registros, PDO::PARAM_INT);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
@@ -101,6 +104,7 @@ class economicoControlador extends economicoModelo
                         $insEconomico->setTipo($row['tipo']);
                         $insEconomico->setFecha($row['fecha']);
                         $insEconomico->setVoucher($row['voucher']);
+                        $insEconomico->setLibro($row['codelibro']);
                         $insBeanPagination->setList($insEconomico->__toString());
                     }
                 }
@@ -116,15 +120,17 @@ class economicoControlador extends economicoModelo
         }
         return $insBeanPagination->__toString();
     }
-    public function bean_paginador_economico_controlador($pagina, $registros)
+    public function bean_paginador_economico_controlador($pagina, $registros, $libro)
     {
         $insBeanCrud = new BeanCrud();
         try {
+
             $pagina = mainModel::limpiar_cadena($pagina);
             $registros = mainModel::limpiar_cadena($registros);
+            $libro = mainModel::limpiar_cadena($libro);
             $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
             $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
-            $insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, $inicio, $registros));
+            $insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, $inicio, $registros, $libro));
 
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";
@@ -137,11 +143,12 @@ class economicoControlador extends economicoModelo
         }
         return $insBeanCrud->__toString();
     }
-    public function eliminar_economico_controlador($Economico)
+    public function eliminar_economico_controlador($Economico, $Libro)
     {
         $insBeanCrud = new BeanCrud();
         try {
             $this->conexion_db->beginTransaction();
+            $Libro = mainModel::limpiar_cadena($Libro);
             $economico = economicoModelo::datos_economico_modelo($this->conexion_db, "unico", $Economico);
             if ($economico["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("No se encuentra el economico");
@@ -151,7 +158,7 @@ class economicoControlador extends economicoModelo
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, 0, 20));
+                    $insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, 0, 20, $Libro));
 
                 } else {
                     $insBeanCrud->setMessageServer("No se eliminó el economico");
@@ -223,7 +230,7 @@ class economicoControlador extends economicoModelo
 
                                 $this->conexion_db->commit();
                                 $insBeanCrud->setMessageServer("ok");
-                                //$insBeanCrud->setBeanPagination(self::paginador_economico_controlador($this->conexion_db, 0, 20));
+
                                 $economicoClass = economicoModelo::datos_economico_modelo($this->conexion_db, "unico", $Economico);
                                 if ($economicoClass["countFilter"] > 0) {
                                     $insBeanCrud->setBeanClass($economicoClass["list"][0]);
@@ -301,6 +308,7 @@ class economicoControlador extends economicoModelo
         <tr>
           <th ></th>
           <th >FECHA</th>
+          <th >LIBRO</th>
           <th >NOMBRES</th>
           <th >APELLIDOS</th>
           <th>TELEFONO</th>
@@ -320,6 +328,76 @@ class economicoControlador extends economicoModelo
             <tr>
             <td>" . ($contador++) . "</td>
               <td>" . $value['fecha'] . "</td>
+              <td>" . $value['libro'] . "</td>
+              <td>" . $value['nombre'] . "</td>
+              <td>" . $value['apellido'] . "</td>
+              <td>" . $value['telefono'] . "</td>
+              <td>" . $value['pais'] . "</td>
+              <td>" . ($value['tipo'] == 1 ? "CULQI" : "EFECTIVO") . "</td>
+              <td>" . $value['banco'] . "</td>
+              <td>" . $value['moneda'] . "</td>
+              <td>" . $value['precio'] . "</td>
+              <td>" . $value['comision'] . "</td>
+              <td>" . number_format(((float) $value['precio'] - (float) $value['comision']), 2) . "</td>
+            </tr>";
+                }
+                $row = $row . "</tbody> </table>";
+
+                header("Content-Disposition:attachment;filename=$titulo.xls");
+
+            }
+
+        } catch (Exception $th) {
+            print "¡Error!: " . $th->getMessage() . "<br/>";
+
+        } catch (PDOException $e) {
+            print "¡Error Processing Request!: " . $e->getMessage() . "<br/>";
+
+        } finally {
+            $this->conexion_db = null;
+        }
+        return $row;
+    }
+    public function reporte_economico_libro_controlador($tipo, $codigo)
+    {
+        $row = "";
+
+        try {
+
+            $variable = economicoModelo::datos_economico_modelo($this->conexion_db, mainModel::limpiar_cadena($tipo), $codigo);
+
+            if ($variable['countFilter'] > 0) {
+                $titulo = "HISTORIAL ECONOMICO DEL LIBRO " . strtoupper(($variable['list'][1]['libro']));
+
+                $row = "<table border='1'>
+        <thead>
+        <tr>
+        <th colspan='12'> LISTA DE $titulo </th>
+        </tr>
+        <tr>
+          <th ></th>
+          <th >FECHA</th>
+          <th >LIBRO</th>
+          <th >NOMBRES</th>
+          <th >APELLIDOS</th>
+          <th>TELEFONO</th>
+          <th >PAIS</th>
+          <th >MEDIO DE PAGO</th>
+          <th >BANCO</th>
+          <th >MONEDA</th>
+          <th >PRECIO</th>
+          <th >COMISIÓN</th>
+          <th >MONTO DEPOSITADO</th>
+        </tr>
+      </thead>
+      <tbody> ";
+                $contador = 1;
+                foreach ($variable['list'][0] as $value) {
+                    $row = $row . "
+            <tr>
+            <td>" . ($contador++) . "</td>
+              <td>" . $value['fecha'] . "</td>
+              <td>" . $value['libro'] . "</td>
               <td>" . $value['nombre'] . "</td>
               <td>" . $value['apellido'] . "</td>
               <td>" . $value['telefono'] . "</td>

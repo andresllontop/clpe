@@ -151,6 +151,14 @@ if (!empty($RESULTADO_token)) {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo json_encode($inscliente->datos_reporte_controlador("tipo", 0));
+                    } else if ($accion == "libroreport") {
+                        $insCuentaClass = new Cuenta();
+                        $insCuentaClass->setCuentaCodigo($_GET['libro']);
+                        header("Content-Type: application/vnd.ms-excel; charset=UTF-16LE");
+                        header("Expires: 0");
+                        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+                        header("Cache-Control: private", false);
+                        echo mb_convert_encoding($inseconomico->reporte_cliente_libro_controlador("cliente-libro", $insCuentaClass), 'UTF-16LE', 'UTF-8');
                     } else if ($accion == "reporte") {
                         $insCuentaClass = new Cuenta();
                         $insCuentaClass->setTipo(2);
