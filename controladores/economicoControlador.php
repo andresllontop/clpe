@@ -365,9 +365,9 @@ class economicoControlador extends economicoModelo
         try {
 
             $variable = economicoModelo::datos_economico_modelo($this->conexion_db, mainModel::limpiar_cadena($tipo), $codigo);
-
+            $variablelibro = economicoModelo::datos_economico_modelo($this->conexion_db, "libro", $codigo);
+            $titulo = "HISTORIAL ECONOMICO DEL LIBRO " . strtoupper(($variablelibro['list'][0]['libro']));
             if ($variable['countFilter'] > 0) {
-                $titulo = "HISTORIAL ECONOMICO DEL LIBRO " . strtoupper(($variable['list'][1]['libro']));
 
                 $row = "<table border='1'>
         <thead>
@@ -392,7 +392,7 @@ class economicoControlador extends economicoModelo
       </thead>
       <tbody> ";
                 $contador = 1;
-                foreach ($variable['list'][0] as $value) {
+                foreach ($variable['list'] as $value) {
                     $row = $row . "
             <tr>
             <td>" . ($contador++) . "</td>
@@ -412,10 +412,23 @@ class economicoControlador extends economicoModelo
                 }
                 $row = $row . "</tbody> </table>";
 
-                header("Content-Disposition:attachment;filename=$titulo.xls");
-
+            } else {
+                $row = "<table border='1'>
+                <thead>
+                <tr>
+                <th colspan='8'> LISTA VACIA</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr>
+              <td>
+              </td>
+              </tr>
+              </tbody>
+              </table>
+               ";
             }
-
+            header("Content-Disposition:attachment;filename=$titulo.xls");
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";
 

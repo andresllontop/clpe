@@ -1014,7 +1014,7 @@ class clienteControlador extends clienteModelo
                 $row = "<table border='1'>
         <thead>
         <tr>
-        <th colspan='8'> LISTA DE $titulo </th>
+        <th colspan='7'> LISTA DE $titulo </th>
         </tr>
         <tr>
           <th ></th>
@@ -1024,7 +1024,6 @@ class clienteControlador extends clienteModelo
           <th >PAIS</th>
           <th>TELEFONO</th>
           <th >EMAIL</th>
-          <th >MONTO</th>
         </tr>
       </thead>
       <tbody> ";
@@ -1039,12 +1038,28 @@ class clienteControlador extends clienteModelo
               <td>" . $value['pais'] . "</td>
               <td>" . $value['telefono'] . "</td>
               <td>" . $value['cuenta']['email'] . "</td>
-              <td>" . $value['cuenta']['voucher'] . "</td>
             </tr>";
                 }
                 $row = $row . "</tbody> </table>";
 
                 header("Content-Disposition:attachment;filename=$titulo.xls");
+
+            } else {
+                $row = "<table border='1'>
+                <thead>
+                <tr>
+                <th colspan='8'> LISTA VACIA</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr>
+              <td>
+              </td>
+              </tr>
+              </tbody>
+              </table>
+               ";
+                header("Content-Disposition:attachment;filename=usuarios.xls");
 
             }
 
@@ -1065,14 +1080,14 @@ class clienteControlador extends clienteModelo
 
         try {
             $variable = clienteModelo::datos_cliente_modelo($this->conexion_db, mainModel::limpiar_cadena($tipo), $codigo);
-       
+            $variablelibro = clienteModelo::datos_cliente_modelo($this->conexion_db, "libro", $codigo);
             if ($variable['countFilter'] > 0) {
-                $titulo = "ALUMNOS " . strtoupper(($variable['list'][1]['libro']));
+                $titulo = "ALUMNOS " . strtoupper(($variablelibro['list'][0]['libro']));
 
                 $row = "<table border='1'>
         <thead>
         <tr>
-        <th colspan='8'> LISTA DE $titulo </th>
+        <th colspan='7'> LISTA DE $titulo </th>
         </tr>
         <tr>
           <th ></th>
@@ -1082,12 +1097,11 @@ class clienteControlador extends clienteModelo
           <th >PAIS</th>
           <th>TELEFONO</th>
           <th >EMAIL</th>
-          <th >MONTO</th>
         </tr>
       </thead>
       <tbody> ";
                 $contador = 1;
-                foreach ($variable['list'][0] as $value) {
+                foreach ($variable['list'] as $value) {
                     $row = $row . "
             <tr>
             <td>" . ($contador++) . "</td>
@@ -1097,12 +1111,28 @@ class clienteControlador extends clienteModelo
               <td>" . $value['pais'] . "</td>
               <td>" . $value['telefono'] . "</td>
               <td>" . $value['cuenta']['email'] . "</td>
-              <td>" . $value['cuenta']['voucher'] . "</td>
             </tr>";
                 }
                 $row = $row . "</tbody> </table>";
 
-                 header("Content-Disposition:attachment;filename=$titulo.xls");
+                header("Content-Disposition:attachment;filename=$titulo.xls");
+
+            } else {
+                $row = "<table border='1'>
+                <thead>
+                <tr>
+                <th colspan='8'> LISTA VACIA</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr>
+              <td>
+              </td>
+              </tr>
+              </tbody>
+              </table>
+               ";
+                header("Content-Disposition:attachment;filename=alumno.xls");
 
             }
 

@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector("#cursoHTML"), "d-none");
         processAjaxTarea();
     }
-
+    document.querySelector("#titleManagerCurso_c").innerHTML = "TAREAS";
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();
     });

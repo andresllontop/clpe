@@ -60,7 +60,6 @@ function processAjaxCurso_c() {
             }
         }
         if (beanCrudResponse.beanPagination !== null) {
-
             beanPaginationCurso_c = beanCrudResponse.beanPagination;
             listaCurso_c(beanPaginationCurso_c);
         }
@@ -74,8 +73,8 @@ function processAjaxCurso_c() {
 
 function listaCurso_c(beanPagination) {
     document.querySelector('#tbodyCurso_c').innerHTML = '';
-    document.querySelector('#titleManagerCurso_c').innerHTML =
-        '[ ' + beanPagination.countFilter + ' ] LIBROS';
+    /*  document.querySelector('#titleManagerCurso_c').innerHTML =
+          '[ ' + beanPagination.countFilter + ' ] LIBROS';*/
     let row = "";
 
     if (beanPagination.list.length == 0) {

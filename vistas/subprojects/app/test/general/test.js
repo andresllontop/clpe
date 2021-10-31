@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoTest').modal('show');
     });
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "PREGUNTAS DE REFORSAMIENTO";
+    document.querySelector("#titleManagerCurso_c").innerHTML = "PREGUNTAS DE REFORSAMIENTO";
     // $('#modalCargandoTest').modal('show');
     $('#modalCargandoCurso_c').modal('show');
     $("#modalCargandoTest").on('shown.bs.modal', function () {

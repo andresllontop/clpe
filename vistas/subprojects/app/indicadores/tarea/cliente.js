@@ -2,6 +2,7 @@ var beanPaginationCliente, totalLecciones = 0;
 var clienteSelected;
 var beanRequestCliente = new BeanRequest();
 document.addEventListener('DOMContentLoaded', function () {
+    parametro = 'tarea';
     beanRequestCliente.entity_api = 'tareas';
     beanRequestCliente.operation = 'alumno';
     beanRequestCliente.type_request = 'GET';
@@ -10,7 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoCliente').modal('show');
     });
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "RESUMEN GENERAL";
-    $('#modalCargandoCurso_c').modal('show');
+    document.querySelector("#titleManagerCurso_c").innerHTML = "RESUMEN GENERAL";
+    //$('#modalCargandoCurso_c').modal('show');
+    processAjaxTarea();
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();
     });
@@ -172,7 +175,31 @@ function processAjaxCliente() {
     });
 
 }
+function processAjaxTarea() {
+    $.ajax({
+        url: getHostAPI() + "tareas/libros",
+        type: "GET",
+        headers: {
+            'Authorization': 'Bearer ' + Cookies.get("clpe_token")
+        },
+        data: null,
+        cache: false,
+        contentType: 'application/json; charset=UTF-8',
+        processData: false,
+        dataType: 'json'
+    }).done(function (beanCrudResponse) {
+        $('#modalCargandoCliente').modal('hide');
+        if (beanCrudResponse.beanPagination !== null) {
+            beanPaginationCurso_c = beanCrudResponse.beanPagination;
+            listaCurso_c(beanPaginationCurso_c);
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        $('#modalCargandoCliente').modal("hide");
+        showAlertErrorRequest();
 
+    });
+
+}
 function listaCliente(beanPagination) {
 
     let row = "";

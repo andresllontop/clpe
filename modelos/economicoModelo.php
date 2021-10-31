@@ -203,19 +203,24 @@ class economicoModelo extends mainModel
                                 $insEconomico->setLibro($row['codelibro']);
                                 $insBeanPagination->setList($insEconomico->__toString());
                             }
-                            $stmt = $conexion->prepare("SELECT * FROM `libro`
-                                WHERE codigo=:IDlibro");
-                            $stmt->bindValue(":IDlibro", $economico->getLibro(), PDO::PARAM_STR);
-                            $stmt->execute();
-                            $datos = $stmt->fetchAll();
-                            foreach ($datos as $row) {
-                                $insBeanPagination->setList(array(
-                                    "libro" => $row['nombre'],
-                                ));
-                            }
+
                         }
                     }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
+                case "libro":
 
+                    $stmt = $conexion->prepare("SELECT * FROM `libro`
+                        WHERE codigo=:IDlibro");
+                    $stmt->bindValue(":IDlibro", $economico->getLibro(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setList(array(
+                            "libro" => $row['nombre'],
+                        ));
+                    }
                     $stmt->closeCursor();
                     $stmt = null;
                     break;

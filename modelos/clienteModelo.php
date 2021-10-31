@@ -333,18 +333,24 @@ class clienteModelo extends mainModel
 
                         }
                     }
-                    $stmt = $conexion->prepare("SELECT * FROM `libro` WHERE codigo=:Codigo");
-                    $stmt->bindValue(":Codigo", $cliente->getCuentaCodigo(), PDO::PARAM_STR);
-                    $stmt->execute();
-                    $datos2 = $stmt->fetchAll();
-                    foreach ($datos2 as $row2) {
-                        $insBeanPagination->setList(array(
-                            "libro" => $row2['nombre'],
-                        ));
-                    }
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+
+                 case "libro":
+                        $stmt = $conexion->prepare("SELECT * FROM `libro` WHERE codigo=:Codigo");
+                        $stmt->bindValue(":Codigo", $cliente->getCuentaCodigo(), PDO::PARAM_STR);
+                        $stmt->execute();
+                        $datos2 = $stmt->fetchAll();
+                        foreach ($datos2 as $row2) {
+                            $insBeanPagination->setList(array(
+                                "libro" => $row2['nombre'],
+                            ));
+                        }
+                        $stmt->closeCursor();
+                        $stmt = null;
+                        break;
+
                 case "tipo-cuenta":
                     if ($cliente->getCuenta()->getEstado() > -1) {
                         $stmt = $conexion->prepare("SELECT COUNT(cuen.idcuenta) AS CONTADOR FROM `cuenta` AS cuen WHERE cuen.tipo=:Tipo  AND cuen.estado=:Estado and cuen.idcuenta!=1");

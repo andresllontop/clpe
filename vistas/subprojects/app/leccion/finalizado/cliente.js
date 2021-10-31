@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoCliente').modal('show');
     });
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "FINALIZADOS";
+    document.querySelector("#titleManagerCurso_c").innerHTML = "FINALIZADOS";
     $('#modalCargandoCurso_c').modal('show');
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();

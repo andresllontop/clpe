@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoAlbum').modal('show');
     });
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "INICIO ALUMNO";
+    document.querySelector("#titleManagerCurso_c").innerHTML = "INICIO ALUMNO";
     $('#modalCargandoCurso_c').modal('show');
 
     $("#modalCargandoAlbum").on('shown.bs.modal', function () {

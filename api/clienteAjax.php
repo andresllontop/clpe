@@ -158,7 +158,7 @@ if (!empty($RESULTADO_token)) {
                         header("Expires: 0");
                         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
                         header("Cache-Control: private", false);
-                        echo mb_convert_encoding($inseconomico->reporte_cliente_libro_controlador("cliente-libro", $insCuentaClass), 'UTF-16LE', 'UTF-8');
+                        echo mb_convert_encoding($inscliente->reporte_cliente_libro_controlador("cliente-libro", $insCuentaClass), 'UTF-16LE', 'UTF-8');
                     } else if ($accion == "reporte") {
                         $insCuentaClass = new Cuenta();
                         $insCuentaClass->setTipo(2);

@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoCliente').modal('show');
     });
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "CERTIFICADOS";
+    document.querySelector("#titleManagerCurso_c").innerHTML = "CERTIFICADOS";
     $('#modalCargandoCurso_c').modal('show');
     // $('#modalCargandoCliente').modal('show');
 

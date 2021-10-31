@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "RECURSOS";
+    document.querySelector("#titleManagerCurso_c").innerHTML = "RECURSOS";
     // $('#modalCargandoRecurso').modal('show');
     $('#modalCargandoCurso_c').modal('show');
     $("#modalCargandoRecurso").on('shown.bs.modal', function () {

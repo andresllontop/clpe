@@ -158,7 +158,7 @@ class Routes
             $resource = new BeanResource('app/certificados', array($path_resource . 'app/certificado/cliente.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/certificado/cliente.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
             //CERTIFICADOS
-            $resource = new BeanResource('app/notificaciones', array($path_resource . 'app/notificacion/notificacion.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/notificacion/notificacion.js?v=' . $version_proyect, 'vistas/js/editor.js'), array('css/clpe.css?v=' . $version_proyect));
+            $resource = new BeanResource('app/notificaciones', array($path_resource . 'app/notificacion/notificacion.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/notificacion/notificacion.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect, 'vistas/js/editor.js'), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
             //CONFERENCIAS
             $resource = new BeanResource('app/conferencias', array($path_resource . 'app/conferencia/conferencia.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/conferencia/conferencia.js?v=' . $version_proyect, 'vistas/js/editor.js'), array('css/clpe.css?v=' . $version_proyect));
@@ -217,7 +217,7 @@ class Routes
             array_push($list_pages, $resource);
             //ECONOMICO
             //////historial
-            $resource = new BeanResource('app/economico', array($path_resource . 'app/economico/historial/economico.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/economico/historial/economico.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
+            $resource = new BeanResource('app/economico', array($path_resource . 'app/economico/historial/economico.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/economico/historial/economico.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
 
             //////general

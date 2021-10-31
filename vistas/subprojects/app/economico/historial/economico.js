@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "CONTROL ECONÓMICO";
+    document.querySelector("#titleManagerCurso_c").innerHTML = "CONTROL ECONÓMICO";
     $('#modalCargandoCurso_c').modal('show');
     // $('#modalCargandoEconomico').modal('show');
 

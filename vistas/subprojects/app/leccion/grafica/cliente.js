@@ -3,6 +3,7 @@ var totalLecciones;
 var clienteSelected;
 var beanRequestCliente = new BeanRequest();
 document.addEventListener('DOMContentLoaded', function () {
+
     beanRequestCliente.entity_api = 'cliente';
     beanRequestCliente.operation = 'tarea';
     beanRequestCliente.type_request = 'GET';

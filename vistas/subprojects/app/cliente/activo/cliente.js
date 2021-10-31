@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "ALUMNOS";
+    document.querySelector("#titleManagerCurso_c").innerHTML = "ALUMNOS";
     $('#modalCargandoCurso_c').modal('show');
     $("#modalCargandoCliente").on('shown.bs.modal', function () {
         processAjaxCliente();

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoNotificacion').modal('show');
     });
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "NOTIFICACIONES";
+    document.querySelector("#titleManagerCurso_c").innerHTML = "NOTIFICACIONES";
     $('#modalCargandoCurso_c').modal('show');
 
     // $('#modalCargandoNotificacion').modal('show');

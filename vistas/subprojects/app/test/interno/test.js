@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalCargandoTest').modal('show');
     });
     document.querySelector("#tipoOpcionHeaderCurso").innerHTML = "PREGUNTAS INTERNAS";
+
+    document.querySelector("#titleManagerCurso_c").innerHTML = "PREGUNTAS INTERNAS";
     // $('#modalCargandoTest').modal('show');
     $('#modalCargandoCurso_c').modal('show');
     $("#modalCargandoTest").on('shown.bs.modal', function () {
