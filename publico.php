@@ -160,27 +160,26 @@ if ($array_resource != "") {
       <script>
         window.fbAsyncInit = function() {
           FB.init({
-            xfbml            : true,
-            version          : 'v9.0'
+            autoLogAppEvents : true,
+            status : true, // check login status
+            cookie : true, // enable cookies to allow the server to access the session
+            xfbml  : true,  // parse XFBML
+            version          : 'v12.0'
           });
         };
 
         (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
+        js = d.createElement(s); 
+        js.id = id;
         js.src = 'https://connect.facebook.net/es_LA/sdk/xfbml.customerchat.js';
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));</script>
 
       <!-- Your Chat Plugin code -->
-      <div class="fb-customerchat"
-        attribution=setup_tool
-        page_id="1312732348808673"
-  theme_color="#7646ff"
-  logged_in_greeting="Hola soy el administrador del CLPE ¿En que puedo ayudarte?"
-  logged_out_greeting="Hola soy el administrador del CLPE ¿En que puedo ayudarte?">
-      </div>
+      <div class="fb-customerchat" attribution=setup_tool page_id="1312732348808673" greeting_dialog_display="hide"  theme_color="#7646ff" logged_in_greeting="Hola soy el administrador del CLPE ¿En que puedo ayudarte?" logged_out_greeting="Hola soy el administrador del CLPE ¿En que puedo ayudarte?"></div>
+
 
     <script language="javascript" src="<?php echo (SERVERURL); ?>vistas/publico/Dale/js/jquery-1.11.0.min.js?v=1.38"></script>
 

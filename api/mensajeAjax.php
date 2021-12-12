@@ -2,7 +2,6 @@
 require_once './api/security/filter.php';
 $insFilter = new SecurityFilter();
 $RESULTADO_token = $insFilter->HeaderToken();
-
 if (!empty($RESULTADO_token)) {
     require_once './classes/principal/mensaje.php';
     require_once './controladores/mensajeControlador.php';

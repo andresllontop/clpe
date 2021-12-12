@@ -32,6 +32,7 @@ function processAjaxMensaje() {
 
             break;
     }
+
     $.ajax({
         url: getHostAPI() + beanRequestMensaje.entity_api + "/" + beanRequestMensaje.operation +
             parameters_pagination,
