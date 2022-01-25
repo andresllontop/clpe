@@ -56,11 +56,11 @@ if ($alumno->tipo == 1) {
                 $pdf->set_paper("A4", "portrait");
                 // Introducimos HTML de prueba
                 // $html = file_get_contents_curl(SERVERURL . "vistas/subprojects/pdf/certificado.html");
-                //  $html = html_entity_decode($insleccion->reporte_lecciones_controlador($insLeccionClass));
-                $html = mb_convert_encoding($insleccion->reporte_lecciones_controlador($insLeccionClass), 'UTF-8', 'HTML-ENTITIES');
+                $html = html_entity_decode($insleccion->reporte_lecciones_controlador($insLeccionClass));
+                // $html = mb_convert_encoding($insleccion->reporte_lecciones_controlador($insLeccionClass), 'UTF-8', 'HTML-ENTITIES');
 
                 // Cargamos el contenido HTML.
-                $pdf->load_html(utf8_decode($html));
+                $pdf->load_html($html);
                 // Renderizamos el documento PDF.
                 $pdf->render();
                 // Enviamos el fichero PDF al navegador.

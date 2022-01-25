@@ -1,0 +1,216 @@
+<!--contenido de la pagina  -->
+<div id="seccion-cliente" class="d-none">
+  <div class="container-fluid page-header pt-3">
+    <div class="form-row">
+      <div class="col-2 text-center pb-2">
+        <button class="btn btn-dark float-left btn-regresar"><i
+            class="zmdi zmdi-long-arrow-left zmdi-hc-2x"></i></button>
+      </div>
+      <h3 class="text-center all-tittles col-9 f-weight-600 text-primary pr-10" id="titleLibro"></h3>
+      <div class="dropdown col-2">
+        <input type="hidden" id="pageCliente" value="1">
+        <select id="sizePageCliente" class="form-control w-auto">
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+        </select>
+      </div>
+      <h3 class="text-center all-tittles col-8 f-weight-600" id="titleManagerCliente"></h3>
+      <div class="col-2 text-right">
+        <button class="btn btn-primary" id="btnAbrirListaAjusteCita">
+          <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Subtitulos
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <form class="form-inline" id="formularioClienteSearch" autocomplete="off">
+    <div class="form-group col-9 mb-2">
+      <label for="txtSearchCliente" class="sr-only"></label>
+      <div class="input-group w-100  box-shadow border border-radius">
+        <div class="input-group-prepend">
+          <button type="submit" class="input-group-text border border-radius"><i class="zmdi zmdi-search"
+              style="font-size: 28px;"></i></button>
+        </div>
+        <input id="txtSearchCliente" type="search" class="form-control col-auto border border-radius"
+          placeholder="Buscar Alumno">
+      </div>
+
+    </div>
+    <div class="form-group col-3 mb-2 ">
+      <label for="txtCountCliente" class="">Contador</label>
+      <input id="txtCountCliente" type="text" class="ml-auto form-control border border-radius text-center box-shadow"
+        placeholder="0">
+    </div>
+  </form>
+
+  <div class="container-fluid col-xs-12">
+
+    <div class="table-responsive">
+      <table class="table table-hover text-center mb-0">
+        <thead>
+          <tr>
+            <th class="text-center" style="width:15%">NOMBRES</th>
+            <th class="text-center" style="width:15%">APELLIDOS</th>
+            <th class="text-center" style="width:15%">CAPÍTULO</th>
+            <th class="text-center" style="width:15%">SUBTÍTULO</th>
+            <th class="text-center d-none" style="width:15%">FECHA</th>
+            <th class="text-center" style="width:15%">CITAS</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyCliente"></tbody>
+      </table>
+    </div>
+    <nav class="border-top py-2 text-center" aria-label="Page navigation example">
+      <ul id="paginationCliente" class="pagination pagination-sm justify-content-center">
+      </ul>
+    </nav>
+    <!-- /pagination BLOG -->
+  </div>
+
+</div>
+
+<!--final del contenido de la pagina  -->
+<div class="modal fade" id="modalCargandoCliente" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+            aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Alumnos. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalCargandoCita" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+  style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom: 0px;">
+          <div class="progress-bar progress-bar-cita progress-bar-striped progress-bar-animated" role="progressbar"
+            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            Cargando Citas. . .
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- lista CITAS -->
+<div id="ventanaModalCitaLista" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h4 class="modal-title text-center w-100">CITAS</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          style="margin-top: -1em;margin-right: -1.5em;">
+          <span aria-hidden="true" class="m-0"
+            style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body p-0 pb-2">
+        <div class="form-row p-2">
+          <div class="dropdown col-2">
+            <input type="hidden" id="pageCita" value="1">
+            <select id="sizePageCita" class="form-control w-auto">
+              <option value="20">20</option>
+              <option value="25">25</option>
+              <option value="30">30</option>
+            </select>
+          </div>
+          <h4 class="modal-title text-center col-7  f-weight-700" id="txtAlumno">CITAS</h4>
+          <div class="col-3 text-right">
+            <button class="btn btn-primary" id="btnAbrirCita">
+              <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Registrar
+            </button>
+          </div>
+        </div>
+
+        <div class="container-fluid col-xs-1">
+
+          <div class="table-responsive">
+            <table class="table table-hover text-center mb-0">
+              <thead>
+                <tr>
+
+                  <th class="text-center" style="width:15%">ASUNTO</th>
+                  <th class="text-center" style="width:15%">FECHA PROGRAMADA</th>
+                  <th class="text-center" style="width:15%">ATENDIDO?</th>
+                  <th class="text-center" style="width:15%">ELIMINAR</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyCita"></tbody>
+            </table>
+          </div>
+          <nav class="border-top py-2 text-center" aria-label="Page navigation example">
+            <ul id="paginationCita" class="pagination pagination-sm justify-content-center">
+            </ul>
+          </nav>
+          <!-- /pagination BLOG -->
+        </div>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          CERRAR
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="ventanaModalCitaAdd" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md border-primary" role="document">
+    <div class="modal-content">
+      <form id="formularioCita" autocomplete="off">
+
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+
+            <div class="col-12">
+              <div class="form-check p-2 text-center pb-4">
+                <input class="form-check-input" type="checkbox" id="txtTipoCita">
+                <label class="form-check-label">
+                  SUBTITULO ?
+                </label>
+              </div>
+            </div>
+            <div class="col-12 d-none" id="htmlSubtituloCita">
+
+              <div class="group-material">
+                <input id="txtSubtituloCita" type="text" class="material-control tooltips-general "
+                  data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtSubtituloCita">SUBTITULO</label>
+              </div>
+            </div>
+            <div class="col-12" id="htmlAsuntoCita">
+              <label class="all-tittles">ASUNTO</label>
+              <textarea id="txtAsuntoCita" type="text" class="w-100" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            CERRAR
+          </button>
+          <button type="submit" class="btn btn-primary ">
+            GUARDAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

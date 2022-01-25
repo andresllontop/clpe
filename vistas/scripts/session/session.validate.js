@@ -1,84 +1,83 @@
 let user_session;
 let contextPah = getHostFrontEnd();
-document.addEventListener("DOMContentLoaded", function () {
-  if (Cookies.get("clpe_token") === undefined) {
-    location.href = contextPah + "index";
-  } else if (parseJwt(Cookies.get("clpe_token"))) {
-    if (JSON.parse(Cookies.get("clpe_user")).libroCode === undefined) {
-      closeSession();
-      return;
-    }
-    //CARGAMOS LOS DATOS DEL USUARIO
-    user_session = Cookies.getJSON('clpe_user');
-    let user = user_session;
-    //SET DATOS USER
-    document.querySelectorAll('.name-user-session').forEach(element => {
-      element.innerHTML = getStringCapitalize(user.usuario.split(" ")[0].toLowerCase());
-
-    });
-    document.querySelectorAll('.name-type-user-session').forEach(element => {
-      element.innerHTML = getStringTipoUsuario(user.tipo_usuario);
-    });
-    let url_foto;
-    if (user.foto != "" && user.foto != null) {
-      url_foto = getHostFrontEnd() + "adjuntos/clientes/" + user.foto;
-    } else {
-      url_foto = getHostFrontEnd() + "vistas/assets/img/userclpe.png";
-    }
-    setUrlFotoUserSession(url_foto);
-    //ADD ITEMS MENU AL SIDEBAR
-    addMenus(user);
-  } else {
-    closeSession();
-  }
-
+document.addEventListener('DOMContentLoaded', function () {
+	if (Cookies.get('clpe_token') === undefined) {
+		location.href = contextPah + 'index';
+	} else if (parseJwt(Cookies.get('clpe_token'))) {
+		if (JSON.parse(Cookies.get('clpe_user')).libroCode === undefined) {
+			closeSession();
+			return;
+		}
+		//CARGAMOS LOS DATOS DEL USUARIO
+		user_session = Cookies.getJSON('clpe_user');
+		let user = user_session;
+		//SET DATOS USER
+		document.querySelectorAll('.name-user-session').forEach((element) => {
+			element.innerHTML = getStringCapitalize(
+				user.usuario.split(' ')[0].toLowerCase()
+			);
+		});
+		document.querySelectorAll('.name-type-user-session').forEach((element) => {
+			element.innerHTML = getStringTipoUsuario(user.tipo_usuario);
+		});
+		let url_foto;
+		if (user.foto != '' && user.foto != null) {
+			url_foto = getHostFrontEnd() + 'adjuntos/clientes/' + user.foto;
+		} else {
+			url_foto = getHostFrontEnd() + 'vistas/assets/img/userclpe.png';
+		}
+		setUrlFotoUserSession(url_foto);
+		//ADD ITEMS MENU AL SIDEBAR
+		addMenus(user);
+	} else {
+		closeSession();
+	}
 });
 
 function getStringTipoUsuario(tipo_usuario) {
-  let st = "";
-  switch (tipo_usuario) {
-    case 1:
-      st = "Usuario CLPE";
-      break;
-    default:
-      st = "User";
-      break;
-  }
-  //st = getStringCapitalize(st.toLowerCase());
-  return st;
+	let st = '';
+	switch (tipo_usuario) {
+		case 1:
+			st = 'Usuario CLPE';
+			break;
+		default:
+			st = 'User';
+			break;
+	}
+	//st = getStringCapitalize(st.toLowerCase());
+	return st;
 }
 
 function addMenus() {
-  //console.log(usuario.tipo_usuario);
-  switch (parseInt(user_session.tipo_usuario)) {
-    case 1:
-      //CLPE
-      createHTML_CLPE((user_session.perfil).toString());
-      break;
-    case 2:
-      if (Cookies.get("clpe_libro") == undefined) {
-        //AULA
-        createHTML_AULA(parseInt(0));
-      } else {
-        //AULA
-        createHTML_AULA(parseInt(user_session.tipo_usuario));
-      }
+	//console.log(usuario.tipo_usuario);
+	switch (parseInt(user_session.tipo_usuario)) {
+		case 1:
+			//CLPE
+			createHTML_CLPE(user_session.perfil.toString());
+			break;
+		case 2:
+			if (Cookies.get('clpe_libro') == undefined) {
+				//AULA
+				createHTML_AULA(parseInt(0));
+			} else {
+				//AULA
+				createHTML_AULA(parseInt(user_session.tipo_usuario));
+			}
 
-      break;
+			break;
 
-    default:
-      break;
-
-  }
+		default:
+			break;
+	}
 }
 
 function createHTML_CLPE(typeProfile) {
-  let arrayTypeProfile = Array.from(typeProfile), row = "";
+	let arrayTypeProfile = Array.from(typeProfile),
+		row = '';
 
-  //TODOS
-  if (arrayTypeProfile[0] == 1) {
-    row +=
-      ` <li class="dt-side-nav__item">
+	//TODOS
+	if (arrayTypeProfile[0] == 1) {
+		row += ` <li class="dt-side-nav__item">
             <a href="javascript:void(0);" class="dt-side-nav__link dt-side-nav__arrow" title="VISTA PUBLICO">
             <i class="zmdi zmdi-eye zmdi-hc-fw"></i>&nbsp;&nbsp; VISTA PUBLICO
             <i class="zmdi zmdi-chevron-down pull-right zmdi-hc-fw"></i>
@@ -238,11 +237,10 @@ function createHTML_CLPE(typeProfile) {
             </ul>
           </li>
         `;
-  }
-  //TODOS
-  if (arrayTypeProfile[0] == 1) {
-    row +=
-      ` <li class="dt-side-nav__item">
+	}
+	//TODOS
+	if (arrayTypeProfile[0] == 1) {
+		row += ` <li class="dt-side-nav__item">
             <a href="javascript:void(0);" class="dt-side-nav__link dt-side-nav__arrow" title="VISTA ALUMNOS">
             <i class="zmdi zmdi-eye zmdi-hc-fw"></i>&nbsp;&nbsp; VISTA ALUMNOS
             <i class="zmdi zmdi-chevron-down pull-right zmdi-hc-fw"></i>
@@ -269,33 +267,34 @@ function createHTML_CLPE(typeProfile) {
                         PREGUNTAS INTERNAS</a>
                         </li>
                         `;
-  }
-  //TAREAS
-  if (arrayTypeProfile[2] == 1) {
-    row +=
-      `<li class="dt-side-nav__item">
+	}
+	//TAREAS
+	if (arrayTypeProfile[2] == 1) {
+		row += `<li class="dt-side-nav__item">
                       <a href="${contextPah}app/lecciones" class="dt-side-nav__link"><i class="zmdi zmdi-account-box zmdi-hc-fw"></i>&nbsp;
                       TAREAS ALUMNOS </a>
                       </li>
+                      <li class="dt-side-nav__item">
+                      <a href="${contextPah}app/cita" class="dt-side-nav__link"><i class="zmdi zmdi-account-box zmdi-hc-fw"></i>&nbsp;
+                      CITAS </a>
+                      </li>
                       `;
-    /*
+		/*
 row +=
 `<li class="dt-side-nav__item">
                     <a href="${contextPah}app/lecciones/grafica" class="dt-side-nav__link"><i class="zmdi zmdi-account-box zmdi-hc-fw"></i>&nbsp;
                    GRÁFICA DE TAREA ALUMNOS </a>
                     </li>
                     `;*/
-    row +=
-      `<li class="dt-side-nav__item">
+		row += `<li class="dt-side-nav__item">
                                       <a href="${contextPah}app/lecciones/finalizado" class="dt-side-nav__link"><i class="zmdi zmdi-account-box zmdi-hc-fw"></i>&nbsp;
                                       ALUMNOS TERMINADOS </a>
                                       </li>
                                       `;
-  }
-  //TODOS
-  if (arrayTypeProfile[0] == 1) {
-    row +=
-      `
+	}
+	//TODOS
+	if (arrayTypeProfile[0] == 1) {
+		row += `
                       <li class="dt-side-nav__item">
                       <a href="${contextPah}app/test/general" class="dt-side-nav__link"><i class="zmdi zmdi-label zmdi-hc-fw"></i>&nbsp;
                         PREGUNTAS DE REFORSAMIENTO</a>
@@ -305,22 +304,20 @@ row +=
                         RECURSOS</a>
                       </li>
                       `;
-  }
-  //MENSAJERIA
-  if (arrayTypeProfile[3] == 1) {
-    row +=
-      `
+	}
+	//MENSAJERIA
+	if (arrayTypeProfile[3] == 1) {
+		row += `
                       <li class="dt-side-nav__item">
                       <a href="${contextPah}app/mensajes" class="Noti-Mensaje dt-side-nav__link"><i class="zmdi zmdi-email zmdi-hc-fw"></i>&nbsp;MENSAJERÍA</a>
                       <!-- <span class="label label-danger pull-right label-mhover"
                       >7</span> -->
                       </li>
                       `;
-  }
-  //TODOS
-  if (arrayTypeProfile[0] == 1) {
-    row +=
-      `
+	}
+	//TODOS
+	if (arrayTypeProfile[0] == 1) {
+		row += `
   <li class="dt-side-nav__item">
   <a href="${contextPah}app/album" class="Noti-Mensaje dt-side-nav__link"><i class="zmdi zmdi-label zmdi-hc-fw"></i>&nbsp;INICIO ALUMNOS </a>
   </li>
@@ -342,11 +339,10 @@ row +=
 </ul>
 </li>
 `;
-  }
+	}
 
-  if (arrayTypeProfile[0] == 1) {
-    row +=
-      `<li class="dt-side-nav__item">
+	if (arrayTypeProfile[0] == 1) {
+		row += `<li class="dt-side-nav__item">
         <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow" title="CONTROL">
         <i class="zmdi zmdi-case zmdi-hc-fw"></i>&nbsp;&nbsp; INDICADORES
           <i class="zmdi zmdi-chevron-down pull-right zmdi-hc-fw"></i>
@@ -386,10 +382,9 @@ row +=
           </li>
         </ul>
       </li>`;
-  }
-  if (arrayTypeProfile[4] == 1) {
-    row +=
-      `<li class="dt-side-nav__item">
+	}
+	if (arrayTypeProfile[4] == 1) {
+		row += `<li class="dt-side-nav__item">
                   <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow" title="CONTROL ADMINISTRATIVO">
                   <i class="zmdi zmdi-case zmdi-hc-fw"></i>&nbsp;&nbsp;CONTROL ADMINISTRATIVO
                     <i class="zmdi zmdi-chevron-down pull-right zmdi-hc-fw"></i>
@@ -405,10 +400,9 @@ row +=
                   </li>
                   </ul>
                 </li>`;
-  }
-  if (arrayTypeProfile[5] == 1) {
-    row +=
-      `<li class="dt-side-nav__item">
+	}
+	if (arrayTypeProfile[5] == 1) {
+		row += `<li class="dt-side-nav__item">
                   <a href="javascript:void(0)" class="dt-side-nav__link dt-side-nav__arrow" title="CONTROL ECONÓMICO">
                   <i class="zmdi zmdi-case zmdi-hc-fw"></i>&nbsp;&nbsp;CONTROL ECONÓMICO
                     <i class="zmdi zmdi-chevron-down pull-right zmdi-hc-fw"></i>
@@ -428,17 +422,14 @@ row +=
                   </li>
                   </ul>
                 </li>`;
-  }
-  document.querySelector("#menus_clpe").innerHTML = row;
-  include_script(getHostFrontEnd() + "vistas/js/main-app.js?v=0.22");
-
+	}
+	document.querySelector('#menus_clpe').innerHTML = row;
+	include_script(getHostFrontEnd() + 'vistas/js/main-app.js?v=0.22');
 }
 
 function createHTML_AULA(typeProfile) {
-
-  if (typeProfile == 0) {
-    document.querySelector("#menus_aula").innerHTML +=
-      `
+	if (typeProfile == 0) {
+		document.querySelector('#menus_aula').innerHTML += `
       <li class="tooltips-general" style="float: left !important;">
         <a href="${contextPah}aula/mensajes" class="py-2"><i class="zmdi zmdi-email zmdi-hc-fw"></i>MENSAJERÍA</a>
       </li>
@@ -452,11 +443,12 @@ function createHTML_AULA(typeProfile) {
     </li>
 
         `;
-  }
-  //SERVICIOS
-  if (typeProfile == 2) {
-    document.querySelector("#menus_aula").innerHTML +=
-      `<li class="tooltips-general" style="float: left !important;">
+	}
+	//SERVICIOS
+	if (typeProfile == 2) {
+		document.querySelector(
+			'#menus_aula'
+		).innerHTML += `<li class="tooltips-general" style="float: left !important;">
         <a href="${contextPah}aula/home" class="py-2"><i class="zmdi zmdi-home zmdi-hc-fw"></i>INICIO</a>
       </li>
       <li class="tooltips-general" style="float: left !important;">
@@ -482,9 +474,8 @@ function createHTML_AULA(typeProfile) {
       <a href="${contextPah}aula/conferencias" class="py-2"><i class="zmdi zmdi-cast zmdi-hc-fw"></i>CONFERENCIAS</a>
     </li> 
         `;
-  }
-  document.querySelector("#menus_aula").innerHTML +=
-    `
+	}
+	document.querySelector('#menus_aula').innerHTML += `
     <li class="tooltips-general" style="float: left !important;">
     <a href="${contextPah}aula/index" class="py-2"><i class="zmdi zmdi-book zmdi-hc-fw"></i>LIBROS</a>
     </li>
@@ -493,13 +484,11 @@ function createHTML_AULA(typeProfile) {
 </li> 
     `;
 
-  include_script(getHostFrontEnd() + "vistas/js/main.js?v=0.22");
-
+	include_script(getHostFrontEnd() + 'vistas/js/main.js?v=0.22');
 }
 
 function createHTML_ATE_ACTIVATION_ACCOUNT() {
-  document.querySelector("#menus_clpe").innerHTML =
-    `
+	document.querySelector('#menus_clpe').innerHTML = `
         <!-- Menu Header -->
         <li class="dt-side-nav__item dt-side-nav__header">
             <span class="dt-side-nav__text">Dashboard</span>

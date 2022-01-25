@@ -151,6 +151,10 @@ if (!empty($RESULTADO_token)) {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo json_encode($inscliente->datos_reporte_controlador("tipo", 0));
+                    } else if ($accion == "conteo") {
+                        header("HTTP/1.1 200");
+                        header('Content-Type: application/json; charset=utf-8');
+                        echo json_encode($inscliente->datos_cliente_controlador("conteo", 0));
                     } else if ($accion == "libroreport") {
                         $insCuentaClass = new Cuenta();
                         $insCuentaClass->setCuentaCodigo($_GET['libro']);

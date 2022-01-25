@@ -1520,7 +1520,7 @@ class leccionesControlador extends leccionesModelo
         <head>
         <meta charset="utf-8">
         <title>COMENTARIO</title>
-        <link rel="stylesheet" href="' . SERVERURL . 'vistas/subprojects/pdf/comentario.css?v=0.23"     media="all" />
+        <link rel="stylesheet" href="' . SERVERURL . 'vistas/subprojects/pdf/comentario.css?v=0.23"    media="all" />
 
             </head>
 
@@ -1541,7 +1541,7 @@ class leccionesControlador extends leccionesModelo
 
                 <div id="invoice">
                     <h1 style="font-size: 25px;">' . $data[0]['subTitulo']['libro'] . '</h1>
-                    <h2 class="name" style="font-weight: bold;">' . $data[0]['subTitulo']['titulo'] . '</   h2>
+                    <h2 class="name" style="font-weight: bold;">' . $data[0]['subTitulo']['titulo'] . '</h2>
                     <div class="address">' . $data[0]['subTitulo']['subTitulo'] . '</div>
                     <!--div class="date">Realizado: 01/06/2014</div-->
                 </div>

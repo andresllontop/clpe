@@ -156,8 +156,8 @@ class certificadoControlador extends certificadoModelo
         $insBeanCrud = new BeanCrud();
         try {
             $this->conexion_db->beginTransaction();
-            $certificado = certificadoModelo::datos_certificado_modelo($this->conexion_db, "cuenta", $Certificado);
-            if ($certificado["countFilter"] == 0) {
+            $certific = certificadoModelo::datos_certificado_modelo($this->conexion_db, "cuenta", $Certificado);
+            if ($certific["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("No se encuentra el certificado");
             } else {
                 $stmt = certificadoModelo::eliminar_certificado_modelo($this->conexion_db, mainModel::limpiar_cadena($Certificado->getCuenta()));
@@ -165,7 +165,7 @@ class certificadoControlador extends certificadoModelo
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_certificado_controlador($this->conexion_db, 0, 20, 1, ""));
+                    $insBeanCrud->setBeanPagination(self::paginador_certificado_controlador($this->conexion_db, 0, 20, 1, "", ""));
 
                 } else {
                     $insBeanCrud->setMessageServer("se elimino el certificado");

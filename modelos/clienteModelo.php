@@ -337,19 +337,19 @@ class clienteModelo extends mainModel
                     $stmt = null;
                     break;
 
-                 case "libro":
-                        $stmt = $conexion->prepare("SELECT * FROM `libro` WHERE codigo=:Codigo");
-                        $stmt->bindValue(":Codigo", $cliente->getCuentaCodigo(), PDO::PARAM_STR);
-                        $stmt->execute();
-                        $datos2 = $stmt->fetchAll();
-                        foreach ($datos2 as $row2) {
-                            $insBeanPagination->setList(array(
-                                "libro" => $row2['nombre'],
-                            ));
-                        }
-                        $stmt->closeCursor();
-                        $stmt = null;
-                        break;
+                case "libro":
+                    $stmt = $conexion->prepare("SELECT * FROM `libro` WHERE codigo=:Codigo");
+                    $stmt->bindValue(":Codigo", $cliente->getCuentaCodigo(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos2 = $stmt->fetchAll();
+                    foreach ($datos2 as $row2) {
+                        $insBeanPagination->setList(array(
+                            "libro" => $row2['nombre'],
+                        ));
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
 
                 case "tipo-cuenta":
                     if ($cliente->getCuenta()->getEstado() > -1) {
@@ -403,7 +403,7 @@ class clienteModelo extends mainModel
                     $stmt = null;
                     break;
                 case "conteo":
-                    $stmt = $conexion->prepare("SELECT COUNT(idadministrador) AS CONTADOR FROM `administrador`");
+                    $stmt = $conexion->prepare("SELECT COUNT(id) AS CONTADOR FROM `administrador`");
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
@@ -412,14 +412,17 @@ class clienteModelo extends mainModel
                             $stmt = $conexion->prepare("SELECT * FROM `administrador` ");
                             $stmt->execute();
                             $datos = $stmt->fetchAll();
-                            $insAdministrador = new Administrador();
-                            $insAdministrador->setNombre($row['AdminNombre']);
-                            $insAdministrador->setApellido($row['AdminApellido']);
-                            $insAdministrador->setOcupacion($row['AdminOcupacion']);
-                            $insAdministrador->setPais($row['pais']);
-                            $insAdministrador->setCodigoCuenta($row['Cuenta_Codigo']);
+                            foreach ($datos as $row) {
+                                $insCliente = new Cliente();
+                                $insCliente->setNombre($row['AdminNombre']);
+                                $insCliente->setApellido($row['AdminApellido']);
+                                $insCliente->setTelefono($row['AdminTelefono']);
+                                $insCliente->setOcupacion($row['AdminOcupacion']);
+                                $insCliente->setPais($row['pais']);
+                                $insCliente->setCuenta($row['Cuenta_Codigo']);
+                                $insBeanPagination->setList($insCliente->__toString());
 
-                            $insBeanPagination->setList($insAdministrador->__toString());
+                            }
                         }
                     }
                     $stmt->closeCursor();

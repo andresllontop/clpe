@@ -12,7 +12,7 @@ class Routes
         $path_style = "";
         //VALIDAMOS SI ES UNA URL CORRECTA
         if ($routes->isURLValidate()) {
-            $version_proyect = "1.30";
+            $version_proyect = "1.32";
             /*
             $version_proyect = 1.0; -> antes del 02/09/2020
              */
@@ -127,6 +127,13 @@ class Routes
             //VIDEOS POR CADA LECCION
             $resource = new BeanResource('app/album', array($path_resource . 'app/album/album.html', $path_resource . 'app/album/subtitulo_filter.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/album/album.js?v=' . $version_proyect, $path_resource . 'app/album/subtitulo_filter.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
+            //CITAS
+            $resource = new BeanResource('app/xxxx', array($path_resource . 'app/cita/cita.html', $path_resource . 'app/cita/alumno_filter.html', $path_resource . 'app/album/subtitulo_filter.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/cita/cita.js?v=' . $version_proyect, $path_resource . 'app/cita/alumno_filter.js?v=' . $version_proyect, $path_resource . 'app/album/subtitulo_filter.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
+            array_push($list_pages, $resource);
+            //CITAS
+            $resource = new BeanResource('app/cita', array($path_resource . 'app/cita/cita.html', $path_resource . 'app/cita/config/cita.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html', $path_resource . 'app/cita/cita.html', $path_resource . 'app/album/subtitulo_filter.html'), array($path_resource . 'app/cita/cita.js?v=' . $version_proyect, $path_resource . 'app/cita/config/cita.js?v=' . $version_proyect, $path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect, $path_resource . 'app/album/subtitulo_filter.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
+            array_push($list_pages, $resource);
+
             //PUBLICOS
             $resource = new BeanResource('app/publicos', array($path_resource . 'app/publico/publico.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/publico/publico.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
@@ -149,7 +156,7 @@ class Routes
 
             //INDICADORES
             /////TAREAS
-            $resource = new BeanResource('app/indicadores/tarea', array($path_resource . 'app/indicadores/tarea/cliente.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/indicadores/tarea/cliente.js?v=' . $version_proyect, 'plugins/chart/dist/Chart.min.js', $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
+            $resource = new BeanResource('app/indicadores/tarea', array($path_resource . 'app/indicadores/tarea/cliente.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html', $path_resource . 'app/leccion/comentario/comentario.html', $path_resource . 'app/leccion/cuestionario/cuestionario.html', $path_resource . 'app/leccion/respuesta/respuesta.html'), array($path_resource . 'app/leccion/comentario/comentario.js?v=' . $version_proyect, $path_resource . 'app/leccion/respuesta/respuesta.js?v=' . $version_proyect, $path_resource . 'app/leccion/cuestionario/cuestionario.js?v=' . $version_proyect, $path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/indicadores/tarea/cliente.js?v=' . $version_proyect, 'plugins/chart/dist/Chart.min.js', $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
             //LECCIONES finalizado
             $resource = new BeanResource('app/lecciones/finalizado', array($path_resource . 'app/leccion/finalizado/cliente.html', $path_resource . 'app/leccion/finalizado/comentario/comentario.html', $path_resource . 'app/leccion/finalizado/cuestionario/cuestionario.html', $path_resource . 'app/leccion/finalizado/respuesta/respuesta.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/leccion/finalizado/cliente.js?v=' . $version_proyect, $path_resource . 'app/leccion/finalizado/comentario/comentario.js?v=' . $version_proyect, $path_resource . 'app/leccion/finalizado/respuesta/respuesta.js?v=' . $version_proyect, $path_resource . 'app/leccion/finalizado/cuestionario/cuestionario.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
@@ -707,17 +714,24 @@ class Routes
             //conferencia
             $resource = new BeanResource('api/conferencia', array($path_resource . 'conferenciaAjax.php'), array(), array());
             array_push($list_pages, $resource);
-            //conferencia
+            //niubiz
             $resource = new BeanResource('api/niubiz', array($path_resource . 'pago/sesionNiubiz.php'), array(), array());
             array_push($list_pages, $resource);
-            //conferencia
+            //social
             $resource = new BeanResource('api/social', array($path_resource . 'socialAjax.php'), array(), array());
+            array_push($list_pages, $resource);
+            //cita
+            $resource = new BeanResource('api/cita', array($path_resource . 'citaAjax.php'), array(), array());
+            array_push($list_pages, $resource);
+            
+            $resource = new BeanResource('api/ajuste/cita', array($path_resource . 'ajustecitaAjax.php'), array(), array());
             array_push($list_pages, $resource);
 
             $exists = false;
 
             foreach ($list_pages as $_resource) {
                 if (strpos($path, $_resource->path) !== false) {
+
                     $exists = true;
                     $path_resource = $_resource->path_resource;
                     $path_scripts = $_resource->path_scripts;
@@ -732,7 +746,6 @@ class Routes
             /*URL NO VALIDO */
             $path_resource = [];
         }
-
         $resources = new BeanResource($path, $path_resource, $path_scripts, $path_style);
         return $resources;
     }
