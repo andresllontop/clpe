@@ -171,8 +171,17 @@
 </div>
 
 <div id="ventanaModalCitaAdd" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
-  <div class="modal-dialog modal-md border-primary" role="document">
-    <div class="modal-content">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="border-2 border-primary modal-content shadow-lg bg-white rounded">
+      <div class="modal-header">
+
+        <h4 class="modal-title text-center w-100">REGISTRAR CITAS</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          style="margin-top: -1em;margin-right: -1.5em;">
+          <span aria-hidden="true" class="m-0"
+            style="-webkit-text-stroke: 4px white;background: red;border: 0px solid;border-radius: 41px;padding: 0 15px; font-size: 33px;">&times;</span>
+        </button>
+      </div>
       <form id="formularioCita" autocomplete="off">
 
         <div class="modal-body" style="padding-top:5%;">
@@ -182,24 +191,63 @@
               <div class="form-check p-2 text-center pb-4">
                 <input class="form-check-input" type="checkbox" id="txtTipoCita">
                 <label class="form-check-label">
-                  SUBTITULO ?
+                  Seleccionar Subtitulo Actual?
                 </label>
               </div>
             </div>
             <div class="col-12 d-none" id="htmlSubtituloCita">
-
+              <label class="all-tittles" for="txtSubtituloCita">SUBTITULO</label>
               <div class="group-material">
                 <input id="txtSubtituloCita" type="text" class="material-control tooltips-general "
-                  data-toggle="tooltip" data-placement="top">
+                  data-toggle="tooltip" data-placement="top" disabled>
+              </div>
+              <!-- <div class="group-material">
+                <input id="txtSubtituloCita" type="text" class="material-control tooltips-general "
+                  data-toggle="tooltip" data-placement="top" disabled>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label class="all-tittles" for="txtSubtituloCita">SUBTITULO</label>
-              </div>
+              </div> -->
             </div>
             <div class="col-12" id="htmlAsuntoCita">
               <label class="all-tittles">ASUNTO</label>
               <textarea id="txtAsuntoCita" type="text" class="w-100" rows="3"></textarea>
             </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            CERRAR
+          </button>
+          <button type="submit" class="btn btn-primary ">
+            GUARDAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="ventanaModalCitaUpdate" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="border-2 border-secundary modal-content shadow-lg bg-white rounded">
+    
+      <form id="formularioCitaUpdate" autocomplete="off">
+
+        <div class="modal-body" style="padding-top:5%;">
+          <div class="row">
+
+            <div class="col-12" >
+
+              <div class="group-material">
+                <input id="txtFechaCita" type="datetime-local" class="material-control tooltips-general "
+                  data-toggle="tooltip" data-placement="top">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="all-tittles" for="txtFechaCita">Fecha Atendido</label>
+              </div>
+            </div>
+          
           </div>
         </div>
         <div class="modal-footer">

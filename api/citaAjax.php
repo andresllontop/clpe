@@ -70,7 +70,8 @@ if (!empty($RESULTADO_token)) {
                             $insCitaClass = new Cita();
                             $insCitaClass->setIdcita($personData->idcita);
                             $insCitaClass->setEstadoSolicitud($personData->estadoSolicitud);
-                            header("HTTP/1.1 200");
+                            $insCitaClass->setFechaAtendida($personData->fechaAtendida);
+                                                        header("HTTP/1.1 200");
                             header('Content-Type: application/json; charset=utf-8');
                             echo $inscita->actualizar_cita_controlador($insCitaClass);
                         } catch (\Throwable $th) {

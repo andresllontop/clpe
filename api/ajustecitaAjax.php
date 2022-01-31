@@ -55,7 +55,7 @@ if (!empty($RESULTADO_token)) {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
 
-                        echo json_encode($insajustecita->bean_paginador_ajustecita_controlador($_GET['pagina'], $_GET['registros'], $_GET['filter']));
+                        echo json_encode($insajustecita->bean_paginador_ajustecita_controlador($_GET['pagina'], $_GET['registros'], $_GET['filtro']));
                     } else if ($accion == "obtener") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');

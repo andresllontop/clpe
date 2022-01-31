@@ -15,21 +15,29 @@ class citaControlador extends citaModelo
         try {
             $this->conexion_db->beginTransaction();
             $Cita->setFechaSolicitud(date('Y-m-d H:i:s'));
+         
+
             $Cita->setEstadoSolicitud(mainModel::limpiar_cadena($Cita->getEstadoSolicitud()));
             $Cita->setSubtitulo(mainModel::limpiar_cadena($Cita->getSubtitulo()));
             $Cita->setCliente(mainModel::limpiar_cadena($Cita->getCliente()));
             $Cita->setTipo(mainModel::limpiar_cadena($Cita->getTipo()));
             $Cita->setAsunto(mainModel::limpiar_cadena($Cita->getAsunto()));
-            $stmt = citaModelo::agregar_cita_modelo($this->conexion_db, $Cita);
-            if ($stmt->execute()) {
-                $this->conexion_db->commit();
-                $insBeanCrud->setMessageServer("ok");
-                $insBeanCrud->setBeanPagination(self::paginador_cita_controlador($this->conexion_db, 0, 20, $Cita->getCliente()));
-
+            $citaLista = citaModelo::datos_cita_modelo($this->conexion_db, 'add', $Cita);
+            if ($citaLista['countFilter']> 0) {
+                $insBeanCrud->setMessageServer('El Subtitulo para esta Cita ya se encuentra registrada');
             } else {
-
-                $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la cita ");
+                $stmt = citaModelo::agregar_cita_modelo($this->conexion_db, $Cita);
+                if ($stmt->execute()) {
+                    $this->conexion_db->commit();
+                    $insBeanCrud->setMessageServer("ok");
+                    $insBeanCrud->setBeanPagination(self::paginador_cita_controlador($this->conexion_db, 0, 20, $Cita->getCliente()));
+    
+                } else {
+    
+                    $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la cita ");
+                }
             }
+           
         } catch (Exception $th) {
             if ($this->conexion_db->inTransaction()) {
                 $this->conexion_db->rollback();
@@ -203,8 +211,8 @@ class citaControlador extends citaModelo
             if ($citaLista["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("error en el servidor, No hemos encontrado la cita");
             } else {
-                $Cita->setFechaAtendida(date('Y-m-d H:i:s'));
-
+                $fecha = new DateTime($Cita->getFechaAtendida());
+                $Cita->setFechaAtendida($Cita->getFechaAtendida()==""?date('Y-m-d H:i:s'):$fecha->format('Y-m-d H:i:s'));
                 $stmt = citaModelo::actualizar_cita_modelo($this->conexion_db, $Cita);
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();

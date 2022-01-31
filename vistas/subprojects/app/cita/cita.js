@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		beanRequestCliente.entity_api = 'cita';
 		beanRequestCliente.type_request = 'GET';
 		beanRequestCliente.operation = 'paginate';
-		PromiseInitCitaMaximo();
+	
 	});
 	$('#ventanaModalCitaLista').on('shown.bs.modal', function () {
 		beanRequestCliente.entity_api = 'cita';
@@ -49,6 +49,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		event.preventDefault();
 		event.stopPropagation();
 		$('#modalCargandoCita').modal('show');
+	});
+	$('#formularioCitaUpdate').submit(function (event) {
+		event.preventDefault();
+		event.stopPropagation();
+		$('#modalCargandoCita').modal('show');
+		//console.log(document.querySelector('#txtFechaCita').value);
+		
 	});
 	$('#btnAbrirCita').click(function () {
 		beanRequestCliente.entity_api = 'cita';
@@ -295,6 +302,7 @@ function processAjaxCita() {
 		case 'update':
 			json.idcita = citaSelected.idcita;
 			json.estadoSolicitud = 3;
+			json.fechaAtendida=document.querySelector('#txtFechaCita').value;
 			form_data.append('class', JSON.stringify(json));
 			break;
 		case 'add':
@@ -332,6 +340,7 @@ function processAjaxCita() {
 	})
 		.done(function (beanCrudResponse) {
 			$('#modalCargandoCita').modal('hide');
+			
 			if (beanCrudResponse.messageServer !== null) {
 				if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
 					$('#ventanaModalCitaAdd').modal('hide');
@@ -348,6 +357,15 @@ function processAjaxCita() {
 				beanPaginationCita = beanCrudResponse.beanPagination;
 				listaCita(beanPaginationCita);
 			}
+			if(beanRequestCliente.operation=='update'){
+				$('#ventanaModalCitaUpdate').modal('hide');
+				updateCitaAlumno(json);
+			}
+			if(beanRequestCliente.operation=='delete'){
+				json={subtitulo:citaSelected.subtitulo.codigo,cliente:citaSelected.cliente.cuenta}
+				updateCitaAlumno(json,'PENDIENTE');
+			}
+			
 		})
 		.fail(function (jqXHR, textStatus, errorThrown) {
 			$('#modalCargandoCita').modal('hide');
@@ -378,7 +396,9 @@ function listaCliente(beanPagination) {
 <td class="text-center pt-5 ver-lecciones  f-weight-700">${
 			cliente.subTitulo.titulo.nombre
 		}</td>
-<td class="text-center ver-lecciones pt-5">${cliente.subTitulo.nombre}</td>
+<td class="text-center ver-lecciones pt-5">${cliente.subTitulo.codigo} <br>${
+	cliente.subTitulo.nombre
+}</td>
 <td class="text-center ver-lecciones pt-5 d-none">${
 			cliente.fecha.split(' ')[0].split('-')[2] +
 			'-' +
@@ -429,22 +449,22 @@ function listaCita(beanPagination) {
 		return;
 	}
 	beanPagination.list.forEach((cita) => {
-		row += `<tr  idcita="${cita.idcita}"  class="aula-cursor-mano">
+		row += `<tr idcita="${cita.idcita}"  class="aula-cursor-mano">
 
-<td class="text-center pt-5">${
+<td class="text-center">${
 			cita.tipo == '1'
 				? cita.subtitulo.codigo + '<br>' + cita.subtitulo.nombre
 				: cita.asunto
 		}</td>
 
-<td class="text-center pt-5">${
+<td class="text-center">${
 			cita.fechaSolicitud.split(' ')[0].split('-')[2] +
 			'-' +
 			cita.fechaSolicitud.split(' ')[0].split('-')[1] +
 			'-' +
 			cita.fechaSolicitud.split(' ')[0].split('-')[0]
 		}</td>
-		<td class="text-center pt-5">${
+		<td class="text-center">${
 			cita.fechaAtendida == null
 				? '<button class="btn btn-warning update-cita">ATENDIDO</button>'
 				: cita.fechaAtendida.split(' ')[0].split('-')[2] +
@@ -480,7 +500,8 @@ function addEventsButtonsCita() {
 				beanRequestCliente.entity_api = 'cita';
 				beanRequestCliente.type_request = 'POST';
 				beanRequestCliente.operation = 'update';
-				$('#modalCargandoCita').modal('show');
+				//document.querySelector('#txtFechaCita').value=new Date();
+				$('#ventanaModalCitaUpdate').modal('show');
 			} else {
 				swal('No se encontró el alumno', '', 'info');
 			}
@@ -502,6 +523,25 @@ function addEventsButtonsCita() {
 			}
 		};
 	});
+}
+function updateCitaAlumno(json,status='REALIZADA') {
+	document.querySelectorAll('#tbodyCliente tr').forEach((btn) => {
+		//AGREGANDO EVENTO CLICK
+		if(json.cliente==btn.getAttribute('cuenta') && json.subtitulo==clienteSelected.subTitulo.codigo){
+			if(status=='REALIZADA'){
+				removeClass(btn.children[5].firstElementChild,'btn-danger');
+				addClass(btn.children[5].firstElementChild,'btn-success');
+			}else{
+				removeClass(btn.children[5].firstElementChild,'btn-success');
+				addClass(btn.children[5].firstElementChild,'btn-danger');
+			}
+			btn.children[5].firstElementChild.innerHTML=status;
+			
+		}
+			
+		});
+	
+	
 }
 function addEventsButtonsCliente() {
 	document.querySelectorAll('.ver-lecciones').forEach((btn) => {

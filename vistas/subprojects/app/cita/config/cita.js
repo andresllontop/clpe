@@ -1,6 +1,7 @@
 var beanPaginationAjusteCita;
 var ajusteCitaSelected;
 var subtituloSelected;
+var libroExterno='';
 var tipoSelected = 0;
 var beanRequestAjusteCita = new BeanRequest();
 document.addEventListener('DOMContentLoaded', function () {
@@ -37,10 +38,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		$('#modalCargandoAjusteCita').modal('show');
 	});
 	$('#btnAbrirAjusteCita').click(function () {
+		addAlbum();
 		beanRequestAjusteCita.operation = 'add';
 		beanRequestAjusteCita.type_request = 'POST';
 		$('#tituloModalManAjusteCita').html('REGISTRAR SUBTITULOS');
-		if (beanPaginationSubtituloC == undefined) {
+		if (beanPaginationSubtituloC == undefined || libroExterno!=curso_cSelected.codigo) {
+			libroExterno=curso_cSelected.codigo;
 			beanRequestSubtituloC.operation = 'obtener';
 			beanRequestSubtituloC.type_request = 'GET';
 			processAjaxSubtituloC(undefined);
@@ -131,7 +134,7 @@ function processAjaxAjusteCita() {
 			break;
 
 		default:
-			parameters_pagination += '?filtro=';
+			parameters_pagination += '?filtro='+curso_cSelected.codigo;
 			parameters_pagination +=
 				'&pagina=' + document.querySelector('#pageAjusteCita').value.trim();
 			parameters_pagination +=

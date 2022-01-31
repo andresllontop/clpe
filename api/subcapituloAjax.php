@@ -58,6 +58,7 @@ if (!empty($RESULTADO_token)) {
                     echo json_encode($inssubcapitulo->bean_paginador_subcapitulo_controlador((int) $_GET['pagina'], (int) $_GET['registros'], $_GET['capitulo']));
                 } else if ($accion == "obtener") {
                     $insCapituloClass = new SubTitulo();
+                    $insCapituloClass->setCodigo($_GET['filtro']?$_GET['filtro']:'L01');
                     $insCapituloClass->setPagina($_GET['pagina']);
                     $insCapituloClass->setRegistro($_GET['registros']);
                     header("HTTP/1.1 200");

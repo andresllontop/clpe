@@ -59,18 +59,21 @@ class subcapituloModelo extends mainModel
                     $stmt = null;
                     break;
                 case "conteo":
+                    
                     $registros = mainModel::limpiar_cadena($SubTitulo->getRegistro());
                     $pagina = mainModel::limpiar_cadena($SubTitulo->getPagina());
                     $pagina = (isset($pagina) && $pagina > 0) ? (int) $pagina : 1;
                     $inicio = ($pagina) ? (($pagina * $registros) - $registros) : 0;
 
-                    $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo` WHERE codigo_subtitulo LIKE('%L01%')");
+                    $stmt = $conexion->prepare("SELECT COUNT(idsubtitulo) AS CONTADOR FROM `subtitulo` WHERE codigo_subtitulo LIKE CONCAT('%',?,'%')");
+                    $stmt->bindValue(1, $SubTitulo->getCodigo(), PDO::PARAM_STR);
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT * FROM `subtitulo` ORDER BY codigo_subtitulo ASC LIMIT $inicio,$registros");
+                            $stmt = $conexion->prepare("SELECT * FROM `subtitulo` WHERE codigo_subtitulo LIKE CONCAT('%',?,'%') ORDER BY codigo_subtitulo ASC LIMIT $inicio,$registros");
+                            $stmt->bindValue(1, $SubTitulo->getCodigo(), PDO::PARAM_STR);
                             $stmt->execute();
                             $datos = $stmt->fetchAll();
                             foreach ($datos as $row) {

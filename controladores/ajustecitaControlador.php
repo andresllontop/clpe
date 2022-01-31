@@ -16,16 +16,23 @@ class ajustecitaControlador extends ajustecitaModelo
             $this->conexion_db->beginTransaction();
             $Ajustecita->setSubtitulo(mainModel::limpiar_cadena($Ajustecita->getSubtitulo()));
             $Ajustecita->setTipo(mainModel::limpiar_cadena($Ajustecita->getTipo()));
-            $stmt = ajustecitaModelo::agregar_ajustecita_modelo($this->conexion_db, $Ajustecita);
-            if ($stmt->execute()) {
-                $this->conexion_db->commit();
-                $insBeanCrud->setMessageServer("ok");
-                $insBeanCrud->setBeanPagination(self::paginador_ajustecita_controlador($this->conexion_db, 0, 20, ''));
+            $mensaje = ajustecitaModelo::datos_ajustecita_modelo($this->conexion_db, 'subtitulo', $Ajustecita);
 
+            if ($mensaje['countFilter']> 0) {
+                $insBeanCrud->setMessageServer('El Subtitulo ya se encuentra registrado');
             } else {
-
-                $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la ajustecita ");
+                $stmt = ajustecitaModelo::agregar_ajustecita_modelo($this->conexion_db, $Ajustecita);
+                if ($stmt->execute()) {
+                    $this->conexion_db->commit();
+                    $insBeanCrud->setMessageServer("ok");
+                    $insBeanCrud->setBeanPagination(self::paginador_ajustecita_controlador($this->conexion_db, 0, 20, ''));
+    
+                } else {
+    
+                    $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la ajustecita ");
+                }
             }
+            
         } catch (Exception $th) {
             if ($this->conexion_db->inTransaction()) {
                 $this->conexion_db->rollback();
@@ -187,8 +194,13 @@ class ajustecitaControlador extends ajustecitaModelo
             $mensaje = ajustecitaModelo::datos_ajustecita_modelo($this->conexion_db, 'unico', $Ajustecita);
 
             if ($mensaje['countFilter'] == 0) {
-                $insBeanCrud->setMessageServer('No se encuentra la cita');
+                $insBeanCrud->setMessageServer('No se encuentra el Subtitulo');
             } else {
+                $sub = ajustecitaModelo::datos_ajustecita_modelo($this->conexion_db, 'update', $Ajustecita);
+
+            if ($sub['countFilter']> 0) {
+                $insBeanCrud->setMessageServer('El Subtitulo ya se encuentra registrado, ingrese otro subtitulo');
+            } else{
                 $stmt = ajustecitaModelo::actualizar_ajustecita_modelo($this->conexion_db, $Ajustecita);
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
@@ -198,6 +210,8 @@ class ajustecitaControlador extends ajustecitaModelo
                 } else {
                     $insBeanCrud->setMessageServer('No se actualizó la cita');
                 }
+            }
+               
             }
 
         } catch (Exception $th) {

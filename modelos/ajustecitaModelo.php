@@ -72,6 +72,60 @@ class ajustecitaModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+                    case "subtitulo":
+                        $stmt = $conexion->prepare("SELECT COUNT(idajuste_cita) AS CONTADOR FROM `ajuste_cita` WHERE subtitulo=:IDajustecita");
+                        $stmt->bindValue(":IDajustecita", $ajustecita->getSubtitulo(), PDO::PARAM_STR);
+                        $stmt->execute();
+                        $datos = $stmt->fetchAll();
+                        foreach ($datos as $row) {
+                            $insBeanPagination->setCountFilter($row['CONTADOR']);
+                            if ($row['CONTADOR'] > 0) {
+                                $stmt = $conexion->prepare("SELECT * FROM `ajuste_cita` WHERE subtitulo=:IDajustecita");
+                                $stmt->bindValue(":IDajustecita", $ajustecita->getSubtitulo(), PDO::PARAM_STR);
+                                $stmt->execute();
+                                $datos = $stmt->fetchAll();
+                                foreach ($datos as $row) {
+    
+                                    $insAjustecita = new Ajustecita();
+                                    $insAjustecita->setIdajusteCita($row['idajuste_cita']);
+                                    $insAjustecita->setTipo($row['tipo']);
+                                    $insAjustecita->setSubtitulo($row['subtitulo']);
+    
+                                    $insBeanPagination->setList($insAjustecita->__toString());
+                                }
+                            }
+                        }
+                        $stmt->closeCursor();
+                        $stmt = null;
+                        break;
+                    case "update":
+                            $stmt = $conexion->prepare("SELECT COUNT(idajuste_cita) AS CONTADOR FROM `ajuste_cita` WHERE subtitulo=:Subtitulo and idajuste_cita!=:IDajustecita");
+                            $stmt->bindValue(":Subtitulo", $ajustecita->getSubtitulo(), PDO::PARAM_STR);
+                            $stmt->bindValue(":IDajustecita", $ajustecita->getIdajusteCita(), PDO::PARAM_INT);
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+                            foreach ($datos as $row) {
+                                $insBeanPagination->setCountFilter($row['CONTADOR']);
+                                if ($row['CONTADOR'] > 0) {
+                                    $stmt = $conexion->prepare("SELECT * FROM `ajuste_cita` WHERE subtitulo=:Subtitulo and idajuste_cita!=:IDajustecita");
+                                    $stmt->bindValue(":Subtitulo", $ajustecita->getSubtitulo(), PDO::PARAM_STR);
+                                    $stmt->bindValue(":IDajustecita", $ajustecita->getIdajusteCita(), PDO::PARAM_INT);
+                                    $stmt->execute();
+                                    $datos = $stmt->fetchAll();
+                                    foreach ($datos as $row) {
+        
+                                        $insAjustecita = new Ajustecita();
+                                        $insAjustecita->setIdajusteCita($row['idajuste_cita']);
+                                        $insAjustecita->setTipo($row['tipo']);
+                                        $insAjustecita->setSubtitulo($row['subtitulo']);
+        
+                                        $insBeanPagination->setList($insAjustecita->__toString());
+                                    }
+                                }
+                            }
+                            $stmt->closeCursor();
+                            $stmt = null;
+                            break;
                 default:
                     # code...
                     break;

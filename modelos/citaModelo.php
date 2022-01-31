@@ -63,6 +63,40 @@ class citaModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+                case "add":
+                        $stmt = $conexion->prepare("SELECT COUNT(idcita) AS CONTADOR FROM `cita` WHERE tipo=1 and subtitulo=:Subtitulo");
+                        $stmt->bindValue(":Subtitulo", $cita->getSubtitulo(), PDO::PARAM_STR);
+                        $stmt->execute();
+                        $datos = $stmt->fetchAll();
+                        foreach ($datos as $row) {
+                            $insBeanPagination->setCountFilter($row['CONTADOR']);
+                            if ($row['CONTADOR'] > 0) {
+                                $stmt = $conexion->prepare("SELECT * FROM `cita`
+                                 WHERE tipo=1 and subtitulo=:Subtitulo");
+                                $stmt->bindValue(":Subtitulo", $cita->getSubtitulo(), PDO::PARAM_STR);
+                                $stmt->execute();
+                                $datos = $stmt->fetchAll();
+                                foreach ($datos as $row) {
+    
+                                    $inscita = new Cita();
+                                    $inscita->setIdcita($row['idcita']);
+                                    $inscita->setTipo($row['tipo']);
+                                    $inscita->setAsunto($row['asunto']);
+                                    $inscita->setCliente($row['cliente']);
+                                    $inscita->setSubtitulo($row['subtitulo']);
+                                    $inscita->setEstadoSolicitud($row['estado_solicitud']);
+                                    $inscita->setFechaSolicitud($row['fecha_solicitud']);
+                                    $inscita->setFechaProgramada($row['fecha_rogramada']);
+                                    $inscita->setFechaAtendida($row['fecha_atendida']);
+                                    $inscita->setFechaAceptacion($row['fecha_aceptacion']);
+    
+                                    $insBeanPagination->setList($inscita->__toString());
+                                }
+                            }
+                        }
+                        $stmt->closeCursor();
+                        $stmt = null;
+                        break;
                 case "conteo":
                     $stmt = $conexion->prepare("SELECT COUNT(idcita) AS CONTADOR FROM `cita`");
                     $stmt->execute();

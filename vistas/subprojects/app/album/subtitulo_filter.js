@@ -25,6 +25,7 @@ function processAjaxSubtituloC(recurso = undefined) {
 			break;
 		default:
 			parameters_pagination += '?filtro=';
+			parameters_pagination += '?libro='+libroExterno?libroExterno:'';
 			parameters_pagination += '&pagina=1';
 			parameters_pagination += '&registros=500';
 

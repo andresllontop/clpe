@@ -127,9 +127,7 @@ class Routes
             //VIDEOS POR CADA LECCION
             $resource = new BeanResource('app/album', array($path_resource . 'app/album/album.html', $path_resource . 'app/album/subtitulo_filter.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/album/album.js?v=' . $version_proyect, $path_resource . 'app/album/subtitulo_filter.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
-            //CITAS
-            $resource = new BeanResource('app/xxxx', array($path_resource . 'app/cita/cita.html', $path_resource . 'app/cita/alumno_filter.html', $path_resource . 'app/album/subtitulo_filter.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/cita/cita.js?v=' . $version_proyect, $path_resource . 'app/cita/alumno_filter.js?v=' . $version_proyect, $path_resource . 'app/album/subtitulo_filter.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
-            array_push($list_pages, $resource);
+       
             //CITAS
             $resource = new BeanResource('app/cita', array($path_resource . 'app/cita/cita.html', $path_resource . 'app/cita/config/cita.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html', $path_resource . 'app/cita/cita.html', $path_resource . 'app/album/subtitulo_filter.html'), array($path_resource . 'app/cita/cita.js?v=' . $version_proyect, $path_resource . 'app/cita/config/cita.js?v=' . $version_proyect, $path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect, $path_resource . 'app/album/subtitulo_filter.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
