@@ -5,6 +5,7 @@ class Cita
     private $idcita;
     private $tipo;
     private $cliente;
+    private $clienteExterno;
     private $asunto;
     private $subtitulo;
     private $estadoSolicitud;
@@ -13,9 +14,8 @@ class Cita
     2:ACEPTADO
     3:PROGRAMADA
      */
-    private $fechaAceptacion;
+
     private $fechaSolicitud;
-    private $fechaProgramada;
     private $fechaAtendida;
     public function setIdcita($idcita)
     {
@@ -32,6 +32,14 @@ class Cita
     public function getCliente()
     {
         return $this->cliente;
+    }
+    public function setClienteExterno($clienteExterno)
+    {
+        $this->clienteExterno = $clienteExterno;
+    }
+    public function getClienteExterno()
+    {
+        return $this->clienteExterno;
     }
     public function setTipo($tipo)
     {
@@ -57,22 +65,7 @@ class Cita
     {
         return $this->subtitulo;
     }
-    public function setEstadoAceptacion($estadoAceptacion)
-    {
-        $this->estadoAceptacion = $estadoAceptacion;
-    }
-    public function getEstadoAceptacion()
-    {
-        return $this->estadoAceptacion;
-    }
-    public function setFechaAceptacion($fechaAceptacion)
-    {
-        $this->fechaAceptacion = $fechaAceptacion;
-    }
-    public function getFechaAceptacion()
-    {
-        return $this->fechaAceptacion;
-    }
+
     public function setFechaSolicitud($fechaSolicitud)
     {
         $this->fechaSolicitud = $fechaSolicitud;
@@ -80,14 +73,6 @@ class Cita
     public function getFechaSolicitud()
     {
         return $this->fechaSolicitud;
-    }
-    public function setFechaProgramada($fechaProgramada)
-    {
-        $this->fechaProgramada = $fechaProgramada;
-    }
-    public function getFechaProgramada()
-    {
-        return $this->fechaProgramada;
     }
     public function setFechaAtendida($fechaAtendida)
     {
@@ -112,13 +97,11 @@ class Cita
             "subtitulo" => $this->subtitulo,
             "asunto" => $this->asunto,
             "estadoSolicitud" => $this->estadoSolicitud,
-            "estadoAceptacion" => $this->estadoAceptacion,
             "fechaSolicitud" => $this->fechaSolicitud,
-            "fechaAceptacion" => $this->fechaAceptacion,
-            "fechaProgramada" => $this->fechaProgramada,
             "fechaAtendida" => $this->fechaAtendida,
             "idcita" => $this->idcita,
             "cliente" => $this->cliente,
+            "clienteExterno" => $this->clienteExterno,
             "tipo" => $this->tipo,
         );
     }

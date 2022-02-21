@@ -127,9 +127,9 @@ class Routes
             //VIDEOS POR CADA LECCION
             $resource = new BeanResource('app/album', array($path_resource . 'app/album/album.html', $path_resource . 'app/album/subtitulo_filter.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/album/album.js?v=' . $version_proyect, $path_resource . 'app/album/subtitulo_filter.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
-       
+
             //CITAS
-            $resource = new BeanResource('app/cita', array($path_resource . 'app/cita/cita.html', $path_resource . 'app/cita/config/cita.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html', $path_resource . 'app/cita/cita.html', $path_resource . 'app/album/subtitulo_filter.html'), array($path_resource . 'app/cita/cita.js?v=' . $version_proyect, $path_resource . 'app/cita/config/cita.js?v=' . $version_proyect, $path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect, $path_resource . 'app/album/subtitulo_filter.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
+            $resource = new BeanResource('app/cita', array($path_resource . 'app/cita/cita.html', $path_resource . 'app/cita/config/cita.html', $path_resource . 'app/cita/cronograma/cronograma.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html', $path_resource . 'app/cita/cita.html', $path_resource . 'app/album/subtitulo_filter.html', $path_resource . 'app/cita/config/alumno_filter.html'), array($path_resource . 'app/cita/cita.js?v=' . $version_proyect, $path_resource . 'app/cita/config/cita.js?v=' . $version_proyect, $path_resource . 'app/cita/cronograma/cronograma.js?v=' . $version_proyect, $path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect, $path_resource . 'app/album/subtitulo_filter.js?v=' . $version_proyect, $path_resource . 'app/cita/config/alumno_filter.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
 
             //PUBLICOS
@@ -721,7 +721,7 @@ class Routes
             //cita
             $resource = new BeanResource('api/cita', array($path_resource . 'citaAjax.php'), array(), array());
             array_push($list_pages, $resource);
-            
+
             $resource = new BeanResource('api/ajuste/cita', array($path_resource . 'ajustecitaAjax.php'), array(), array());
             array_push($list_pages, $resource);
 

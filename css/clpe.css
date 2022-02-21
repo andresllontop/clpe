@@ -1,3 +1,12 @@
+.bg-warning-200 {
+	background-color: #ffe070 !important;
+}
+.bg-red-200 {
+	background-color: #fd8888 !important;
+}
+.bg-green-200 {
+	background-color: #9eff88 !important;
+}
 .flex-container {
 	display: flex;
 	flex-wrap: wrap;

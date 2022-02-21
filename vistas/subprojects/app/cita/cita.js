@@ -2,7 +2,9 @@ var beanPaginationCliente,
 	beanPaginationAjusteCita,
 	beanPaginationCita,
 	beanPaginationMaximoCita;
-var clienteSelected, citaSelected;
+var clienteSelected,
+	citaSelected,
+	ADAUTOMATICO = false;
 var beanRequestCliente = new BeanRequest();
 document.addEventListener('DOMContentLoaded', function () {
 	beanRequestCliente.entity_api = 'tareas';
@@ -31,13 +33,16 @@ document.addEventListener('DOMContentLoaded', function () {
 		beanRequestCliente.entity_api = 'cita';
 		beanRequestCliente.type_request = 'GET';
 		beanRequestCliente.operation = 'paginate';
-	
 	});
 	$('#ventanaModalCitaLista').on('shown.bs.modal', function () {
 		beanRequestCliente.entity_api = 'cita';
 		beanRequestCliente.type_request = 'GET';
 		beanRequestCliente.operation = 'paginate';
-		processAjaxCita();
+		if (!ADAUTOMATICO) {
+			processAjaxCita();
+		} else {
+			ADAUTOMATICO = false;
+		}
 	});
 
 	$('#formularioClienteSearch').submit(function (event) {
@@ -54,18 +59,22 @@ document.addEventListener('DOMContentLoaded', function () {
 		event.preventDefault();
 		event.stopPropagation();
 		$('#modalCargandoCita').modal('show');
-		//console.log(document.querySelector('#txtFechaCita').value);
-		
 	});
 	$('#btnAbrirCita').click(function () {
-		beanRequestCliente.entity_api = 'cita';
-		beanRequestCliente.type_request = 'POST';
-		beanRequestCliente.operation = 'add';
-		document.querySelector('#txtSubtituloCita').value =
-			clienteSelected.subTitulo.codigo +
-			' - ' +
-			clienteSelected.subTitulo.nombre;
-		$('#ventanaModalCitaAdd').modal('show');
+		addClass(document.querySelector('#htmlClienteCita'), 'd-none');
+		removeClass(document.querySelector('#htmlTipoCita'), 'd-none');
+		let hoy = new Date();
+		document.querySelector('#txtFechaSolicitudCita').value =
+			getDateJava(hoy).split('/')[2] +
+			'-' +
+			getDateJava(hoy).split('/')[1] +
+			'-' +
+			getDateJava(hoy).split('/')[0] +
+			'T' +
+			getFullDateJava(hoy).split(' ')[1].split(':')[0] +
+			':' +
+			getFullDateJava(hoy).split(' ')[1].split(':')[1];
+		clickAddCita();
 	});
 
 	document.querySelectorAll('.btn-regresar').forEach((btn) => {
@@ -88,8 +97,77 @@ document.addEventListener('DOMContentLoaded', function () {
 			addClass(document.querySelector('#htmlSubtituloCita'), 'd-none');
 		}
 	});
+	document
+		.getElementById('txtTipoAlumno')
+		.addEventListener('change', (event) => {
+			if (event.currentTarget.checked) {
+				removeClass(document.querySelector('#txtAlumnoSelect'), 'd-none');
+				addClass(document.querySelector('#txtAlumnoInput'), 'd-none');
+			} else {
+				removeClass(document.querySelector('#txtAlumnoInput'), 'd-none');
+				addClass(document.querySelector('#txtAlumnoSelect'), 'd-none');
+			}
+		});
 });
+function clickAddCita() {
+	document.querySelector('#txtAlumnoInput').value = '';
+	document.querySelector('#txtAlumnoSelect').value = '';
+	document.querySelector('#txtSubtituloDesde').value = '';
+	document.querySelector('#txtAsuntoCita').value = '';
+	if (
+		beanPaginationSubtituloC == undefined ||
+		libroExterno != curso_cSelected.codigo
+	) {
+		libroExterno = curso_cSelected.codigo;
+		beanRequestSubtituloC.operation = 'obtener';
+		beanRequestSubtituloC.type_request = 'GET';
+		processAjaxSubtituloC(undefined);
+	}
+	beanRequestCliente.entity_api = 'cita';
+	beanRequestCliente.type_request = 'POST';
+	beanRequestCliente.operation = 'add';
+	document.querySelector('#modalTitleCitaAdd').innerHTML = 'REGISTRAR CITA';
+	$('#ventanaModalCitaAdd').modal('show');
+}
+function clickUpdateCita() {
+	if (
+		beanPaginationSubtituloC == undefined ||
+		libroExterno != curso_cSelected.codigo
+	) {
+		libroExterno = curso_cSelected.codigo;
+		beanRequestSubtituloC.operation = 'obtener';
+		beanRequestSubtituloC.type_request = 'GET';
+		processAjaxSubtituloC(undefined);
+	}
+	document.querySelector('#txtFechaCita').value = citaSelected.fechaAtendida;
+	document.querySelector('#txtFechaSolicitudCita').value =
+		citaSelected.fechaSolicitud.split(' ')[0] +
+		'T' +
+		citaSelected.fechaSolicitud.split(' ')[1];
+	beanRequestCliente.entity_api = 'cita';
+	beanRequestCliente.type_request = 'POST';
+	beanRequestCliente.operation = 'update';
+	document.querySelector('#txtAsuntoCita').value = citaSelected.asunto;
+	document.querySelector('#txtSubtituloDesde').value =
+		citaSelected.tipo == '1'
+			? citaSelected.subtitulo.codigo != undefined
+				? citaSelected.subtitulo.codigo
+				: citaSelected.subtitulo
+			: '';
+	document.querySelector('#txtTipoCita').checked = citaSelected.tipo == '1';
+	document.querySelector('#txtTipoAlumno').checked =
+		citaSelected.cliente.cuenta == '' ? false : true;
+	if (citaSelected.tipo == '1') {
+		addClass(document.querySelector('#htmlAsuntoCita'), 'd-none');
+		removeClass(document.querySelector('#htmlSubtituloCita'), 'd-none');
+	} else {
+		addClass(document.querySelector('#htmlSubtituloCita'), 'd-none');
+		removeClass(document.querySelector('#htmlAsuntoCita'), 'd-none');
+	}
+	document.querySelector('#modalTitleCitaAdd').innerHTML = 'ACTUALIZAR CITA';
 
+	$('#ventanaModalCitaAdd').modal('show');
+}
 function addEventsButtonsCurso_c() {
 	document.querySelectorAll('.detalle-curso').forEach((btn) => {
 		//AGREGANDO EVENTO CLICK
@@ -175,6 +253,15 @@ function PromiseInit() {
 			if (json[2].beanPagination !== null) {
 				beanPaginationMaximoCita = json[2].beanPagination;
 				listaCliente(beanPaginationCliente);
+			}
+			if (
+				beanPaginationSubtituloC == undefined ||
+				libroExterno != curso_cSelected.codigo
+			) {
+				libroExterno = curso_cSelected.codigo;
+				beanRequestSubtituloC.operation = 'obtener';
+				beanRequestSubtituloC.type_request = 'GET';
+				processAjaxSubtituloC(undefined);
 			}
 		})
 		.catch((err) => {
@@ -278,14 +365,28 @@ function processAjaxCita() {
 	let json = '';
 	if (
 		beanRequestCliente.operation == 'update' ||
-		beanRequestCliente.operation == 'add'
+		beanRequestCliente.operation == 'add' ||
+		beanRequestCliente.operation == 'add-automatico'
 	) {
 		json = {
 			tipo: document.querySelector('#txtTipoCita').checked ? '1' : '2',
-			cliente: clienteSelected.cuenta,
-			subtitulo: document.querySelector('#txtTipoCita').checked
-				? document.querySelector('#txtSubtituloCita').value.split('-')[0].trim()
+			cliente: clienteSelected
+				? clienteSelected.cuenta
+				: document.querySelector('#txtTipoAlumno').checked
+				? document.querySelector('#txtAlumnoSelect').value
 				: '',
+			clienteExterno: clienteSelected
+				? ''
+				: document.querySelector('#txtTipoAlumno').checked
+				? ''
+				: document.querySelector('#txtAlumnoInput').value,
+			subtitulo:
+				beanRequestCliente.operation == 'add-automatico'
+					? clienteSelected.subTitulo.codigo
+					: document.querySelector('#txtTipoCita').checked
+					? document.querySelector('#txtSubtituloDesde').value
+					: '',
+			fechaSolicitud: document.querySelector('#txtFechaSolicitudCita').value,
 			estadoSolicitud: 1,
 			asunto: document.querySelector('#txtTipoCita').checked
 				? ''
@@ -301,11 +402,14 @@ function processAjaxCita() {
 
 		case 'update':
 			json.idcita = citaSelected.idcita;
-			json.estadoSolicitud = 3;
-			json.fechaAtendida=document.querySelector('#txtFechaCita').value;
+			json.cliente = citaSelected.cliente.cuenta;
+			json.clienteExterno = citaSelected.clienteExterno;
+			json.estadoSolicitud = citaSelected.estadoSolicitud;
+			json.fechaAtendida = document.querySelector('#txtFechaCita').value;
 			form_data.append('class', JSON.stringify(json));
 			break;
 		case 'add':
+		case 'add-automatico':
 			form_data.append('class', JSON.stringify(json));
 			break;
 		default:
@@ -322,7 +426,9 @@ function processAjaxCita() {
 			getHostAPI() +
 			beanRequestCliente.entity_api +
 			'/' +
-			beanRequestCliente.operation +
+			(beanRequestCliente.operation == 'add-automatico'
+				? 'add'
+				: beanRequestCliente.operation) +
 			parameters_pagination,
 		type: beanRequestCliente.type_request,
 		headers: {
@@ -332,7 +438,8 @@ function processAjaxCita() {
 		cache: false,
 		contentType:
 			beanRequestCliente.operation == 'update' ||
-			beanRequestCliente.operation == 'add'
+			beanRequestCliente.operation == 'add' ||
+			beanRequestCliente.operation == 'add-automatico'
 				? false
 				: 'application/json; charset=UTF-8',
 		processData: false,
@@ -340,7 +447,7 @@ function processAjaxCita() {
 	})
 		.done(function (beanCrudResponse) {
 			$('#modalCargandoCita').modal('hide');
-			
+
 			if (beanCrudResponse.messageServer !== null) {
 				if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
 					$('#ventanaModalCitaAdd').modal('hide');
@@ -354,18 +461,31 @@ function processAjaxCita() {
 				}
 			}
 			if (beanCrudResponse.beanPagination !== null) {
-				beanPaginationCita = beanCrudResponse.beanPagination;
-				listaCita(beanPaginationCita);
+				if (proccessCrono) {
+					$('#modalCargandoCronograma').modal('show');
+				} else {
+					beanPaginationCita = beanCrudResponse.beanPagination;
+					listaCita(beanPaginationCita);
+				}
+				proccessCrono = false;
 			}
-			if(beanRequestCliente.operation=='update'){
+
+			if (beanRequestCliente.operation == 'update') {
 				$('#ventanaModalCitaUpdate').modal('hide');
 				updateCitaAlumno(json);
 			}
-			if(beanRequestCliente.operation=='delete'){
-				json={subtitulo:citaSelected.subtitulo.codigo,cliente:citaSelected.cliente.cuenta}
-				updateCitaAlumno(json,'PENDIENTE');
+			if (beanRequestCliente.operation == 'add-automatico') {
+				updateCitaAlumno(json, 'PROGRAMADA');
+				ADAUTOMATICO = true;
+				$('#ventanaModalCitaLista').modal('show');
 			}
-			
+			if (beanRequestCliente.operation == 'delete') {
+				json = {
+					subtitulo: citaSelected.subtitulo.codigo,
+					cliente: citaSelected.cliente.cuenta,
+				};
+				updateCitaAlumno(json, 'PENDIENTE');
+			}
 		})
 		.fail(function (jqXHR, textStatus, errorThrown) {
 			$('#modalCargandoCita').modal('hide');
@@ -397,8 +517,8 @@ function listaCliente(beanPagination) {
 			cliente.subTitulo.titulo.nombre
 		}</td>
 <td class="text-center ver-lecciones pt-5">${cliente.subTitulo.codigo} <br>${
-	cliente.subTitulo.nombre
-}</td>
+			cliente.subTitulo.nombre
+		}</td>
 <td class="text-center ver-lecciones pt-5 d-none">${
 			cliente.fecha.split(' ')[0].split('-')[2] +
 			'-' +
@@ -413,11 +533,11 @@ function listaCliente(beanPagination) {
 					filtrarAjusteCita(cliente.subTitulo.codigo).length == 0
 						? ''
 						: !filtrarAjusteCitaMaximo(cliente.subTitulo.codigo)
-						? '<button class="btn btn-danger mr-2" >PENDIDENTE</button>'
+						? '<button class="btn btn-danger mr-2 add-cita" >PENDIDENTE</button>'
 						: filtrarAjusteCitaMaximo(cliente.subTitulo.codigo).fechaAtendida !=
 						  null
 						? '<button class="btn btn-success mr-2">REALIZADA</button>'
-						: '<button class="btn btn-danger mr-2" >PROGRAMADA</button>'
+						: '<button class="btn btn-warning mr-2" >PROGRAMADA</button>'
 				}
         <button class="btn btn-info ver-cita" >VER</button>
         </td>
@@ -452,7 +572,7 @@ function listaCita(beanPagination) {
 		row += `<tr idcita="${cita.idcita}"  class="aula-cursor-mano">
 
 <td class="text-center">${
-			cita.tipo == '1'
+			cita.subtitulo.codigo != ''
 				? cita.subtitulo.codigo + '<br>' + cita.subtitulo.nombre
 				: cita.asunto
 		}</td>
@@ -462,18 +582,23 @@ function listaCita(beanPagination) {
 			'-' +
 			cita.fechaSolicitud.split(' ')[0].split('-')[1] +
 			'-' +
-			cita.fechaSolicitud.split(' ')[0].split('-')[0]
+			cita.fechaSolicitud.split(' ')[0].split('-')[0] +
+			'<br>' +
+			cita.fechaSolicitud.split(' ')[1]
 		}</td>
 		<td class="text-center">${
 			cita.fechaAtendida == null
-				? '<button class="btn btn-warning update-cita">ATENDIDO</button>'
+				? '<button class="btn btn-warning atendido-cita">ATENDIDO</button>'
 				: cita.fechaAtendida.split(' ')[0].split('-')[2] +
 				  '-' +
 				  cita.fechaAtendida.split(' ')[0].split('-')[1] +
 				  '-' +
-				  cita.fechaAtendida.split(' ')[0].split('-')[0]
+				  cita.fechaAtendida.split(' ')[0].split('-')[0] +
+				  '<br>' +
+				  cita.fechaSolicitud.split(' ')[1]
 		}</td>
 		<td class="text-center">
+		<button class="btn btn-info update-cita mr-2"><i class="zmdi zmdi-edit"></i></button>
 		<button class="btn btn-danger eliminar-cita"><i class="zmdi zmdi-delete"></i></button>
 		</td>
 </tr>`;
@@ -497,10 +622,46 @@ function addEventsButtonsCita() {
 				btn.parentElement.parentElement.getAttribute('idcita')
 			);
 			if (citaSelected != undefined) {
+				addClass(document.querySelector('#htmlClienteCita'), 'd-none');
+				removeClass(document.querySelector('#htmlTipoCita'), 'd-none');
+				clickUpdateCita();
+			} else {
+				swal('No se encontró el alumno', '', 'info');
+			}
+		};
+	});
+	document.querySelectorAll('.atendido-cita').forEach((btn) => {
+		//AGREGANDO EVENTO CLICK
+		btn.onclick = function () {
+			citaSelected = findByCita(
+				btn.parentElement.parentElement.getAttribute('idcita')
+			);
+			if (citaSelected != undefined) {
 				beanRequestCliente.entity_api = 'cita';
 				beanRequestCliente.type_request = 'POST';
 				beanRequestCliente.operation = 'update';
-				//document.querySelector('#txtFechaCita').value=new Date();
+				citaSelected.estadoSolicitud = '3';
+				let hoy = new Date();
+				document.querySelector('#txtFechaCita').value =
+					getDateJava(hoy).split('/')[2] +
+					'-' +
+					getDateJava(hoy).split('/')[1] +
+					'-' +
+					getDateJava(hoy).split('/')[0] +
+					'T' +
+					getFullDateJava(hoy).split(' ')[1].split(':')[0] +
+					':' +
+					getFullDateJava(hoy).split(' ')[1].split(':')[1];
+
+				document.querySelector('#txtAsuntoCita').value = citaSelected.asunto;
+				document.querySelector('#txtSubtituloDesde').value =
+					citaSelected.tipo == '1' ? citaSelected.subtitulo.codigo : '';
+				document.querySelector('#txtTipoCita').checked =
+					citaSelected.tipo == '1';
+				document.querySelector('#txtFechaSolicitudCita').value =
+					citaSelected.fechaSolicitud.split(' ')[0] +
+					'T' +
+					citaSelected.fechaSolicitud.split(' ')[1];
 				$('#ventanaModalCitaUpdate').modal('show');
 			} else {
 				swal('No se encontró el alumno', '', 'info');
@@ -524,24 +685,34 @@ function addEventsButtonsCita() {
 		};
 	});
 }
-function updateCitaAlumno(json,status='REALIZADA') {
+function updateCitaAlumno(json, status = 'REALIZADA') {
 	document.querySelectorAll('#tbodyCliente tr').forEach((btn) => {
 		//AGREGANDO EVENTO CLICK
-		if(json.cliente==btn.getAttribute('cuenta') && json.subtitulo==clienteSelected.subTitulo.codigo){
-			if(status=='REALIZADA'){
-				removeClass(btn.children[5].firstElementChild,'btn-danger');
-				addClass(btn.children[5].firstElementChild,'btn-success');
-			}else{
-				removeClass(btn.children[5].firstElementChild,'btn-success');
-				addClass(btn.children[5].firstElementChild,'btn-danger');
+
+		if (
+			json.cliente == btn.getAttribute('cuenta') &&
+			json.subtitulo == clienteSelected.subTitulo.codigo
+		) {
+			console.log(status);
+			if (status == 'REALIZADA') {
+				removeClass(btn.children[5].firstElementChild, 'btn-danger');
+				addClass(btn.children[5].firstElementChild, 'btn-success');
+				removeClass(btn.children[5].firstElementChild, 'add-cita');
+				btn.children[5].firstElementChild.setAttribute('disabled', true);
+			} else if (status == 'PROGRAMADA') {
+				removeClass(btn.children[5].firstElementChild, 'btn-danger');
+				addClass(btn.children[5].firstElementChild, 'btn-warning');
+				removeClass(btn.children[5].firstElementChild, 'add-cita');
+				btn.children[5].firstElementChild.setAttribute('disabled', true);
+			} else {
+				removeClass(btn.children[5].firstElementChild, 'btn-success');
+				addClass(btn.children[5].firstElementChild, 'btn-danger');
+				addClass(btn.children[5].firstElementChild, 'add-cita');
+				btn.children[5].firstElementChild.setAttribute('disabled', false);
 			}
-			btn.children[5].firstElementChild.innerHTML=status;
-			
+			btn.children[5].firstElementChild.innerHTML = status;
 		}
-			
-		});
-	
-	
+	});
 }
 function addEventsButtonsCliente() {
 	document.querySelectorAll('.ver-lecciones').forEach((btn) => {
@@ -550,22 +721,6 @@ function addEventsButtonsCliente() {
 			clienteSelected = findByCliente(
 				btn.parentElement.getAttribute('idtarea')
 			);
-
-			// if (clienteSelected != undefined) {
-			// 	clienteSelected = {
-			// 		nombre: clienteSelected.registro,
-			// 		apellido: clienteSelected.apellido,
-			// 		cuenta: { cuentaCodigo: clienteSelected.cuenta },
-			// 	};
-			// 	document.querySelector('#seccion-cliente').classList.add('d-none');
-			// 	document.querySelector('#seccion-leccion').classList.remove('d-none');
-			// 	document.querySelector('#seccion-cuestionario').classList.add('d-none');
-			// 	beanRequestLeccion.type_request = 'GET';
-			// 	beanRequestLeccion.operation = 'paginate';
-			// 	$('#modalCargandoLeccion').modal('show');
-			// } else {
-			// 	swal('No se encontró el alumno', '', 'info');
-			// }
 		};
 	});
 	document.querySelectorAll('.ver-cita').forEach((btn) => {
@@ -574,12 +729,40 @@ function addEventsButtonsCliente() {
 			clienteSelected = findByCliente(
 				btn.parentElement.parentElement.getAttribute('idtarea')
 			);
-			if (clienteSelected != undefined) {
-				// beanRequestCliente.entity_api = 'cita';
-				// beanRequestCliente.type_request = 'POST';
-				// beanRequestCliente.operation = 'add';
-				// $('#modalCargandoCita').modal('show');
+			if (clienteSelected) {
+				if (
+					beanPaginationSubtituloC == undefined ||
+					libroExterno != curso_cSelected.codigo
+				) {
+					libroExterno = curso_cSelected.codigo;
+					beanRequestSubtituloC.operation = 'obtener';
+					beanRequestSubtituloC.type_request = 'GET';
+
+					processAjaxSubtituloC(undefined);
+				} else {
+					document.querySelector('#txtSubtituloDesde').value =
+						clienteSelected.subTitulo ? clienteSelected.subTitulo.codigo : '';
+				}
 				$('#ventanaModalCitaLista').modal('show');
+			} else {
+				swal('No se encontró el alumno', '', 'info');
+			}
+		};
+	});
+	document.querySelectorAll('.add-cita').forEach((btn) => {
+		//AGREGANDO EVENTO CLICK
+		btn.onclick = function () {
+			clienteSelected = findByCliente(
+				btn.parentElement.parentElement.getAttribute('idtarea')
+			);
+			if (clienteSelected != undefined) {
+				beanRequestCliente.entity_api = 'cita';
+				beanRequestCliente.type_request = 'POST';
+				beanRequestCliente.operation = 'add-automatico';
+				document.querySelector('#txtTipoCita').checked = true;
+				document.querySelector('#txtSubtituloDesde').value =
+					clienteSelected.subTitulo.codigo;
+				$('#modalCargandoCita').modal('show');
 			} else {
 				swal('No se encontró el alumno', '', 'info');
 			}
@@ -607,8 +790,8 @@ function findByClienteByCuenta(cuenta) {
 		}
 	});
 }
-function findByCita(idcita) {
-	return beanPaginationCita.list.find((Cita) => {
+function findByCita(idcita, beanPagination = beanPaginationCita) {
+	return beanPagination.list.find((Cita) => {
 		if (parseInt(idcita) == parseInt(Cita.idcita)) {
 			return Cita;
 		}

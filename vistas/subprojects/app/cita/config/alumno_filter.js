@@ -102,9 +102,9 @@ function processAjaxAlumnoC() {
 function toListAlumnoC(beanPagination) {
 	document.querySelector('#txtAlumno').innerHTML = '';
 
-	let row = '<option value="0">SIN DEFINIR</option>';
+	let row = '<option value="">SIN DEFINIR</option>';
 	if (beanPagination.list.length == 0) {
-		document.querySelector('#txtAlumno').innerHTML += row;
+		document.querySelector('#txtAlumnoSelect').innerHTML += row;
 		return;
 	}
 	beanPagination.list.forEach((alumno) => {
@@ -115,8 +115,7 @@ function toListAlumnoC(beanPagination) {
 		// $('[data-toggle="tooltip"]').tooltip();
 	});
 
-	document.querySelector('#txtAlumno').innerHTML += row;
-
+	document.querySelector('#txtAlumnoSelect').innerHTML += row;
 	addEventsAlumnosC();
 }
 

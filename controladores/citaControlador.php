@@ -14,30 +14,32 @@ class citaControlador extends citaModelo
         $insBeanCrud = new BeanCrud();
         try {
             $this->conexion_db->beginTransaction();
-            $Cita->setFechaSolicitud(date('Y-m-d H:i:s'));
-         
+            $Cita->setFechaSolicitud($Cita->getFechaSolicitud());
 
             $Cita->setEstadoSolicitud(mainModel::limpiar_cadena($Cita->getEstadoSolicitud()));
             $Cita->setSubtitulo(mainModel::limpiar_cadena($Cita->getSubtitulo()));
             $Cita->setCliente(mainModel::limpiar_cadena($Cita->getCliente()));
             $Cita->setTipo(mainModel::limpiar_cadena($Cita->getTipo()));
+            $Cita->setClienteExterno(mainModel::limpiar_cadena($Cita->getClienteExterno()));
             $Cita->setAsunto(mainModel::limpiar_cadena($Cita->getAsunto()));
             $citaLista = citaModelo::datos_cita_modelo($this->conexion_db, 'add', $Cita);
-            if ($citaLista['countFilter']> 0) {
+            if ($citaLista['countFilter'] > 0) {
                 $insBeanCrud->setMessageServer('El Subtitulo para esta Cita ya se encuentra registrada');
             } else {
+                $fechaSoli = new DateTime($Cita->getFechaSolicitud());
+                $Cita->setFechaSolicitud($Cita->getFechaSolicitud() == "" ? date('Y-m-d H:i:s') : $fechaSoli->format('Y-m-d H:i:s'));
                 $stmt = citaModelo::agregar_cita_modelo($this->conexion_db, $Cita);
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
                     $insBeanCrud->setBeanPagination(self::paginador_cita_controlador($this->conexion_db, 0, 20, $Cita->getCliente()));
-    
+
                 } else {
-    
+
                     $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la cita ");
                 }
             }
-           
+
         } catch (Exception $th) {
             if ($this->conexion_db->inTransaction()) {
                 $this->conexion_db->rollback();
@@ -64,7 +66,6 @@ class citaControlador extends citaModelo
         $insBeanCrud = new BeanCrud();
         try {
             $tipo = mainModel::limpiar_cadena($tipo);
-            $codigo = mainModel::limpiar_cadena($codigo);
             $insBeanCrud->setBeanPagination(citaModelo::datos_cita_modelo($this->conexion_db, $tipo, $codigo));
         } catch (Exception $th) {
             print "¡Error!: " . $th->getMessage() . "<br/>";
@@ -90,7 +91,7 @@ class citaControlador extends citaModelo
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
 
                 if ($row['CONTADOR'] > 0) {
-                    $stmt = $conexion->prepare("SELECT cit.*,admis.AdminNombre,admis.AdminApellido,subt.nombre as subt_nombre FROM `cita` as cit INNER JOIN `administrador` as admis ON admis.Cuenta_Codigo=cit.cliente LEFT JOIN `subtitulo` as subt ON subt.codigo_subtitulo=cit.subtitulo WHERE cit.cliente=? ORDER BY cit.idcita ASC LIMIT ?,?");
+                    $stmt = $conexion->prepare("SELECT cit.*,admis.AdminNombre,admis.AdminApellido,subt.nombre as subt_nombre FROM `cita` as cit INNER JOIN `administrador` as admis ON admis.Cuenta_Codigo=cit.cliente LEFT JOIN `subtitulo` as subt ON subt.codigo_subtitulo=cit.subtitulo WHERE cit.cliente=? ORDER BY cit.fecha_solicitud DESC LIMIT ?,?");
                     $stmt->bindValue(1, $filter, PDO::PARAM_STR);
                     $stmt->bindValue(2, $inicio, PDO::PARAM_INT);
                     $stmt->bindValue(3, $registros, PDO::PARAM_INT);
@@ -112,10 +113,8 @@ class citaControlador extends citaModelo
                         $inscita->setAsunto($row['asunto']);
                         $inscita->setEstadoSolicitud($row['estado_solicitud']);
                         $inscita->setFechaSolicitud($row['fecha_solicitud']);
-                        $inscita->setFechaProgramada($row['fecha_rogramada']);
                         $inscita->setFechaAtendida($row['fecha_atendida']);
-                        $inscita->setFechaAceptacion($row['fecha_aceptacion']);
-
+                        $inscita->setClienteExterno($row['cliente_externo']);
                         $inscita->setCliente($insCliente->__toString());
                         $inscita->setSubtitulo($insSubtitulo->__toString());
                         $insBeanPagination->setList($inscita->__toString());
@@ -206,13 +205,21 @@ class citaControlador extends citaModelo
             $this->conexion_db->beginTransaction();
             $Cita->setIdcita(mainModel::limpiar_cadena($Cita->getIdcita()));
             $Cita->setEstadoSolicitud(mainModel::limpiar_cadena($Cita->getEstadoSolicitud()));
-
+            $Cita->setFechaSolicitud($Cita->getFechaSolicitud());
+            $Cita->setClienteExterno(mainModel::limpiar_cadena($Cita->getClienteExterno()));
+            $Cita->setEstadoSolicitud(mainModel::limpiar_cadena($Cita->getEstadoSolicitud()));
+            $Cita->setSubtitulo(mainModel::limpiar_cadena($Cita->getSubtitulo()));
+            $Cita->setCliente(mainModel::limpiar_cadena($Cita->getCliente()));
+            $Cita->setTipo(mainModel::limpiar_cadena($Cita->getTipo()));
+            $Cita->setAsunto(mainModel::limpiar_cadena($Cita->getAsunto()));
             $citaLista = citaModelo::datos_cita_modelo($this->conexion_db, "unico", $Cita);
             if ($citaLista["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("error en el servidor, No hemos encontrado la cita");
             } else {
                 $fecha = new DateTime($Cita->getFechaAtendida());
-                $Cita->setFechaAtendida($Cita->getFechaAtendida()==""?date('Y-m-d H:i:s'):$fecha->format('Y-m-d H:i:s'));
+                $Cita->setFechaAtendida($Cita->getFechaAtendida() == "" ? null : $fecha->format('Y-m-d H:i:s'));
+                $fechaSoli = new DateTime($Cita->getFechaSolicitud());
+                $Cita->setFechaSolicitud($fechaSoli->format('Y-m-d H:i:s'));
                 $stmt = citaModelo::actualizar_cita_modelo($this->conexion_db, $Cita);
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();

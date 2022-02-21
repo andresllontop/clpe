@@ -15,7 +15,12 @@
           <option value="30">30</option>
         </select>
       </div>
-      <h3 class="text-center all-tittles col-8 f-weight-600" id="titleManagerCliente"></h3>
+      <h3 class="text-center all-tittles col-6 f-weight-600" id="titleManagerCliente"></h3>
+      <div class="col-2 text-right">
+        <button class="btn btn-success" id="btnAbrirCronograma">
+          Cronograma
+        </button>
+      </div>
       <div class="col-2 text-right">
         <button class="btn btn-primary" id="btnAbrirListaAjusteCita">
           <i class="zmdi zmdi-plus-square"></i> &nbsp;&nbsp;Subtitulos
@@ -87,8 +92,8 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalCargandoCita" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
-  style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
+<div class="modal fade" id="modalCargandoCita" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  style="padding-top: 40vh; overflow-y: visible; display: none;z-index: 1044;" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body">
@@ -104,7 +109,7 @@
 </div>
 
 <!-- lista CITAS -->
-<div id="ventanaModalCitaLista" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+<div id="ventanaModalCitaLista" style="z-index: 1041;" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
@@ -142,8 +147,8 @@
               <thead>
                 <tr>
 
-                  <th class="text-center" style="width:15%">ASUNTO</th>
-                  <th class="text-center" style="width:15%">FECHA PROGRAMADA</th>
+                  <th class="text-center" style="width:40%">ASUNTO</th>
+                  <th class="text-center" style="width:15%">FECHA DE CITA</th>
                   <th class="text-center" style="width:15%">ATENDIDO?</th>
                   <th class="text-center" style="width:15%">ELIMINAR</th>
                 </tr>
@@ -170,12 +175,12 @@
   </div>
 </div>
 
-<div id="ventanaModalCitaAdd" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+<div id="ventanaModalCitaAdd" style="z-index: 1042;" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
   <div class="modal-dialog modal-md modal-dialog-centered" role="document">
     <div class="border-2 border-primary modal-content shadow-lg bg-white rounded">
       <div class="modal-header">
 
-        <h4 class="modal-title text-center w-100">REGISTRAR CITAS</h4>
+        <h4 class="modal-title text-center w-100" id="modalTitleCitaAdd">REGISTRAR CITAS</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
           style="margin-top: -1em;margin-right: -1.5em;">
           <span aria-hidden="true" class="m-0"
@@ -186,28 +191,51 @@
 
         <div class="modal-body" style="padding-top:5%;">
           <div class="row">
-
             <div class="col-12">
+              <label class="all-tittles" for="txtFechaSolicitudCita">FECHA DE CITA</label>
+              <div class="group-material">
+                <input id="txtFechaSolicitudCita" type="datetime-local" class="material-control">
+
+              </div>
+            </div>
+
+            <div class="col-12 d-none" id="htmlClienteCita">
+              <div class="form-check p-2 text-center pb-4">
+                <input class="form-check-input" type="checkbox" id="txtTipoAlumno" checked>
+                <label class="form-check-label">
+                  Seleccionar Alumno de la plataforma?
+                </label>
+              </div>
+
+              <label class="all-tittles">ALUMNO</label>
+              <input id="txtAlumnoInput" type="text" class="material-control tooltips-general d-none"
+                data-toggle="tooltip" data-placement="top">
+              <div class="group-material">
+                <select id="txtAlumnoSelect" class="material-control tooltips-general w-100">
+
+                </select>
+              </div>
+
+            </div>
+            <div class="col-12" id="htmlTipoCita">
               <div class="form-check p-2 text-center pb-4">
                 <input class="form-check-input" type="checkbox" id="txtTipoCita">
                 <label class="form-check-label">
-                  Seleccionar Subtitulo Actual?
+                  Seleccionar Subtitulo?
                 </label>
               </div>
             </div>
+
             <div class="col-12 d-none" id="htmlSubtituloCita">
-              <label class="all-tittles" for="txtSubtituloCita">SUBTITULO</label>
+              <label class="all-tittles" for="txtSubtituloDesde">SUBTITULO</label>
               <div class="group-material">
-                <input id="txtSubtituloCita" type="text" class="material-control tooltips-general "
-                  data-toggle="tooltip" data-placement="top" disabled>
+
+                <select id="txtSubtituloDesde" class="material-control tooltips-general w-100">
+
+                </select>
+
               </div>
-              <!-- <div class="group-material">
-                <input id="txtSubtituloCita" type="text" class="material-control tooltips-general "
-                  data-toggle="tooltip" data-placement="top" disabled>
-                <span class="highlight"></span>
-                <span class="bar"></span>
-                <label class="all-tittles" for="txtSubtituloCita">SUBTITULO</label>
-              </div> -->
+
             </div>
             <div class="col-12" id="htmlAsuntoCita">
               <label class="all-tittles">ASUNTO</label>
@@ -228,26 +256,27 @@
   </div>
 </div>
 
-<div id="ventanaModalCitaUpdate" class="modal fade" tabindex="-1" role="dialog" aria-modal="true">
+<div id="ventanaModalCitaUpdate" style="z-index: 1043;" class="modal fade" tabindex="-1" role="dialog"
+  aria-modal="true">
   <div class="modal-dialog modal-md modal-dialog-centered" role="document">
     <div class="border-2 border-secundary modal-content shadow-lg bg-white rounded">
-    
+
       <form id="formularioCitaUpdate" autocomplete="off">
 
         <div class="modal-body" style="padding-top:5%;">
           <div class="row">
 
-            <div class="col-12" >
+            <div class="col-12">
 
               <div class="group-material">
-                <input id="txtFechaCita" type="datetime-local" class="material-control tooltips-general "
+                <input id="txtFechaCita" type="datetime-local" class="material-control tooltips-general"
                   data-toggle="tooltip" data-placement="top">
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label class="all-tittles" for="txtFechaCita">Fecha Atendido</label>
               </div>
             </div>
-          
+
           </div>
         </div>
         <div class="modal-footer">

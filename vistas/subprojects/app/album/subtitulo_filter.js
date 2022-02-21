@@ -25,7 +25,7 @@ function processAjaxSubtituloC(recurso = undefined) {
 			break;
 		default:
 			parameters_pagination += '?filtro=';
-			parameters_pagination += '?libro='+libroExterno?libroExterno:'';
+			parameters_pagination += '?libro=' + libroExterno ? libroExterno : '';
 			parameters_pagination += '&pagina=1';
 			parameters_pagination += '&registros=500';
 
@@ -103,6 +103,10 @@ function toListSubtituloC(beanPagination) {
 	});
 	if (document.querySelector('#txtSubtituloDesde')) {
 		document.querySelector('#txtSubtituloDesde').innerHTML += row;
+		if (clienteSelected) {
+			document.querySelector('#txtSubtituloDesde').value =
+				clienteSelected.subTitulo ? clienteSelected.subTitulo.codigo : '';
+		}
 	}
 
 	document.querySelector('#txtSubtituloHasta').innerHTML += row;

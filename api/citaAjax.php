@@ -60,7 +60,8 @@ if (!empty($RESULTADO_token)) {
                         $insCitaClass->setEstadoSolicitud($personData->estadoSolicitud);
                         $insCitaClass->setAsunto($personData->asunto);
                         $insCitaClass->setTipo($personData->tipo);
-
+                        $insCitaClass->setClienteExterno($personData->clienteExterno);
+                        $insCitaClass->setFechaSolicitud($personData->fechaSolicitud);
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo $inscita->agregar_cita_controlador($insCitaClass);
@@ -69,9 +70,15 @@ if (!empty($RESULTADO_token)) {
                             $personData = json_decode($_POST['class']);
                             $insCitaClass = new Cita();
                             $insCitaClass->setIdcita($personData->idcita);
+                            $insCitaClass->setCliente($personData->cliente);
+                            $insCitaClass->setSubtitulo($personData->subtitulo);
                             $insCitaClass->setEstadoSolicitud($personData->estadoSolicitud);
                             $insCitaClass->setFechaAtendida($personData->fechaAtendida);
-                                                        header("HTTP/1.1 200");
+                            $insCitaClass->setFechaSolicitud($personData->fechaSolicitud);
+                            $insCitaClass->setAsunto($personData->asunto);
+                            $insCitaClass->setTipo($personData->tipo);
+                            $insCitaClass->setClienteExterno($personData->clienteExterno);
+                            header("HTTP/1.1 200");
                             header('Content-Type: application/json; charset=utf-8');
                             echo $inscita->actualizar_cita_controlador($insCitaClass);
                         } catch (\Throwable $th) {
@@ -99,6 +106,16 @@ if (!empty($RESULTADO_token)) {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
                         echo json_encode($inscita->datos_cita_controlador("conteo", 0));
+                    } else if ($accion == "cronograma") {
+                        header("HTTP/1.1 200");
+                        header('Content-Type: application/json; charset=utf-8');
+                        $dateInitial = new DateTime($_GET['dateInitial']);
+                        $dateFinally = new DateTime($_GET['dateFinally']);
+                        $insCitaClass = new Cita();
+                        $insCitaClass->setFechaSolicitud($dateInitial->format('Y-m-d'));
+                        $insCitaClass->setFechaAtendida($dateFinally->format('Y-m-d'));
+
+                        echo json_encode($inscita->datos_cita_controlador("fecha", $insCitaClass));
                     } else {
                         header("HTTP/1.1 500");
                     }
