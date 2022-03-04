@@ -9,8 +9,9 @@ var lunesDate,
 	domingoDate = new Date();
 document.addEventListener('DOMContentLoaded', function () {
 	let hoy = new Date();
-	let firstday = new Date(hoy.setDate(hoy.getDate() - hoy.getDay() + 1));
-	let lastday = new Date(hoy.setDate(hoy.getDate() - hoy.getDay() + 7));
+	let firstday = getMonday(hoy);
+	let lastday = addDays(firstday, 6);
+
 	setParameterData(firstday, lastday);
 	$('#modalCargandoCronograma').on('shown.bs.modal', function () {
 		processAjaxCronograma();
@@ -22,47 +23,47 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	$('#btn-regresar-cronograma').click(function () {
-		removeClass(document.querySelector('#seccion-cliente'), 'd-none');
 		addClass(document.querySelector('#htmlCronograma'), 'd-none');
+		if (window.location.pathname.includes('cronograma')) {
+			if (!curso_cSelected.idlibro) {
+				document.querySelector('#cursoHTML').classList.remove('d-none');
+				processAjaxTarea();
+			}
+		} else {
+			removeClass(document.querySelector('#seccion-cliente'), 'd-none');
+		}
 	});
 	$('#btn-filter-anterior').click(function () {
 		let firstday = new Date(),
 			lastday = new Date();
-		firstday = new Date(firstday.setDate(lunesDate.getDate() - 7));
-		lastday = new Date(lastday.setDate(lunesDate.getDate() - 1));
+		firstday = removeDays(lunesDate, 7);
+		lastday = removeDays(lunesDate, 1);
 		setParameterData(firstday, lastday);
 		$('#modalCargandoCronograma').modal('show');
 	});
 	$('#btn-filter-posterior').click(function () {
 		let firstday = new Date(),
 			lastday = new Date();
-		firstday = new Date(
-			firstday.setDate(domingoDate.getDate() - domingoDate.getDay() + 1)
-		);
-		lastday = new Date(
-			lastday.setDate(firstday.getDate() - firstday.getDay() + 7)
-		);
+		firstday = addDays(domingoDate, 1);
+		lastday = addDays(domingoDate, 7);
 		setParameterData(firstday, lastday);
 		$('#modalCargandoCronograma').modal('show');
 	});
 });
+function getMonday(d) {
+	d = new Date(d);
+	var day = d.getDay(),
+		diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+	return new Date(d.setDate(diff));
+}
+
 function setParameterData(firstday, lastday) {
 	lunesDate = firstday;
-	martesDate = new Date(
-		martesDate.setDate(firstday.getDate() - firstday.getDay() + 2)
-	);
-	miercolesDate = new Date(
-		miercolesDate.setDate(firstday.getDate() - firstday.getDay() + 3)
-	);
-	juevesDate = new Date(
-		juevesDate.setDate(firstday.getDate() - firstday.getDay() + 4)
-	);
-	viernesDate = new Date(
-		viernesDate.setDate(firstday.getDate() - firstday.getDay() + 5)
-	);
-	sabadoDate = new Date(
-		sabadoDate.setDate(firstday.getDate() - firstday.getDay() + 6)
-	);
+	martesDate = addDays(firstday, 1);
+	miercolesDate = addDays(firstday, 2);
+	juevesDate = addDays(firstday, 3);
+	viernesDate = addDays(firstday, 4);
+	sabadoDate = addDays(firstday, 5);
 	domingoDate = lastday;
 	document.querySelector('#dateInitial').value =
 		getDateJava(firstday).split('/')[2] +
@@ -204,16 +205,12 @@ function findByTimeStatus(day, time) {
 		(parseInt(time.split(':')[1]) + 30 == 60 ? '00' : '30') +
 		':' +
 		time.split(':')[2];
-	let arrayFilter = new Array();
-	beanPaginationCronograma.list.map((detail) => {
-		if (
+
+	return beanPaginationCronograma.list.find(
+		(detail) =>
 			detail.fechaSolicitud >= parameterFirstDay &&
 			detail.fechaSolicitud < parameterSecondDay
-		) {
-			arrayFilter.push(detail.estadoSolicitud);
-		}
-	});
-	return arrayFilter;
+	);
 }
 function horaEnSegundos(q) {
 	return q * 60 * 60;
@@ -228,7 +225,35 @@ function listarCronograma() {
 	let horaInicio = horaEnSegundos(5);
 	let horaFin = horaEnSegundos(24);
 	let progresion = minutosEnSegundos(30);
-	let row = '';
+	let row = '',
+		rowHead = '';
+	rowHead = `
+	
+	<span class="bg-dark py-2 text-white text-center" style="width:12.5%">HORA</span>
+	<span class="bg-dark py-2 text-white text-center" style="width:12.5%">LUNES  ${getDateJava(
+		lunesDate
+	).slice(0, -5)}</span>
+	<span class="bg-dark py-2 text-white text-center" style="width:12.5%">MARTES  ${getDateJava(
+		martesDate
+	).slice(0, -5)}</span>
+	<span class="bg-dark py-2 text-white text-center" style="width:12.5%">MIERCOLES  ${getDateJava(
+		miercolesDate
+	).slice(0, -5)}</span>
+	<span class="bg-dark py-2 text-white text-center" style="width:12.5%">JUEVES  ${getDateJava(
+		juevesDate
+	).slice(0, -5)}</span>
+	<span class="bg-dark py-2 text-white text-center" style="width:12.5%">VIERNES  ${getDateJava(
+		viernesDate
+	).slice(0, -5)}</span>
+	<span class="bg-dark py-2 text-white text-center" style="width:12.5%">SABADO  ${getDateJava(
+		sabadoDate
+	).slice(0, -5)}</span>
+	<span class="bg-dark py-2 text-white text-center" style="width:12.5%">DOMINGO  ${getDateJava(
+		domingoDate
+	).slice(0, -5)}</span>
+	
+	`;
+
 	while (horaInicio < horaFin) {
 		horaInicio = horaInicio + progresion;
 
@@ -257,129 +282,102 @@ function listarCronograma() {
 			findSabado = findByTimeStatus(sabadoDate, resultado),
 			findDomingo = findByTimeStatus(domingoDate, resultado);
 		row += `<tr >
-		<th scope="row">${resultado}</th>
-		<td class="${
+		<td scope="row">${resultado}</td>
+		<td style="width:12.5%" class="${
 			filterLunes == ''
 				? 'add-cita-cronograma aula-cursor-mano'
-				: findLunes.length == 0
+				: !findLunes
 				? ''
-				: findLunes.includes('1')
-				? 'bg-red-200'
-				: findLunes.includes('3')
+				: findLunes.clienteExterno != ''
 				? 'bg-green-200'
+				: findLunes.fechaAtendida == null
+				? 'bg-blue-200'
 				: ''
 		}" fecha-actual="${resultado + '|' + getDateJava(lunesDate)}">
-		<p class="text-right mb-0 ${filterLunes == '' ? 'd-none' : ''}">
-		<button class="btn btn-dark add-cita-cronograma aula-cursor-mano mb-2" >
-          <i class="zmdi zmdi-plus-square"></i>
-        </button>
-		</p>
+		
 	
 		${filterLunes} </td>
-		<td class="${
+		<td style="width:12.5%" class="${
 			filterMartes == ''
 				? 'add-cita-cronograma aula-cursor-mano'
-				: findMartes.length == 0
+				: !findMartes
 				? ''
-				: findMartes.includes('1')
-				? 'bg-red-200'
-				: findMartes.includes('3')
+				: findMartes.clienteExterno != ''
 				? 'bg-green-200'
+				: findMartes.fechaAtendida == null
+				? 'bg-blue-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(martesDate)}">
-		<p class="text-right mb-0 ${filterMartes == '' ? 'd-none' : ''}">
-		<button class="btn btn-dark add-cita-cronograma aula-cursor-mano mb-2" >
-          <i class="zmdi zmdi-plus-square"></i>
-        </button>
-		</p>
+	
 		${filterMartes}</td>
-		<td class="${
+		<td style="width:12.5%" class="${
 			filterMiercoles == ''
 				? 'add-cita-cronograma aula-cursor-mano'
-				: findMiercoles.length == 0
+				: !findMiercoles
 				? ''
-				: findMiercoles.includes('1')
-				? 'bg-red-200'
-				: findMiercoles.includes('3')
+				: findMiercoles.clienteExterno != ''
 				? 'bg-green-200'
+				: findMiercoles.fechaAtendida == null
+				? 'bg-blue-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(miercolesDate)}">
-		<p class="text-right mb-0 ${filterMiercoles == '' ? 'd-none' : ''}">
-		<button class="btn btn-dark add-cita-cronograma aula-cursor-mano mb-2" >
-          <i class="zmdi zmdi-plus-square"></i>
-        </button>
-		</p>
+		
 		${filterMiercoles}</td>
-		<td class="${
+		<td style="width:12.5%" class="${
 			filterJueves == ''
 				? 'add-cita-cronograma aula-cursor-mano'
-				: findJueves.length == 0
+				: !findJueves
 				? ''
-				: findJueves.includes('1')
-				? 'bg-red-200'
-				: findJueves.includes('3')
+				: findJueves.clienteExterno != ''
 				? 'bg-green-200'
+				: findJueves.fechaAtendida == null
+				? 'bg-blue-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(juevesDate)}">
-		<p class="text-right mb-0 ${filterJueves == '' ? 'd-none' : ''}">
-		<button class="btn btn-dark add-cita-cronograma aula-cursor-mano mb-2" >
-          <i class="zmdi zmdi-plus-square"></i>
-        </button>
-		</p>
+	
 		${filterJueves}</td>
-		<td class="${
+		<td style="width:12.5%" class="${
 			filterViernes == ''
 				? 'add-cita-cronograma aula-cursor-mano'
-				: findViernes.length == 0
+				: !findViernes
 				? ''
-				: findViernes.includes('1')
-				? 'bg-red-200'
-				: findViernes.includes('3')
+				: findViernes.clienteExterno != ''
 				? 'bg-green-200'
+				: findViernes.fechaAtendida == null
+				? 'bg-blue-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(viernesDate)}">
-		<p class="text-right mb-0 ${filterViernes == '' ? 'd-none' : ''}">
-		<button class="btn btn-dark add-cita-cronograma aula-cursor-mano mb-2" >
-          <i class="zmdi zmdi-plus-square"></i>
-        </button>
-		</p>
+		
 		${filterViernes}</td>
-		<td class="${
+		<td style="width:12.5%" class="${
 			filterSabado == ''
 				? 'add-cita-cronograma aula-cursor-mano'
-				: findSabado.length == 0
+				: !findSabado
 				? ''
-				: findSabado.includes('1')
-				? 'bg-red-200'
-				: findSabado.includes('3')
+				: findSabado.clienteExterno != ''
 				? 'bg-green-200'
+				: findSabado.fechaAtendida == null
+				? 'bg-blue-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(sabadoDate)}">
-		<p class="text-right mb-0 ${filterSabado == '' ? 'd-none' : ''}">
-		<button class="btn btn-dark add-cita-cronograma aula-cursor-mano mb-2" >
-          <i class="zmdi zmdi-plus-square"></i>
-        </button>
-		</p>
+		
 		${filterSabado}</td>
-		<td class="${
+		<td  style="width:12.5%" class="${
 			filterDomingo == ''
 				? 'add-cita-cronograma aula-cursor-mano'
-				: findDomingo.length == 0
+				: !findDomingo
 				? ''
-				: findDomingo.includes('1')
-				? 'bg-red-200'
-				: findDomingo.includes('3')
+				: findDomingo.clienteExterno != ''
 				? 'bg-green-200'
+				: findDomingo.fechaAtendida == null
+				? 'bg-blue-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(domingoDate)}">
-		<p class="text-right mb-0 ${filterDomingo == '' ? 'd-none' : ''}">
-		<button class="btn btn-dark add-cita-cronograma aula-cursor-mano mb-2" >
-          <i class="zmdi zmdi-plus-square"></i>
-        </button>
-		</p>
+		
 		${filterDomingo}</td>
 	</tr>`;
 	}
+	document.querySelector('#theadCronograma').innerHTML = rowHead;
 	document.querySelector('#tbodyCronograma').innerHTML += row;
 	addEventsButtonsCronograma();
 }
@@ -492,7 +490,6 @@ function addEventsButtonsCronograma() {
 			}
 		};
 	});
-
 	document.querySelectorAll('.eliminar-cita-cronograma').forEach((btn) => {
 		//AGREGANDO EVENTO CLICK
 		btn.onclick = function () {

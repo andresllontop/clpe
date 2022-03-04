@@ -17,7 +17,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelector('#tipoOpcionHeaderCurso').innerHTML = 'CITAS';
 	document.querySelector('#titleManagerCurso_c').innerHTML = 'CITAS';
 	//$('#modalCargandoCurso_c').modal('show');
-	processAjaxTarea();
+	if (window.location.pathname.includes('cronograma')) {
+		curso_cSelected = { codigo: 'L01', name: 'PIENSE Y HÁGASE RICO' };
+		document.querySelector('#cursoHTML').classList.add('d-none');
+		document.querySelector('#htmlCronograma').classList.remove('d-none');
+		$('#modalCargandoCronograma').modal('show');
+	} else {
+		processAjaxTarea();
+	}
+
 	$('#modalCargandoCliente').on('shown.bs.modal', function () {
 		processAjaxCliente();
 	});

@@ -214,12 +214,10 @@ class tareaModelo extends mainModel
                             or admmini.AdminApellido like concat('%',?, '%') )
                         and lec.tipo = 0 and (lec.codigo_subtitulo like concat('%',?,'%'))
                     group by
-                        lec.cuenta LIMIT ?,?");
+                        lec.cuenta");
                         $stmt->bindValue(1, $Leccion->getCuenta(), PDO::PARAM_STR);
                         $stmt->bindValue(2, $Leccion->getCuenta(), PDO::PARAM_STR);
                         $stmt->bindValue(3, $Leccion->getTipo(), PDO::PARAM_STR);
-                        $stmt->bindValue(4, $inicio, PDO::PARAM_INT);
-                        $stmt->bindValue(5, $registros, PDO::PARAM_INT);
                         $stmt->execute();
                         $datos = $stmt->fetchAll();
 

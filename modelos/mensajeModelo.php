@@ -156,7 +156,7 @@ class mensajeModelo extends mainModel
                     $stmt->execute();
                     $insBeanPagination->setList(array("countAlumnoResumen" => count($stmt->fetchAll())));
 
-                    $stmt = $conexion->prepare("SELECT COUNT(idcita) AS CONTADOR FROM `cita`");
+                    $stmt = $conexion->prepare("SELECT COUNT(idcita) AS CONTADOR FROM `cita` WHERE fecha_atendida IS NULL");
                     $stmt->execute();
                     $datos = $stmt->fetchAll();
                     foreach ($datos as $row) {

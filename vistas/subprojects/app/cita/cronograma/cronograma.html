@@ -35,23 +35,20 @@
                     class="zmdi zmdi-long-arrow-right zmdi-hc-2x"></i></button>
         </div>
     </div>
-    <table class="table table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">HORA</th>
-                <th scope="col">LUNES</th>
-                <th scope="col">MARTES</th>
-                <th scope="col">MIERCOLES</th>
-                <th scope="col">JUEVES</th>
-                <th scope="col">VIERNES</th>
-                <th scope="col">SABADO</th>
-                <th scope="col">DOMINGO</th>
-            </tr>
-        </thead>
-        <tbody id="tbodyCronograma">
+    <div id="theadCronograma" class="row px-3">
 
-        </tbody>
-    </table>
+    </div>
+    <div style="display: block; position: relative;
+    height: 290px;
+    overflow: auto;">
+        <table class="table table-bordered">
+
+            <tbody id="tbodyCronograma">
+
+            </tbody>
+        </table>
+    </div>
+
 </div>
 <div class="modal fade" id="modalCargandoCronograma" data-backdrop="static" data-keyboard="false" tabindex="-1"
     role="dialog" style="padding-top: 40vh; overflow-y: visible; display: none;" aria-hidden="true">
