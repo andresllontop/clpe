@@ -4,6 +4,7 @@ class Cita
 {
     private $idcita;
     private $tipo;
+    private $color;
     private $cliente;
     private $clienteExterno;
     private $asunto;
@@ -90,11 +91,20 @@ class Cita
     {
         return $this->asunto;
     }
+    public function setColor($color)
+    {
+        $this->color = $color;
+    }
+    public function getColor()
+    {
+        return $this->color;
+    }
     public function __toString()
     {
         return
         array(
             "subtitulo" => $this->subtitulo,
+            "color" => $this->color,
             "asunto" => $this->asunto,
             "estadoSolicitud" => $this->estadoSolicitud,
             "fechaSolicitud" => $this->fechaSolicitud,

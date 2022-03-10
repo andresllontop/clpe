@@ -60,6 +60,7 @@ if (!empty($RESULTADO_token)) {
                         $insCitaClass->setEstadoSolicitud($personData->estadoSolicitud);
                         $insCitaClass->setAsunto($personData->asunto);
                         $insCitaClass->setTipo($personData->tipo);
+                        $insCitaClass->setColor($personData->color);
                         $insCitaClass->setClienteExterno($personData->clienteExterno);
                         $insCitaClass->setFechaSolicitud($personData->fechaSolicitud);
                         header("HTTP/1.1 200");
@@ -77,6 +78,7 @@ if (!empty($RESULTADO_token)) {
                             $insCitaClass->setFechaSolicitud($personData->fechaSolicitud);
                             $insCitaClass->setAsunto($personData->asunto);
                             $insCitaClass->setTipo($personData->tipo);
+                            $insCitaClass->setColor($personData->color);
                             $insCitaClass->setClienteExterno($personData->clienteExterno);
                             header("HTTP/1.1 200");
                             header('Content-Type: application/json; charset=utf-8');

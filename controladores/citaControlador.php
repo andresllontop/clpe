@@ -22,6 +22,7 @@ class citaControlador extends citaModelo
             $Cita->setTipo(mainModel::limpiar_cadena($Cita->getTipo()));
             $Cita->setClienteExterno(mainModel::limpiar_cadena($Cita->getClienteExterno()));
             $Cita->setAsunto(mainModel::limpiar_cadena($Cita->getAsunto()));
+            $Cita->setColor(mainModel::limpiar_cadena($Cita->getColor()));
             $citaLista = citaModelo::datos_cita_modelo($this->conexion_db, 'add', $Cita);
             if ($citaLista['countFilter'] > 0) {
                 $insBeanCrud->setMessageServer('El Subtitulo para esta Cita ya se encuentra registrada');
@@ -110,6 +111,7 @@ class citaControlador extends citaModelo
                         $inscita = new Cita();
                         $inscita->setIdcita($row['idcita']);
                         $inscita->setTipo($row['tipo']);
+                        $inscita->setColor($row['color']);
                         $inscita->setAsunto($row['asunto']);
                         $inscita->setEstadoSolicitud($row['estado_solicitud']);
                         $inscita->setFechaSolicitud($row['fecha_solicitud']);
@@ -212,6 +214,7 @@ class citaControlador extends citaModelo
             $Cita->setCliente(mainModel::limpiar_cadena($Cita->getCliente()));
             $Cita->setTipo(mainModel::limpiar_cadena($Cita->getTipo()));
             $Cita->setAsunto(mainModel::limpiar_cadena($Cita->getAsunto()));
+            $Cita->setColor(mainModel::limpiar_cadena($Cita->getColor()));
             $citaLista = citaModelo::datos_cita_modelo($this->conexion_db, "unico", $Cita);
             if ($citaLista["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("error en el servidor, No hemos encontrado la cita");

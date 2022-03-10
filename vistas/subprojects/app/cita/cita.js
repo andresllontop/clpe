@@ -148,6 +148,7 @@ function clickUpdateCita() {
 		processAjaxSubtituloC(undefined);
 	}
 	document.querySelector('#txtFechaCita').value = citaSelected.fechaAtendida;
+	document.querySelector('#txtColorCita').value = citaSelected.color;
 	document.querySelector('#txtFechaSolicitudCita').value =
 		citaSelected.fechaSolicitud.split(' ')[0] +
 		'T' +
@@ -396,6 +397,9 @@ function processAjaxCita() {
 					: '',
 			fechaSolicitud: document.querySelector('#txtFechaSolicitudCita').value,
 			estadoSolicitud: 1,
+			color: document.querySelector('#citaColorNinguno').checked
+				? ''
+				: document.querySelector('#txtColorCita').value,
 			asunto: document.querySelector('#txtTipoCita').checked
 				? ''
 				: document.querySelector('#txtAsuntoCita').value,

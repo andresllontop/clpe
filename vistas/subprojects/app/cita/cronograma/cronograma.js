@@ -49,6 +49,16 @@ document.addEventListener('DOMContentLoaded', function () {
 		setParameterData(firstday, lastday);
 		$('#modalCargandoCronograma').modal('show');
 	});
+	$('input:radio[name="citaColor"]').change(function (e) {
+		console.log($(this).val());
+		if ($(this).val() == '1') {
+			document.querySelector('#txtColorCita').value = '#f9f348';
+		} else if ($(this).val() == '2') {
+			document.querySelector('#txtColorCita').value = '#ee7474';
+		} else {
+			document.querySelector('#txtColorCita').value = '';
+		}
+	});
 });
 function getMonday(d) {
 	d = new Date(d);
@@ -160,15 +170,15 @@ function filterByTime(day, time) {
 		}
 	});
 	value.forEach((element) => {
-		row += `<div style="display: flex;justify-content: space-between;"><span>- ${
+		row += `<div style="width: 110px;"><p class="text-truncate">- ${
 			element.clienteExterno == null || element.clienteExterno == ''
 				? element.cliente.nombre != null
 					? element.cliente.nombre + ' ' + element.cliente.apellido
 					: element.asunto
 				: element.clienteExterno
-		}</span><span idcita="${element.idcita}">${
+		}</p><span idcita="${element.idcita}">${
 			element.fechaAtendida == null || element.fechaAtendida == ''
-				? '<button class="btn btn-warning atendido-cita-cronograma p-0 mx-1 px-1"><small>PEND</small></button>'
+				? '<button class="btn btn-warning atendido-cita-cronograma p-0 px-1"><small>PEND</small></button>'
 				: ''
 		}<button class="btn btn-info update-cita-cronograma p-0 mx-1 px-1"><i class="zmdi zmdi-edit"></i></button>
 			<button class="btn btn-danger eliminar-cita-cronograma p-0 px-1"><i class="zmdi zmdi-delete"></i></button>	</span>
@@ -283,94 +293,137 @@ function listarCronograma() {
 			findDomingo = findByTimeStatus(domingoDate, resultado);
 		row += `<tr >
 		<td scope="row">${resultado}</td>
-		<td style="width:12.5%" class="${
+		<td style="width:12.5%; ${
+			filterLunes == ''
+				? ''
+				: findLunes.color != null && findLunes.fechaAtendida == null
+				? 'background-color: ' + findLunes.color + ' !important;'
+				: ''
+		}" class="${
 			filterLunes == ''
 				? 'add-cita-cronograma aula-cursor-mano'
 				: !findLunes
 				? ''
-				: findLunes.clienteExterno != ''
-				? 'bg-green-200'
-				: findLunes.fechaAtendida == null
+				: findLunes.fechaAtendida != null
 				? 'bg-blue-200'
+				: findLunes.clienteExterno == '' && findLunes.fechaAtendida == null
+				? 'bg-green-200'
 				: ''
 		}" fecha-actual="${resultado + '|' + getDateJava(lunesDate)}">
 		
 	
 		${filterLunes} </td>
-		<td style="width:12.5%" class="${
+		<td style="width:12.5%; ${
+			filterMartes == ''
+				? ''
+				: findMartes.color != null && findMartes.fechaAtendida == null
+				? 'background-color: ' + findMartes.color + ' !important;'
+				: ''
+		}" class="${
 			filterMartes == ''
 				? 'add-cita-cronograma aula-cursor-mano'
 				: !findMartes
 				? ''
-				: findMartes.clienteExterno != ''
-				? 'bg-green-200'
-				: findMartes.fechaAtendida == null
+				: findMartes.fechaAtendida != null
 				? 'bg-blue-200'
+				: findMartes.clienteExterno == '' && findMartes.fechaAtendida == null
+				? 'bg-green-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(martesDate)}">
 	
 		${filterMartes}</td>
-		<td style="width:12.5%" class="${
+		<td style="width:12.5%; ${
+			filterMiercoles == ''
+				? ''
+				: findMiercoles.color != null && findMiercoles.fechaAtendida == null
+				? 'background-color: ' + findMiercoles.color + ' !important;'
+				: ''
+		}" class="${
 			filterMiercoles == ''
 				? 'add-cita-cronograma aula-cursor-mano'
 				: !findMiercoles
 				? ''
-				: findMiercoles.clienteExterno != ''
-				? 'bg-green-200'
-				: findMiercoles.fechaAtendida == null
+				: findMiercoles.fechaAtendida != null
 				? 'bg-blue-200'
+				: findMiercoles.clienteExterno == '' &&
+				  findMiercoles.fechaAtendida == null
+				? 'bg-green-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(miercolesDate)}">
 		
 		${filterMiercoles}</td>
-		<td style="width:12.5%" class="${
+		<td style="width:12.5%; ${
+			filterJueves == ''
+				? ''
+				: findJueves.color != null && findJueves.fechaAtendida == null
+				? 'background-color: ' + findJueves.color + ' !important;'
+				: ''
+		}" class="${
 			filterJueves == ''
 				? 'add-cita-cronograma aula-cursor-mano'
 				: !findJueves
 				? ''
-				: findJueves.clienteExterno != ''
-				? 'bg-green-200'
-				: findJueves.fechaAtendida == null
+				: findJueves.fechaAtendida != null
 				? 'bg-blue-200'
+				: findJueves.clienteExterno == '' && findJueves.fechaAtendida == null
+				? 'bg-green-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(juevesDate)}">
 	
 		${filterJueves}</td>
-		<td style="width:12.5%" class="${
+		<td style="width:12.5%; ${
+			filterViernes == ''
+				? ''
+				: findViernes.color != null && findViernes.fechaAtendida == null
+				? 'background-color: ' + findViernes.color + ' !important;'
+				: ''
+		}" class="${
 			filterViernes == ''
 				? 'add-cita-cronograma aula-cursor-mano'
 				: !findViernes
 				? ''
-				: findViernes.clienteExterno != ''
-				? 'bg-green-200'
-				: findViernes.fechaAtendida == null
+				: findViernes.fechaAtendida != null
 				? 'bg-blue-200'
+				: findViernes.clienteExterno == '' && findViernes.fechaAtendida == null
+				? 'bg-green-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(viernesDate)}">
 		
 		${filterViernes}</td>
-		<td style="width:12.5%" class="${
+		<td style="width:12.5%; ${
+			filterSabado == ''
+				? ''
+				: filterSabado.color != null && filterSabado.fechaAtendida == null
+				? 'background-color: ' + filterSabado.color + ' !important;'
+				: ''
+		}" class="${
 			filterSabado == ''
 				? 'add-cita-cronograma aula-cursor-mano'
 				: !findSabado
 				? ''
-				: findSabado.clienteExterno != ''
-				? 'bg-green-200'
-				: findSabado.fechaAtendida == null
+				: findSabado.fechaAtendida != null
 				? 'bg-blue-200'
+				: findSabado.clienteExterno == '' && findSabado.fechaAtendida == null
+				? 'bg-green-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(sabadoDate)}">
 		
 		${filterSabado}</td>
-		<td  style="width:12.5%" class="${
+		<td  style="width:12.5%; ${
+			filterDomingo == ''
+				? ''
+				: filterDomingo.color != null && filterDomingo.fechaAtendida == null
+				? 'background-color: ' + filterDomingo.color + ' !important;'
+				: ''
+		}" class="${
 			filterDomingo == ''
 				? 'add-cita-cronograma aula-cursor-mano'
 				: !findDomingo
 				? ''
-				: findDomingo.clienteExterno != ''
-				? 'bg-green-200'
-				: findDomingo.fechaAtendida == null
+				: findDomingo.fechaAtendida != null
 				? 'bg-blue-200'
+				: findDomingo.clienteExterno == '' && findDomingo.fechaAtendida == null
+				? 'bg-green-200'
 				: ''
 		}"  fecha-actual="${resultado + '|' + getDateJava(domingoDate)}">
 		

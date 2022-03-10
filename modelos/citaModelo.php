@@ -12,8 +12,8 @@ class citaModelo extends mainModel
     protected function agregar_cita_modelo($conexion, $Cita)
     {
         $sql = $conexion->prepare("INSERT INTO
-        `cita`(tipo,cliente,subtitulo,estado_solicitud,fecha_solicitud,asunto,cliente_externo)
-        VALUES(:Tipo,:Cliente,:SubTitulo,:Estado,:Fecha,:Asunto,:ClienteExterno)");
+        `cita`(tipo,cliente,subtitulo,estado_solicitud,fecha_solicitud,asunto,cliente_externo,color)
+        VALUES(:Tipo,:Cliente,:SubTitulo,:Estado,:Fecha,:Asunto,:ClienteExterno,:Color)");
         $sql->bindValue(":Cliente", $Cita->getCliente(), PDO::PARAM_STR);
         $sql->bindValue(":Tipo", $Cita->getTipo(), PDO::PARAM_INT);
         $sql->bindValue(":Estado", $Cita->getEstadoSolicitud(), PDO::PARAM_INT);
@@ -21,6 +21,7 @@ class citaModelo extends mainModel
         $sql->bindValue(":Asunto", $Cita->getAsunto(), PDO::PARAM_STR);
         $sql->bindValue(":ClienteExterno", $Cita->getClienteExterno(), PDO::PARAM_STR);
         $sql->bindValue(":Fecha", $Cita->getFechaSolicitud());
+        $sql->bindValue(":Color", $Cita->getColor(), PDO::PARAM_STR);
         return $sql;
     }
     protected function datos_cita_modelo($conexion, $tipo, $cita)
@@ -162,6 +163,7 @@ class citaModelo extends mainModel
                                 $inscita->setIdcita($row['idcita']);
                                 $inscita->setClienteExterno($row['cliente_externo']);
                                 $inscita->setTipo($row['tipo']);
+                                $inscita->setColor($row['color']);
                                 $inscita->setAsunto($row['asunto']);
                                 $inscita->setSubtitulo($row['subtitulo']);
                                 $inscita->setEstadoSolicitud($row['estado_solicitud']);
