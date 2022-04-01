@@ -170,7 +170,7 @@ function filterByTime(day, time) {
 		}
 	});
 	value.forEach((element) => {
-		row += `<div style="width: 110px;"><p class="text-truncate">- ${
+		row += `<div style="width: 110px;"><p class="text-truncate"> ${
 			element.clienteExterno == null || element.clienteExterno == ''
 				? element.cliente.nombre != null
 					? element.cliente.nombre + ' ' + element.cliente.apellido
@@ -393,8 +393,8 @@ function listarCronograma() {
 		<td style="width:12.5%; ${
 			filterSabado == ''
 				? ''
-				: filterSabado.color != null && filterSabado.fechaAtendida == null
-				? 'background-color: ' + filterSabado.color + ' !important;'
+				: findSabado.color != null && findSabado.fechaAtendida == null
+				? 'background-color: ' + findSabado.color + ' !important;'
 				: ''
 		}" class="${
 			filterSabado == ''
@@ -412,8 +412,8 @@ function listarCronograma() {
 		<td  style="width:12.5%; ${
 			filterDomingo == ''
 				? ''
-				: filterDomingo.color != null && filterDomingo.fechaAtendida == null
-				? 'background-color: ' + filterDomingo.color + ' !important;'
+				: findDomingo.color != null && findDomingo.fechaAtendida == null
+				? 'background-color: ' + findDomingo.color + ' !important;'
 				: ''
 		}" class="${
 			filterDomingo == ''
