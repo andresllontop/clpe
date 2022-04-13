@@ -5,7 +5,7 @@ function getHostAPI() {
 
 /* HOST FRONTED*/
 function getHostAPP() {
-  return 'http://localhost:8888/';
+  return 'http://clpe.local/';
   //  return 'https://clpe5.com/'
   ;
 }

@@ -65,9 +65,12 @@ class SecurityFilter
     {
         require_once './core/configGeneral.php';
         require_once "core/configAPP.php";
-        $values_path = $_SERVER['REDIRECT_URL'];
-
+        $values_path = $_SERVER['REQUEST_URI'];
+        
+        //$values_path = $_SERVER['REDIRECT_URL'];
+        $values_path = explode("?", $values_path)[0];
         //HACEMOS UN SPLIT PARA DEJAR EL PATH SIN PARAMETROS
+
         $values_path = explode("/", $values_path);
         $accion = $values_path[sizeof($values_path) - 1];
         $resultadoTOKEN = $this->validarBearerToken();

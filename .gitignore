@@ -206,7 +206,9 @@ adjuntos/video-usuarios/AC9841510229L01N0101042021-05-14-12-40-090.mp4
 adjuntos/video-usuarios/AC9841510229L01N0101052021-05-14-12-40-230.mp4
 vistas/subprojects/publico/comprar/x.sql
 core/config.inc.php
-core/config.inc.php
-core/config.inc.php
 core/configAPP.php
-modelos/mensajeModelo.php
+core/configGeneral.php
+core/functions.php
+core/mainModel.php
+api/security
+api/pago

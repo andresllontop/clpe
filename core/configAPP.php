@@ -1,5 +1,5 @@
 <?php
-const SERVER = "localhost";
+const SERVER = "http://clpe.local/";
 //const SERVER = "http://clpe5.com/";
 const DB = "clpecom_aula";
 
@@ -7,7 +7,7 @@ const DB = "clpecom_aula";
 //const PASS = "*";
 //const SGDB = "*";
 const USER = "root";
-const PASS = "";
+const PASS = "root";
 const SGDB = "*";
 
 const METHOD = "*";
