@@ -2,6 +2,7 @@
 require_once './api/security/filter.php';
 $insFilter = new SecurityFilter();
 $RESULTADO_token = $insFilter->HeaderToken();
+
 if (!empty($RESULTADO_token)) {
     require_once './classes/principal/administrador.php';
     require_once './classes/principal/cuenta.php';
