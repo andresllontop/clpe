@@ -10,6 +10,7 @@ function generateToken()
         CURLOPT_ENCODING => "",
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_HTTPHEADER => array(
             "Accept: */*",
             'Authorization: ' . 'Basic ' . base64_encode(VISA_USER . ":" . VISA_PWD),
@@ -17,6 +18,7 @@ function generateToken()
     ));
     $response = curl_exec($curl);
     curl_close($curl);
+
     return $response;
 }
 
@@ -77,6 +79,7 @@ function postRequest($url, $postData, $token)
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_CUSTOMREQUEST => "POST",
         CURLOPT_HTTPHEADER => array(
             'Authorization: ' . $token,
@@ -102,6 +105,7 @@ function generateTokenization($transactionToken, $token)
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_HTTPHEADER => array(
             'Authorization: ' . $token,
             'Content-Type: application/json',

@@ -12,19 +12,21 @@ class mainModel
             $conexion_db->exec(" SET CHARACTER SET 'utf8' ");
             //para tildes y ñ
             return $conexion_db;
-        } catch (Exception $th) {
-            echo ("la linea de error es:" . $th->getLine());
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
         }
 
     }
 
     protected function encryption($string)
     {
+
         $output = false;
         $key = hash('sha256', SECRET_KEY);
         $iv = substr(hash('sha256', SECRET_IV), 0, 16);
         $output = openssl_encrypt($string, METHOD, $key, 0, $iv);
         $output = base64_encode($output);
+
         return $output;
     }
     protected function decryption($string)
@@ -83,8 +85,8 @@ class mainModel
             if ($cantidad == 1) {
                 $arr = explode('/', $array[0]);
                 $igualultimo = array_pop($arr);
-                if ( $igualultimo== $nombreImagen) {
-                    $nombreImagen="other-".$nombreImagen;
+                if ($igualultimo == $nombreImagen) {
+                    $nombreImagen = "other-" . $nombreImagen;
                 }
             }
             $resultado_guardado = move_uploaded_file($original['tmp_name'], $destino . $nombreImagen);
