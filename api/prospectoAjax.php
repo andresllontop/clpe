@@ -2,19 +2,20 @@
 
 require_once './api/security/filter.php';
 $insFilter = new SecurityFilter();
-
 $RESULTADO_token = $insFilter->HeaderToken();
+
 if (!empty($RESULTADO_token)) {
     require_once './classes/principal/prospecto.php';
     require_once './controladores/prospectoControlador.php';
     $insprospecto = new prospectoControlador();
     $accion = $RESULTADO_token->accion;
     if (isset($RESULTADO_token->tipo)) {
-        if($RESULTADO_token->tipo==1){
+
+        if ($RESULTADO_token->tipo == 1) {
             switch ($_SERVER['REQUEST_METHOD']) {
 
                 case 'POST':
-    
+
                     if ($accion == "add") {
                         $personData = json_decode($_POST['class']);
                         $insProspectoClass = new Prospecto();
@@ -48,9 +49,9 @@ if (!empty($RESULTADO_token)) {
                     } else {
                         header("HTTP/1.1 500");
                     }
-    
+
                     break;
-    
+
                 case 'GET':
                     if ($accion == "delete") {
                         header("HTTP/1.1 200");
@@ -61,7 +62,8 @@ if (!empty($RESULTADO_token)) {
                     } else if ($accion == "paginate") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
-                        echo json_encode($insprospecto->bean_paginador_prospecto_controlador($_GET['pagina'], $_GET['registros']));
+
+                        echo json_encode($insprospecto->bean_paginador_prospecto_controlador($_GET['pagina'], $_GET['registros'], $_GET['filtro']));
                     } else if ($accion == "obtener") {
                         header("HTTP/1.1 200");
                         header('Content-Type: application/json; charset=utf-8');
@@ -69,7 +71,7 @@ if (!empty($RESULTADO_token)) {
                     } else {
                         header("HTTP/1.1 500");
                     }
-    
+
                     break;
                 default:
                     session_start();
@@ -79,7 +81,7 @@ if (!empty($RESULTADO_token)) {
                     break;
             }
         }
-     
+
     } else {
         return header("HTTP/1.1 403");
     }

@@ -4,8 +4,8 @@ require_once './modelos/prospectoModelo.php';
 require_once './classes/other/beanCrud.php';
 require_once './classes/other/beanPagination.php';
 
-require_once './classes/principal/cliente.php';
-require_once './classes/principal/subtitulo.php';
+require_once './classes/principal/prospecto.php';
+
 class prospectoControlador extends prospectoModelo
 {
     public function agregar_prospecto_controlador($Prospecto)
@@ -81,7 +81,8 @@ class prospectoControlador extends prospectoModelo
     {
         $insBeanPagination = new BeanPagination();
         try {
-            $stmt = $conexion->prepare("SELECT COUNT(idprospecto) AS CONTADOR  FROM `prospecto` WHERE nombre=?");
+
+            $stmt = $conexion->prepare("SELECT COUNT(idprospecto) AS CONTADOR  FROM `prospecto` WHERE nombre LIKE CONCAT('%',?,'%') ");
             $stmt->bindValue(1, $filter, PDO::PARAM_STR);
             $stmt->execute();
             $datos = $stmt->fetchAll();
@@ -89,7 +90,7 @@ class prospectoControlador extends prospectoModelo
                 $insBeanPagination->setCountFilter($row['CONTADOR']);
 
                 if ($row['CONTADOR'] > 0) {
-                    $stmt = $conexion->prepare("SELECT * FROM `prospecto` WHERE nombre=? ORDER BY idprospectoDESC LIMIT ?,?");
+                    $stmt = $conexion->prepare("SELECT * FROM `prospecto` WHERE nombre LIKE CONCAT('%',?,'%')  ORDER BY idprospecto DESC LIMIT ?,? ");
                     $stmt->bindValue(1, $filter, PDO::PARAM_STR);
                     $stmt->bindValue(2, $inicio, PDO::PARAM_INT);
                     $stmt->bindValue(3, $registros, PDO::PARAM_INT);
@@ -104,7 +105,7 @@ class prospectoControlador extends prospectoModelo
                         $insProspecto->setPais($row['pais']);
                         $insProspecto->setTelefono($row['telefono']);
                         $insProspecto->setIdFatherProspecto($row['father_idprospecto']);
-                        $insBeanPagination->setList($insprospecto->__toString());
+                        $insBeanPagination->setList($insProspecto->__toString());
                     }
                 }
             }
@@ -238,5 +239,5 @@ class prospectoControlador extends prospectoModelo
         }
         return json_encode($insBeanCrud->__toString());
     }
-   
+
 }
