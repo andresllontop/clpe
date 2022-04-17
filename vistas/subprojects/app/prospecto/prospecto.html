@@ -7,37 +7,68 @@
 <div class="container-fluid ">
 
     <div class="row">
-        <div class="col-5 pr-0">
-            <div class="table-responsive" id="tbodyProspecto">
+        <div class="col-sm-5 pr-0">
+            <div class="card px-0">
+                <div class="card-header">Información de la red de distribuidores</div>
+                <div class="card-body p-1">
+                    <div class="table-responsive" id="tbodyProspecto">
 
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-7">
-            <div class="tab-content border">
-                <form id="formularioProspecto" autocomplete="off">
-                    <h4 class="modal-title text-center w-100" id="tituloModalManProspecto"></h4>
-                    <div class="modal-body" style="padding-top:5%;">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-10 col-sm-offset-1">
-                                <div class="group-material">
-                                    <input id="txtNombreProspecto" type="text" class="material-control tooltips-general"
-                                        placeholder="Nombre completo" required="" maxlength="50">
-                                    <span class="highlight"></span>
-                                    <span class="bar"></span>
-                                    <label class="all-tittles">Nombre </label>
+        <div class="col-sm-7">
+            <div class="card px-0">
+                <div class="card-header">Información Básica</div>
+                <div class="card-body p-1">
+                    <div class="tab-content">
+                        <form id="formularioProspecto" autocomplete="off">
+                            <h4 class="modal-title text-center w-100" id="tituloModalManProspecto"></h4>
+                            <div class="modal-body" style="padding-top:5%;">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <div class="group-material">
+                                            <input id="txtNombreProspecto" type="text"
+                                                class="material-control tooltips-general" required="" maxlength="50">
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <label class="all-tittles">NOMBRE </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6">
+                                        <div class="group-material">
+                                            <input id="txtTelefonoProspecto" type="text"
+                                                class="material-control tooltips-general" required="" maxlength="12">
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <label class="all-tittles">TELEFONO </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6">
+                                        <div class="group-material">
+                                            <input id="txtPaisProspecto" type="text"
+                                                class="material-control tooltips-general" required="" maxlength="25">
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <label class="all-tittles">PAIS </label>
+                                        </div>
+
+                                    </div>
                                 </div>
-
                             </div>
-                        </div>
+                            <div class="modal-footer d-none">
+                                <button type="submit" class="btn btn-primary">
+                                    GUARDAR
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">
-                            GUARDAR
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 

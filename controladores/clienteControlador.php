@@ -25,6 +25,7 @@ class clienteControlador extends clienteModelo
             $insLibroCuenta = new LibroCuenta();
             $insLibroCuenta->setLibro(mainModel::limpiar_cadena($Cliente->getcuenta()->libro));
             $insLibroCuenta->setMonto(0);
+            $insLibroCuenta->setEstado(0);
             $insLibroCuenta->setImagen('');
             $insLibroCuenta->setFecha($Cliente->getFecha());
             $insCuenta = new Cuenta();
@@ -59,8 +60,10 @@ class clienteControlador extends clienteModelo
                                     $insCuenta->setCuentaCodigo($cuentacodigo);
 
                                     $stmt = clienteModelo::agregar_cuenta_modelo($this->conexion_db, $insCuenta);
+
                                     if ($stmt->execute()) {
                                         $Cliente->setCuenta($cuentacodigo);
+
                                         $stmt = clienteModelo::agregar_cliente_modelo($this->conexion_db, $Cliente);
                                         if ($stmt->execute()) {
                                             $insLibroCuenta->setCuenta($cuentacodigo);

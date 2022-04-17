@@ -57,6 +57,29 @@ class prospectoModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+                case "getCuentaByNombre":
+                    $stmt = $conexion->prepare("SELECT COUNT(id) AS CONTADOR FROM `administrador`");
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $conexion->prepare("SELECT Cuenta_Codigo FROM `administrador`
+                                WHERE CONCAT(AdminNombre,' ',AdminApellido)=:Nombre");
+                            $stmt->bindValue(":Nombre", $prospecto->getNombre(), PDO::PARAM_INT);
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+                            foreach ($datos as $row) {
+                                $insProspecto = new Prospecto();
+                                $insProspecto->setCuenta($row['Cuenta_Codigo']);
+
+                                $insBeanPagination->setList($insProspecto->__toString());
+                            }
+                        }
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 case "conteo":
                     $stmt = $conexion->prepare("SELECT COUNT(idprospecto) AS CONTADOR FROM `prospecto`");
                     $stmt->execute();

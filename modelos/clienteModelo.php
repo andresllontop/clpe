@@ -556,6 +556,7 @@ class clienteModelo extends mainModel
     }
     protected function agregar_cuenta_modelo($conexion, $cuenta)
     {
+   
 
         $sql = $conexion->prepare("INSERT INTO `cuenta` (CuentaCodigo,usuario,clave,email,estado,tipo)
          VALUES(?,?,?,?,?,?)");
@@ -566,7 +567,7 @@ class clienteModelo extends mainModel
         $sql->bindValue(4, $cuenta->getEmail(), PDO::PARAM_STR);
         $sql->bindValue(5, $cuenta->getEstado(), PDO::PARAM_STR);
         $sql->bindValue(6, $cuenta->getTipo(), PDO::PARAM_STR);
-
+       
         return $sql;
 
     }

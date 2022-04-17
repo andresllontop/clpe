@@ -328,6 +328,9 @@ row +=
 </ul>
 </li>
 <li class="dt-side-nav__item">
+<a href="${contextPah}app/prospectos" class="dt-side-nav__link"><i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i>&nbsp;&nbsp;PROSPECTOS</a>
+</li>
+<li class="dt-side-nav__item">
 <a href="${contextPah}app/notificaciones" class="dt-side-nav__link"><i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i>&nbsp;&nbsp;NOTIFICACIONES</a>
 </li>
 <li class="dt-side-nav__item">

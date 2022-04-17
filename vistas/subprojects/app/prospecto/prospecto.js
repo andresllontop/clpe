@@ -156,7 +156,9 @@ function listaProspecto(beanPagination) {
 	let list = new Array();
 	list = filterByFatherId(beanPagination.list, null);
 	list.forEach((p) => {
-		row += `<li class="list-group-item px-1" idprospecto="${p.idprospecto}"><div class="ver-prospecto aula-cursor-mano"><i class="zmdi zmdi-plus text-info mx-2"></i><span>${p.nombre}</span></div><div></div></li>`;
+		row += `<li class="list-group-item px-1" idprospecto="${
+			p.idprospecto
+		}"><div class="ver-prospecto aula-cursor-mano"><i class="zmdi zmdi-plus text-info mx-2"></i><span>${p.nombre.toUpperCase()}</span></div><div></div></li>`;
 	});
 	row += '</ol>';
 	document.querySelector('#tbodyProspecto').innerHTML += row;
@@ -170,7 +172,9 @@ function listFilterProspecto(value) {
 	list = filterByFatherId(beanPaginationProspecto.list, value);
 	console.log(list);
 	list.forEach((p) => {
-		row += `<li class="list-group-item px-1" idprospecto="${p.idprospecto}"><div class="ver-prospecto aula-cursor-mano"> <i class="zmdi zmdi-plus text-info mx-2"></i><span>${p.nombre}</span></div><div></div></li>`;
+		row += `<li class="list-group-item px-1" idprospecto="${
+			p.idprospecto
+		}"><div class="ver-prospecto aula-cursor-mano"> <i class="zmdi zmdi-plus text-info mx-2"></i><span>${p.nombre.toUpperCase()}</span></div><div></div></li>`;
 	});
 	row += '</ol>';
 	return row;
@@ -188,7 +192,11 @@ function addEventsButtonsAdmin() {
 			);
 			if (prospectoSelected != undefined) {
 				document.querySelector('#txtNombreProspecto').value =
-					prospectoSelected.nombre;
+					prospectoSelected.nombre.toUpperCase();
+				document.querySelector('#txtTelefonoProspecto').value =
+					prospectoSelected.telefono;
+				document.querySelector('#txtPaisProspecto').value =
+					prospectoSelected.pais.toUpperCase();
 				if (btn.firstElementChild.classList.value.includes('zmdi-plus')) {
 					removeClass(btn.firstElementChild, 'zmdi-plus');
 					addClass(btn.firstElementChild, 'zmdi-minus');

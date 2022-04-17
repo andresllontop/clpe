@@ -89,7 +89,7 @@ class Routes
             $resource = new BeanResource('app/clientes/activo', array($path_resource . 'app/cliente/activo/cliente.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/libro/curso_c.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/cliente/activo/cliente.js?v=' . $version_proyect, $path_resource . 'app/libro/curso_c.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
             //CLIENTES INACTIVOS
-            $resource = new BeanResource('app/clientes/inactivo', array($path_resource . 'app/cliente/inactivo/cliente.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/cliente/inactivo/cliente.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
+            $resource = new BeanResource('app/clientes/inactivo', array($path_resource . 'app/cliente/inactivo/cliente.html', $path_resource . 'app/footer/footer.html', $path_resource . 'app/prospecto/alumno_filter.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/cliente/inactivo/cliente.js?v=' . $version_proyect, $path_resource . 'app/prospecto/alumno_filter.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
             //PERSONAL
             $resource = new BeanResource('app/personal', array($path_resource . 'app/personal/personal.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/personal/personal.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
@@ -136,6 +136,9 @@ class Routes
             array_push($list_pages, $resource);
             //PUBLICOS
             $resource = new BeanResource('app/publicos', array($path_resource . 'app/publico/publico.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/publico/publico.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
+            array_push($list_pages, $resource);
+            //PROPSPECTO
+            $resource = new BeanResource('app/prospectos', array($path_resource . 'app/prospecto/prospecto.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/prospecto/prospecto.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
             array_push($list_pages, $resource);
             //BITACORAS
             $resource = new BeanResource('app/bitacoras/activos', array($path_resource . 'app/bitacora/activo/bitacora.html', $path_resource . 'app/footer/footer.html'), array($path_resource . 'app/footer/footer.js?v=' . $version_proyect, $path_resource . 'app/bitacora/activo/bitacora.js?v=' . $version_proyect), array('css/clpe.css?v=' . $version_proyect));
@@ -722,6 +725,9 @@ class Routes
             array_push($list_pages, $resource);
             //cita
             $resource = new BeanResource('api/cita', array($path_resource . 'citaAjax.php'), array(), array());
+            array_push($list_pages, $resource);
+            //prospecto
+            $resource = new BeanResource('api/prospectos', array($path_resource . 'prospectoAjax.php'), array(), array());
             array_push($list_pages, $resource);
 
             $resource = new BeanResource('api/ajuste/cita', array($path_resource . 'ajustecitaAjax.php'), array(), array());

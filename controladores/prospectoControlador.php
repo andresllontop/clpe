@@ -20,20 +20,18 @@ class prospectoControlador extends prospectoModelo
             $Prospecto->setPais(mainModel::limpiar_cadena($Prospecto->getPais()));
             $Prospecto->setTelefono(mainModel::limpiar_cadena($Prospecto->getTelefono()));
             $Prospecto->setIdFatherProspecto(mainModel::limpiar_cadena($Prospecto->getIdFatherProspecto()));
-            $prospectoLista = prospectoModelo::datos_prospecto_modelo($this->conexion_db, 'add', $Prospecto);
-            if ($prospectoLista['countFilter'] > 0) {
-                $insBeanCrud->setMessageServer('El Subtitulo para esta Prospecto ya se encuentra registrada');
+            $prospectoLista = prospectoModelo::datos_prospecto_modelo($this->conexion_db, 'getCuentaByNombre', $Prospecto);
+            if ($prospectoLista['countFilter'] == 0) {
+                $insBeanCrud->setMessageServer('No se encuentra la cuenta del Usuario registrado para el prospecto');
             } else {
-                $fechaSoli = new DateTime($Prospecto->getFechaSolicitud());
-                $Prospecto->setFechaSolicitud($Prospecto->getFechaSolicitud() == "" ? date('Y-m-d H:i:s') : $fechaSoli->format('Y-m-d H:i:s'));
+                $Prospecto->setCuenta($prospectoLista['list'][0]['cuenta']);
                 $stmt = prospectoModelo::agregar_prospecto_modelo($this->conexion_db, $Prospecto);
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, $Prospecto->getCuenta()));
+                    $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, $Prospecto->getNombre()));
 
                 } else {
-
                     $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la prospecto ");
                 }
             }
