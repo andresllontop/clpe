@@ -23,6 +23,8 @@ if (!empty($RESULTADO_token)) {
                         $insProspectoClass->setCuenta($personData->cuenta);
                         $insProspectoClass->setDocumento($personData->documento);
                         $insProspectoClass->setPais($personData->pais);
+                        $insProspectoClass->setEmail($personData->email);
+                        $insProspectoClass->setEspecialidad($personData->especialidad);
                         $insProspectoClass->setTelefono($personData->telefono);
                         $insProspectoClass->setIdFatherProspecto($personData->idFatherProspecto);
                         header("HTTP/1.1 200");
@@ -37,6 +39,8 @@ if (!empty($RESULTADO_token)) {
                             $insProspectoClass->setCuenta($personData->cuenta);
                             $insProspectoClass->setDocumento($personData->documento);
                             $insProspectoClass->setPais($personData->pais);
+                            $insProspectoClass->setEmail($personData->email);
+                            $insProspectoClass->setEspecialidad($personData->especialidad);
                             $insProspectoClass->setTelefono($personData->telefono);
                             $insProspectoClass->setIdFatherProspecto($personData->idFatherProspecto);
                             header("HTTP/1.1 200");

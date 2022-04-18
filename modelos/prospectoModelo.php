@@ -12,14 +12,16 @@ class prospectoModelo extends mainModel
     protected function agregar_prospecto_modelo($conexion, $Prospecto)
     {
         $sql = mainModel::__construct()->prepare("INSERT INTO
-        `prospecto`(cuenta,documento,nombre,pais,telefono,father_idprospecto)
-        VALUES(:Cuenta,:Documento,:Nombre,:Pais,:Telefono,:FatherProspecto)");
+        `prospecto`(cuenta,documento,nombre,pais,telefono,email,especialidad,father_idprospecto)
+        VALUES(:Cuenta,:Documento,:Nombre,:Pais,:Telefono,:Email,:Especialidad,:FatherProspecto)");
         $sql->bindValue(":Nombre", $Prospecto->getNombre(), PDO::PARAM_STR);
         $sql->bindValue(":Pais", $Prospecto->getPais(), PDO::PARAM_STR);
         $sql->bindValue(":Telefono", $Prospecto->getTelefono(), PDO::PARAM_STR);
         $sql->bindValue(":FatherProspecto", $Prospecto->getIdFatherProspecto(), PDO::PARAM_INT);
-        $sql->bindValue(":Cuenta", $Prospecto->getCuenta(), PDO::PARAM_STR);
-        $sql->bindValue(":Documento", $Prospecto->getDocumento(), PDO::PARAM_STR);
+        $sql->bindValue(":Email", $Prospecto->getEmail(), PDO::PARAM_STR);
+        $sql->bindValue(":Especialidad", $Prospecto->getEspecialidad(), PDO::PARAM_STR);
+        $sql->bindValue(":Cuenta", $Prospecto->getCuenta() == "" || $Prospecto->getCuenta() == null ? null : $Prospecto->getCuenta());
+        $sql->bindValue(":Documento", $Prospecto->getDocumento() == "" || $Prospecto->getDocumento() == null ? null : $Prospecto->getDocumento());
         return $sql;
     }
     protected function datos_prospecto_modelo($conexion, $tipo, $prospecto)
@@ -48,6 +50,8 @@ class prospectoModelo extends mainModel
                                 $insProspecto->setNombre($row['nombre']);
                                 $insProspecto->setPais($row['pais']);
                                 $insProspecto->setTelefono($row['telefono']);
+                                $insProspecto->setEmail($row['email']);
+                                $insProspecto->setEspecialidad($row['especialidad']);
                                 $insProspecto->setIdFatherProspecto($row['father_idprospecto']);
 
                                 $insBeanPagination->setList($insProspecto->__toString());
@@ -98,6 +102,8 @@ class prospectoModelo extends mainModel
                                 $insProspecto->setNombre($row['nombre']);
                                 $insProspecto->setPais($row['pais']);
                                 $insProspecto->setTelefono($row['telefono']);
+                                $insProspecto->setEmail($row['email']);
+                                $insProspecto->setEspecialidad($row['especialidad']);
                                 $insProspecto->setIdFatherProspecto($row['father_idprospecto']);
                                 $insBeanPagination->setList($insProspecto->__toString());
                             }
@@ -129,16 +135,20 @@ class prospectoModelo extends mainModel
     }
     protected function actualizar_prospecto_modelo($conexion, $Prospecto)
     {
+
         $sql = $conexion->prepare("UPDATE `prospecto`
-        SET nombre=:Nombre,cuenta=:Cuenta,documento=:Documento
-        ,pais=:Pais,telefono=:Telefono,father_idprospecto=:FatherProspecto
+        SET nombre=:Nombre,cuenta=:Cuenta,documento=:Documento,email=:Email,
+        especialidad=:Especialidad,pais=:Pais,telefono=:Telefono,
+        father_idprospecto=:FatherProspecto
          WHERE idprospecto=:ID");
         $sql->bindValue(":Nombre", $Prospecto->getNombre(), PDO::PARAM_STR);
-        $sql->bindValue(":Cuenta", $Prospecto->getCuenta(), PDO::PARAM_STR);
-        $sql->bindValue(":Documento", $Prospecto->getDocumento(), PDO::PARAM_STR);
+        $sql->bindValue(":Cuenta", $Prospecto->getCuenta() == "" || $Prospecto->getCuenta() == null ? null : $Prospecto->getCuenta());
+        $sql->bindValue(":Documento", $Prospecto->getDocumento() == "" || $Prospecto->getDocumento() == null ? null : $Prospecto->getDocumento());
         $sql->bindValue(":Pais", $Prospecto->getPais(), PDO::PARAM_STR);
         $sql->bindValue(":Telefono", $Prospecto->getTelefono(), PDO::PARAM_STR);
-        $sql->bindValue(":FatherProspecto", $Prospecto->getIdFatherProspecto(), PDO::PARAM_INT);
+        $sql->bindValue(":Email", $Prospecto->getEmail(), PDO::PARAM_STR);
+        $sql->bindValue(":Especialidad", $Prospecto->getEspecialidad(), PDO::PARAM_STR);
+        $sql->bindValue(":FatherProspecto", $Prospecto->getIdFatherProspecto() == "" || $Prospecto->getIdFatherProspecto() == null ? null : $Prospecto->getIdFatherProspecto());
         $sql->bindValue(":ID", $Prospecto->getIdprospecto(), PDO::PARAM_INT);
         return $sql;
     }

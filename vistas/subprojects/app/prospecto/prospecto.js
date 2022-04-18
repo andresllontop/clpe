@@ -7,12 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	beanRequestProspecto.operation = 'paginate';
 	beanRequestProspecto.type_request = 'GET';
 
-	$('#sizePageProspecto').change(function () {
-		beanRequestProspecto.type_request = 'GET';
-		beanRequestProspecto.operation = 'paginate';
-		$('#modalCargandoProspecto').modal('show');
-	});
-
 	$('#modalCargandoProspecto').modal('show');
 
 	$('#modalCargandoProspecto').on('shown.bs.modal', function () {
@@ -22,11 +16,47 @@ document.addEventListener('DOMContentLoaded', function () {
 		beanRequestProspecto.type_request = 'GET';
 		beanRequestProspecto.operation = 'paginate';
 	});
+	$('#btnAbrirProspecto').click(function () {
+		$('#tituloModalManProspecto').html('REGISTRAR PROSPECTO');
+		addProspecto();
+		$('#ventanaModalManProspecto').modal('show');
+	});
+	$('#btnEliminarProspecto').click(function () {
+		if (prospectoSelected) {
+			if (prospectoSelected.idprospecto == '1') {
+				showAlertTopEnd(
+					'info',
+					'No es posible Eliminar el Prospecto Principal',
+					prospectoSelected.nombre.toUpperCase()
+				);
+			} else {
+				beanRequestProspecto.type_request = 'GET';
+				beanRequestProspecto.operation = 'delete';
+				$('#modalCargandoProspecto').modal('show');
+			}
+		} else {
+			showAlertTopEnd('info', '', 'Seleccione Prospecto');
+		}
+	});
 
 	$('#formularioProspecto').submit(function (event) {
+		beanRequestProspecto.operation = 'add';
+		beanRequestProspecto.type_request = 'POST';
 		if (validarDormularioVideo()) {
 			$('#modalCargandoProspecto').modal('show');
 		}
+		event.preventDefault();
+		event.stopPropagation();
+	});
+	$('#formularioProspectoUpdate').submit(function (event) {
+		beanRequestProspecto.operation = 'update';
+		beanRequestProspecto.type_request = 'POST';
+		if (prospectoSelected) {
+			$('#modalCargandoProspecto').modal('show');
+		} else {
+			showAlertTopEnd('info', '', 'Seleccione Prospecto');
+		}
+
 		event.preventDefault();
 		event.stopPropagation();
 	});
@@ -41,10 +71,6 @@ function processAjaxProspecto() {
 		beanRequestProspecto.operation == 'update' ||
 		beanRequestProspecto.operation == 'add'
 	) {
-		json = {
-			estado: 1,
-			codigo: prospectoSelected.cuenta.cuenta.cuentaCodigo,
-		};
 	} else {
 		form_data = null;
 	}
@@ -54,17 +80,53 @@ function processAjaxProspecto() {
 			parameters_pagination = '?id=' + prospectoSelected.idprospecto;
 			break;
 		case 'update':
-			json.idprospecto = prospectoSelected.idprospecto;
+			json = {
+				idprospecto: prospectoSelected.idprospecto,
+				nombre: document
+					.querySelector('#txtNombreProspectoUpdate')
+					.value.trim(),
+				cuenta: null,
+				documento: null,
+				pais: document.querySelector('#txtPaisProspectoUpdate').value.trim(),
+				telefono: document
+					.querySelector('#txtTelefonoProspectoUpdate')
+					.value.trim(),
+				especialidad: document
+					.querySelector('#txtEspecialidadProspectoUpdate')
+					.value.trim(),
+				email: document.querySelector('#txtEmailProspectoUpdate').value.trim(),
+				idFatherProspecto:
+					document.querySelector('#txtAlumnoSelectUpdate').value != ''
+						? document.querySelector('#txtAlumnoSelectUpdate').value
+						: prospectoSelected.idprospecto == '1'
+						? null
+						: '1',
+			};
 			form_data.append('class', JSON.stringify(json));
 			break;
 		case 'add':
+			json = {
+				nombre: document.querySelector('#txtNombreProspecto').value.trim(),
+				cuenta: null,
+				documento: null,
+				pais: document.querySelector('#txtPaisProspecto').value.trim(),
+				telefono: document.querySelector('#txtTelefonoProspecto').value.trim(),
+				especialidad: document
+					.querySelector('#txtEspecialidadProspecto')
+					.value.trim(),
+				email: document.querySelector('#txtEmailProspecto').value.trim(),
+				idFatherProspecto:
+					document.querySelector('#txtAlumnoSelect').value != ''
+						? document.querySelector('#txtAlumnoSelect').value
+						: '1',
+			};
 			form_data.append('class', JSON.stringify(json));
 			break;
 
 		default:
 			parameters_pagination += '?filtro=';
 			parameters_pagination += '&pagina=1';
-			parameters_pagination += '&registros=100';
+			parameters_pagination += '&registros=1000';
 			break;
 	}
 	$.ajax({
@@ -89,23 +151,34 @@ function processAjaxProspecto() {
 		dataType: 'json',
 	})
 		.done(function (beanCrudResponse) {
-			$('#modalCargandoProspecto').modal('hide');
 			if (beanCrudResponse.messageServer !== null) {
 				if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
+					if (beanRequestProspecto.operation == 'delete') {
+						document.querySelector('#txtNombreProspectoUpdate').value = '';
+						document.querySelector('#txtTelefonoProspectoUpdate').value = '';
+						document.querySelector('#txtPaisProspectoUpdate').value = '';
+						document.querySelector('#txtEspecialidadProspectoUpdate').value =
+							'';
+						document.querySelector('#txtEmailProspectoUpdate').value = '';
+						prospectoSelected = undefined;
+					}
 					showAlertTopEnd(
 						'success',
 						'Realizado',
 						'Acción realizada existosamente!'
 					);
-
-					$('#ventanaModalManProspecto').modal('hide');
+					if (beanRequestProspecto.operation == 'add') {
+						$('#ventanaModalManProspecto').modal('hide');
+					}
 				} else {
 					showAlertTopEnd('warning', 'Error', beanCrudResponse.messageServer);
 				}
 			}
+			$('#modalCargandoProspecto').modal('hide');
 			if (beanCrudResponse.beanPagination !== null) {
 				beanPaginationProspecto = beanCrudResponse.beanPagination;
 				listaProspecto(beanPaginationProspecto);
+				toListAlumnoC(beanPaginationProspecto);
 			}
 		})
 		.fail(function () {
@@ -113,33 +186,42 @@ function processAjaxProspecto() {
 			showAlertErrorRequest();
 		});
 }
+function toListAlumnoC(beanPagination) {
+	document.querySelector('#txtAlumnoSelect').innerHTML = '';
+	let row = '<option value="">SIN DEFINIR</option>';
+	if (beanPagination.list.length == 0) {
+		document.querySelector('#txtAlumnoSelect').innerHTML += row;
+		return;
+	}
+	beanPagination.list.forEach((alumno) => {
+		row += `<option value="${alumno.idprospecto}">${
+			(alumno.cuenta != null ? alumno.cuenta + ' - ' : '') + alumno.nombre
+		}</option>
+`;
+		// $('[data-toggle="tooltip"]').tooltip();
+	});
 
+	document.querySelector('#txtAlumnoSelect').innerHTML += row;
+	if (document.querySelector('#txtAlumnoSelectUpdate')) {
+		document.querySelector('#txtAlumnoSelectUpdate').innerHTML = row;
+	}
+
+	document.querySelector('#txtAlumnoSelect').value = '1';
+}
 function addProspecto(prospecto = undefined) {
 	//LIMPIAR LOS CAMPOS
 
 	document.querySelector('#txtNombreProspecto').value =
 		prospecto == undefined ? '' : prospecto.nombre;
 
-	capituloSelected = prospecto == undefined ? undefined : prospecto.titulo;
-	document.querySelector('#txtCapituloProspecto').value =
-		prospecto == undefined
-			? ''
-			: prospecto.titulo.codigo + ' - ' + prospecto.titulo.nombre;
-	document.querySelector('#tbodyPreguntas').innerHTML = '';
-	let row = '';
-	for (let index = 1; index <= 10; index++) {
-		row += `<label for="txtPregunta${index}Prospecto">Pregunta N° ${index}</label>
-         <div class="group-material">
-        <textarea class="material-control w-100" data-toggle="tooltip" required="" data-placement="top" title="" data-original-title="Escribe la url de youtube" id="txtPregunta${index}Prospecto" rows="3"></textarea></div>`;
-	}
-
-	document.querySelector('#tbodyPreguntas').innerHTML += row;
-	if (prospecto != undefined) {
-		for (let index = 1; index <= 10; index++) {
-			document.querySelector('#txtPregunta' + index + 'Prospecto').value =
-				prospecto['pregunta_P' + index];
-		}
-	}
+	document.querySelector('#txtTelefonoProspecto').value =
+		prospecto == undefined ? '' : prospecto.telefono;
+	document.querySelector('#txtPaisProspecto').value =
+		prospecto == undefined ? '' : prospecto.pais;
+	document.querySelector('#txtEspecialidadProspecto').value =
+		prospecto == undefined ? '' : prospecto.especialidad;
+	document.querySelector('#txtEmailProspecto').value =
+		prospecto == undefined ? '' : prospecto.email;
 }
 
 function listaProspecto(beanPagination) {
@@ -170,7 +252,7 @@ function listFilterProspecto(value) {
 	let row = '<ol class="list-group">';
 	let list = new Array();
 	list = filterByFatherId(beanPaginationProspecto.list, value);
-	console.log(list);
+
 	list.forEach((p) => {
 		row += `<li class="list-group-item px-1" idprospecto="${
 			p.idprospecto
@@ -191,12 +273,22 @@ function addEventsButtonsAdmin() {
 				btn.parentElement.getAttribute('idprospecto')
 			);
 			if (prospectoSelected != undefined) {
-				document.querySelector('#txtNombreProspecto').value =
+				document.querySelector('#txtNombreProspectoUpdate').value =
 					prospectoSelected.nombre.toUpperCase();
-				document.querySelector('#txtTelefonoProspecto').value =
+				document.querySelector('#txtTelefonoProspectoUpdate').value =
 					prospectoSelected.telefono;
-				document.querySelector('#txtPaisProspecto').value =
+				document.querySelector('#txtPaisProspectoUpdate').value =
 					prospectoSelected.pais.toUpperCase();
+				document.querySelector('#txtEspecialidadProspectoUpdate').value =
+					prospectoSelected.especialidad == null
+						? ''
+						: prospectoSelected.especialidad.toUpperCase();
+				document.querySelector('#txtEmailProspectoUpdate').value =
+					prospectoSelected.email == null ? '' : prospectoSelected.email;
+				document.querySelector('#txtAlumnoSelectUpdate').value =
+					prospectoSelected.idFatherProspecto == null
+						? ''
+						: prospectoSelected.idFatherProspecto;
 				if (btn.firstElementChild.classList.value.includes('zmdi-plus')) {
 					removeClass(btn.firstElementChild, 'zmdi-plus');
 					addClass(btn.firstElementChild, 'zmdi-minus');
@@ -291,30 +383,6 @@ var validarDormularioVideo = () => {
 			showConfirmButton: false,
 		});
 		return false;
-	}
-	if (capituloSelected == undefined) {
-		swal({
-			title: 'Vacío',
-			text: 'Selecciona Capítulo',
-			type: 'warning',
-			timer: 1200,
-			showConfirmButton: false,
-		});
-		return false;
-	}
-	for (let index = 1; index <= 10; index++) {
-		if (
-			document.querySelector('#txtPregunta' + index + 'Prospecto').value == ''
-		) {
-			swal({
-				title: 'Vacío',
-				text: 'Ingrese datos a la Pregunta N° ' + index,
-				type: 'warning',
-				timer: 1200,
-				showConfirmButton: false,
-			});
-			return false;
-		}
 	}
 
 	return true;

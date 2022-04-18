@@ -107,6 +107,10 @@ function toListAlumnoC(beanPagination) {
 	});
 
 	document.querySelector('#txtAlumnoSelect').innerHTML += row;
+	if (document.querySelector('#txtAlumnoSelectUpdate')) {
+		document.querySelector('#txtAlumnoSelectUpdate').innerHTML += row;
+	}
+
 	document.querySelector('#txtAlumnoSelect').value = '1';
 	addEventsAlumnosC();
 }

@@ -8,6 +8,8 @@ class Prospecto
     private $documento;
     private $pais;
     private $telefono;
+    private $email;
+    private $especialidad;
     private $idFatherProspecto;
 
     public function setIdprospecto($idprospecto)
@@ -59,6 +61,22 @@ class Prospecto
     {
         return $this->telefono;
     }
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+    public function getEmail()
+    {
+        return $this->email;
+    }
+    public function setEspecialidad($especialidad)
+    {
+        $this->especialidad = $especialidad;
+    }
+    public function getEspecialidad()
+    {
+        return $this->especialidad;
+    }
     public function setIdFatherProspecto($idFatherProspecto)
     {
         $this->idFatherProspecto = $idFatherProspecto;
@@ -76,6 +94,8 @@ class Prospecto
             "cuenta" => $this->cuenta,
             "idFatherProspecto" => $this->idFatherProspecto,
             "telefono" => $this->telefono,
+            "email" => $this->email,
+            "especialidad" => $this->especialidad,
             "pais" => $this->pais,
             "documento" => $this->documento,
         );

@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		processAjaxCliente();
 	});
 	$('#btnAbrirCliente').click(function () {
-		$('#modalCargandoAlumnoC').modal('show');
-
 		beanRequestCliente.operation = 'add';
 		beanRequestCliente.type_request = 'POST';
 		document.querySelector('#btnSubmit').innerHTML = 'REGISTRAR';
@@ -317,19 +315,6 @@ function processAjaxCliente() {
 						timer: 2000,
 						showConfirmButton: false,
 					});
-					if (beanRequestCliente.operation == 'add') {
-						processAjaxProspecto({
-							nombre: json.nombre + ' ' + json.apellido,
-							cuenta: null,
-							documento: null,
-							pais: json.pais,
-							telefono: json.telefono,
-							idFatherProspecto:
-								document.querySelector('#txtAlumnoSelect').value != ''
-									? document.querySelector('#txtAlumnoSelect').value
-									: '1',
-						});
-					}
 				} else {
 					swal({
 						title: 'VERIFICACIÓN!',
@@ -351,41 +336,7 @@ function processAjaxCliente() {
 			showAlertErrorRequest();
 		});
 }
-function processAjaxProspecto(json = '') {
-	let form_data = new FormData();
-	form_data.append('class', JSON.stringify(json));
 
-	$.ajax({
-		url: getHostAPI() + 'prospectos/add',
-		type: 'POST',
-		headers: {
-			Authorization: 'Bearer ' + Cookies.get('clpe_token'),
-		},
-		data: form_data,
-		cache: false,
-		contentType: false,
-		processData: false,
-		dataType: 'json',
-	})
-		.done(function (beanCrudResponse) {
-			$('#ventanaModalManCliente').modal('hide');
-			if (beanCrudResponse.messageServer !== null) {
-				if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
-					showAlertTopEnd(
-						'success',
-						'Realizado',
-						'Acción realizada existosamente!'
-					);
-				} else {
-					showAlertTopEnd('warning', 'Error', beanCrudResponse.messageServer);
-				}
-			}
-		})
-		.fail(function () {
-			$('#ventanaModalManCliente').modal('hide');
-			showAlertErrorRequest();
-		});
-}
 function addCliente(cliente = undefined) {
 	//LIMPIAR LOS CAMPOS
 

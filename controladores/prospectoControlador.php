@@ -18,6 +18,8 @@ class prospectoControlador extends prospectoModelo
             $Prospecto->setCuenta(mainModel::limpiar_cadena($Prospecto->getCuenta()));
             $Prospecto->setDocumento(mainModel::limpiar_cadena($Prospecto->getDocumento()));
             $Prospecto->setPais(mainModel::limpiar_cadena($Prospecto->getPais()));
+            $Prospecto->setEmail(mainModel::limpiar_cadena($Prospecto->getEmail()));
+            $Prospecto->setEspecialidad(mainModel::limpiar_cadena($Prospecto->getEspecialidad()));
             $Prospecto->setTelefono(mainModel::limpiar_cadena($Prospecto->getTelefono()));
             $Prospecto->setIdFatherProspecto(mainModel::limpiar_cadena($Prospecto->getIdFatherProspecto()));
             $prospectoLista = prospectoModelo::datos_prospecto_modelo($this->conexion_db, 'getCuentaByNombre', $Prospecto);
@@ -29,7 +31,7 @@ class prospectoControlador extends prospectoModelo
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, $Prospecto->getNombre()));
+                    $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, ""));
 
                 } else {
                     $insBeanCrud->setMessageServer("error en el servidor, No hemos podido registrar la prospecto ");
@@ -102,6 +104,8 @@ class prospectoControlador extends prospectoModelo
                         $insProspecto->setNombre($row['nombre']);
                         $insProspecto->setPais($row['pais']);
                         $insProspecto->setTelefono($row['telefono']);
+                        $insProspecto->setEmail($row['email']);
+                        $insProspecto->setEspecialidad($row['especialidad']);
                         $insProspecto->setIdFatherProspecto($row['father_idprospecto']);
                         $insBeanPagination->setList($insProspecto->__toString());
                     }
@@ -158,7 +162,7 @@ class prospectoControlador extends prospectoModelo
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer('ok');
-                    $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, $prospectoLista['list'][0]['cliente']));
+                    $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, ""));
 
                 } else {
                     $insBeanCrud->setMessageServer('No se eliminó la prospecto');
@@ -195,21 +199,20 @@ class prospectoControlador extends prospectoModelo
             $Prospecto->setNombre(mainModel::limpiar_cadena($Prospecto->getNombre()));
             $Prospecto->setCuenta(mainModel::limpiar_cadena($Prospecto->getCuenta()));
             $Prospecto->setDocumento(mainModel::limpiar_cadena($Prospecto->getDocumento()));
+            $Prospecto->setEmail(mainModel::limpiar_cadena($Prospecto->getEmail()));
+            $Prospecto->setEspecialidad(mainModel::limpiar_cadena($Prospecto->getEspecialidad()));
             $Prospecto->setTelefono(mainModel::limpiar_cadena($Prospecto->getTelefono()));
             $Prospecto->setIdFatherProspecto(mainModel::limpiar_cadena($Prospecto->getIdFatherProspecto()));
             $prospectoLista = prospectoModelo::datos_prospecto_modelo($this->conexion_db, "unico", $Prospecto);
+
             if ($prospectoLista["countFilter"] == 0) {
                 $insBeanCrud->setMessageServer("error en el servidor, No hemos encontrado la prospecto");
             } else {
-                $fecha = new DateTime($Prospecto->getFechaAtendida());
-                $Prospecto->setFechaAtendida($Prospecto->getFechaAtendida() == "" ? null : $fecha->format('Y-m-d H:i:s'));
-                $fechaSoli = new DateTime($Prospecto->getFechaSolicitud());
-                $Prospecto->setFechaSolicitud($fechaSoli->format('Y-m-d H:i:s'));
                 $stmt = prospectoModelo::actualizar_prospecto_modelo($this->conexion_db, $Prospecto);
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
                     $insBeanCrud->setMessageServer("ok");
-                    $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, $prospectoLista['list'][0]['cliente']));
+                    $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, ""));
 
                 } else {
                     $insBeanCrud->setMessageServer("error en el servidor, No hemos podido actualizar la prospecto ");
