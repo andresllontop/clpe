@@ -409,7 +409,8 @@ class clienteModelo extends mainModel
                     foreach ($datos as $row) {
                         $insBeanPagination->setCountFilter($row['CONTADOR']);
                         if ($row['CONTADOR'] > 0) {
-                            $stmt = $conexion->prepare("SELECT * FROM `administrador` ");
+                            $stmt = $conexion->prepare("SELECT ad.*,cuen.email FROM `administrador` ad
+                            INNER JOIN `cuenta` cuen on cuen.CuentaCodigo=ad.Cuenta_Codigo where cuen.tipo=2  ");
                             $stmt->execute();
                             $datos = $stmt->fetchAll();
                             foreach ($datos as $row) {
@@ -420,7 +421,16 @@ class clienteModelo extends mainModel
                                 $insCliente->setOcupacion($row['AdminOcupacion']);
                                 $insCliente->setPais($row['pais']);
                                 $insCliente->setCuenta($row['Cuenta_Codigo']);
-                                $insBeanPagination->setList($insCliente->__toString());
+
+                                $insBeanPagination->setList(
+                                    array("nombre" => $insCliente->getNombre(),
+                                        "apellido" => $insCliente->getApellido(),
+                                        "cuenta" => $insCliente->getCuenta(),
+                                        "ocupacion" => $insCliente->getOcupacion(),
+                                        "telefono" => $insCliente->getTelefono(),
+                                        "pais" => $insCliente->getPais(),
+                                        "email" => $row['email'],
+                                    ));
 
                             }
                         }
@@ -556,7 +566,6 @@ class clienteModelo extends mainModel
     }
     protected function agregar_cuenta_modelo($conexion, $cuenta)
     {
-   
 
         $sql = $conexion->prepare("INSERT INTO `cuenta` (CuentaCodigo,usuario,clave,email,estado,tipo)
          VALUES(?,?,?,?,?,?)");
@@ -567,7 +576,7 @@ class clienteModelo extends mainModel
         $sql->bindValue(4, $cuenta->getEmail(), PDO::PARAM_STR);
         $sql->bindValue(5, $cuenta->getEstado(), PDO::PARAM_STR);
         $sql->bindValue(6, $cuenta->getTipo(), PDO::PARAM_STR);
-       
+
         return $sql;
 
     }

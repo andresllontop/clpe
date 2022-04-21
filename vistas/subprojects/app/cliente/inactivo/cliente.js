@@ -178,10 +178,6 @@ function processAjaxCliente() {
 					fecha: date + ' ' + time,
 					libro: document.querySelector('#txtLibroCliente').value,
 				},
-				prospectoId:
-					document.querySelector('#txtAlumnoSelect').value != ''
-						? document.querySelector('#txtAlumnoSelect').value
-						: 'AC8185345164',
 			};
 		}
 	} else {

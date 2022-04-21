@@ -3,28 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-var beanPaginationAlumnoC;
+var beanPaginationAlumnoProspectoC;
 var alumnoCSelected;
-var beanRequestAlumnoC = new BeanRequest();
+var beanRequestAlumnoProspectoC = new BeanRequest();
 
 document.addEventListener('DOMContentLoaded', function () {
 	//INICIALIZANDO VARIABLES DE SOLICITUD
-	beanRequestAlumnoC.entity_api = 'prospectos';
-	beanRequestAlumnoC.operation = 'paginate';
-	beanRequestAlumnoC.type_request = 'GET';
+	beanRequestAlumnoProspectoC.entity_api = 'prospectos';
+	beanRequestAlumnoProspectoC.operation = 'paginate';
+	beanRequestAlumnoProspectoC.type_request = 'GET';
 
-	$('#modalCargandoAlumnoC').on('shown.bs.modal', function () {
-		processAjaxAlumnoC();
+	$('#modalCargandoAlumnoProspectoC').on('shown.bs.modal', function () {
+		processAjaxAlumnoProspectoC();
 	});
-	$('#modalCargandoAlumnoC').on('hidden.bs.modal', function () {
-		beanRequestAlumnoC.operation = 'paginate';
-		beanRequestAlumnoC.type_request = 'GET';
+	$('#modalCargandoAlumnoProspectoC').on('hidden.bs.modal', function () {
+		beanRequestAlumnoProspectoC.operation = 'paginate';
+		beanRequestAlumnoProspectoC.type_request = 'GET';
 	});
 });
 
-function processAjaxAlumnoC() {
+function processAjaxAlumnoProspectoC() {
 	let parameters_pagination = '';
-	switch (beanRequestAlumnoC.operation) {
+	switch (beanRequestAlumnoProspectoC.operation) {
 		case 'paginate':
 			parameters_pagination += '?filtro=';
 			parameters_pagination += '&pagina=1';
@@ -40,11 +40,11 @@ function processAjaxAlumnoC() {
 	$.ajax({
 		url:
 			getHostAPI() +
-			beanRequestAlumnoC.entity_api +
+			beanRequestAlumnoProspectoC.entity_api +
 			'/' +
-			beanRequestAlumnoC.operation +
+			beanRequestAlumnoProspectoC.operation +
 			parameters_pagination,
-		type: beanRequestAlumnoC.type_request,
+		type: beanRequestAlumnoProspectoC.type_request,
 		headers: {
 			Authorization: 'Bearer ' + Cookies.get('clpe_token'),
 		},
@@ -56,7 +56,7 @@ function processAjaxAlumnoC() {
 		processData: false,
 	})
 		.done(function (beanCrudResponse) {
-			$('#modalCargandoAlumnoC').modal('hide');
+			$('#modalCargandoAlumnoProspectoC').modal('hide');
 			if (beanCrudResponse.messageServer !== null) {
 				if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
 					swal({
@@ -66,8 +66,8 @@ function processAjaxAlumnoC() {
 						timer: 1200,
 						showConfirmButton: false,
 					});
-					document.querySelector('#pageAlumnoC').value = 1;
-					document.querySelector('#sizePageAlumnoC').value = 5;
+					document.querySelector('#pageAlumnoProspectoC').value = 1;
+					document.querySelector('#sizePageAlumnoProspectoC').value = 5;
 					$('#ventanaModalManAlumno').modal('hide');
 				} else {
 					swal({
@@ -80,22 +80,22 @@ function processAjaxAlumnoC() {
 				}
 			}
 			if (beanCrudResponse.beanPagination !== null) {
-				beanPaginationAlumnoC = beanCrudResponse.beanPagination;
+				beanPaginationAlumnoProspectoC = beanCrudResponse.beanPagination;
 
-				toListAlumnoC(beanPaginationAlumnoC);
+				toListAlumnoProspectoC(beanPaginationAlumnoProspectoC);
 			}
 		})
 		.fail(function (jqXHR, textStatus, errorThrown) {
-			$('#modalCargandoAlumnoC').modal('hide');
+			$('#modalCargandoAlumnoProspectoC').modal('hide');
 			showAlertErrorRequest();
 		});
 }
 
-function toListAlumnoC(beanPagination) {
-	document.querySelector('#txtAlumnoSelect').innerHTML = '';
+function toListAlumnoProspectoC(beanPagination) {
+	document.querySelector('#txtAlumnoProspectoSelect').innerHTML = '';
 	let row = '<option value="">SIN DEFINIR</option>';
 	if (beanPagination.list.length == 0) {
-		document.querySelector('#txtAlumnoSelect').innerHTML += row;
+		document.querySelector('#txtAlumnoProspectoSelect').innerHTML += row;
 		return;
 	}
 	beanPagination.list.forEach((alumno) => {
@@ -106,21 +106,23 @@ function toListAlumnoC(beanPagination) {
 		// $('[data-toggle="tooltip"]').tooltip();
 	});
 
-	document.querySelector('#txtAlumnoSelect').innerHTML += row;
+	document.querySelector('#txtAlumnoProspectoSelect').innerHTML += row;
 	if (document.querySelector('#txtAlumnoSelectUpdate')) {
 		document.querySelector('#txtAlumnoSelectUpdate').innerHTML += row;
 	}
 
-	document.querySelector('#txtAlumnoSelect').value = '1';
-	addEventsAlumnosC();
+	document.querySelector('#txtAlumnoProspectoSelect').value = '1';
+	addEventsAlumnosProspectoC();
 }
 
-function addEventsAlumnosC() {
+function addEventsAlumnosProspectoC() {
 	document
 		.querySelectorAll('.click-selection-alumno')
 		.forEach(function (element) {
 			element.onclick = function () {
-				alumnoCSelected = findByAlumnoC(this.getAttribute('idsubTitulo'));
+				alumnoCSelected = findByAlumnoProspectoC(
+					this.getAttribute('idsubTitulo')
+				);
 				if (alumnoCSelected != undefined) {
 					if (document.querySelector('#txtSubTituloAlbum')) {
 						switch (tipoSelected) {
@@ -131,7 +133,7 @@ function addEventsAlumnosC() {
 									alumnoCSelected.codigo +
 									' - ' +
 									alumnoCSelected.nombre.toUpperCase();
-								$('#ventanaModalSelectedAlumnoC').modal('hide');
+								$('#ventanaModalSelectedAlumnoProspectoC').modal('hide');
 
 								break;
 
@@ -142,7 +144,7 @@ function addEventsAlumnosC() {
 									alumnoCSelected.codigo +
 									' - ' +
 									alumnoCSelected.nombre.toUpperCase();
-								$('#ventanaModalSelectedAlumnoC').modal('hide');
+								$('#ventanaModalSelectedAlumnoProspectoC').modal('hide');
 								break;
 						}
 						tipoSelected = 0;
@@ -152,16 +154,16 @@ function addEventsAlumnosC() {
 							alumnoCSelected.codigo +
 							' - ' +
 							alumnoCSelected.nombre.toUpperCase();
-						$('#ventanaModalSelectedAlumnoC').modal('hide');
+						$('#ventanaModalSelectedAlumnoProspectoC').modal('hide');
 					}
 				}
 			};
 		});
 }
 
-function findByAlumnoC(cuenta) {
+function findByAlumnoProspectoC(cuenta) {
 	let alumno_;
-	beanPaginationAlumnoC.list.forEach((alumno) => {
+	beanPaginationAlumnoProspectoC.list.forEach((alumno) => {
 		if (cuenta == alumno.cuenta) {
 			alumno_ = alumno;
 			return;

@@ -2,6 +2,7 @@ var beanPaginationProspecto;
 var prospectoSelected;
 var capituloSelected;
 var beanRequestProspecto = new BeanRequest();
+var btnSelected;
 document.addEventListener('DOMContentLoaded', function () {
 	beanRequestProspecto.entity_api = 'prospectos';
 	beanRequestProspecto.operation = 'paginate';
@@ -17,6 +18,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		beanRequestProspecto.operation = 'paginate';
 	});
 	$('#btnAbrirProspecto').click(function () {
+		document.getElementsByName('radioTipoCliente')[0].checked = true;
+		addClass(document.querySelector('#htmlAdd'), 'd-none');
+		if (!beanPaginationAlumnoC) {
+			$('#modalCargandoAlumnoC').modal('show');
+		}
 		$('#tituloModalManProspecto').html('REGISTRAR PROSPECTO');
 		addProspecto();
 		$('#ventanaModalManProspecto').modal('show');
@@ -60,7 +66,34 @@ document.addEventListener('DOMContentLoaded', function () {
 		event.preventDefault();
 		event.stopPropagation();
 	});
+	$('input[type="radio"]').on('change', function (e) {
+		if (e.target.name == 'radioTipoCliente') {
+			if (e.target.value == '1') {
+				addClass(document.querySelector('#htmlAdd'), 'd-none');
+				addProspecto();
+			} else {
+				document.querySelector('#txtAlumnoSelect').value = '';
+				removeClass(document.querySelector('#htmlAdd'), 'd-none');
+			}
+		}
+	});
+	$('#txtAlumnoSelect').change(function (e) {
+		let data = findAlumno(e.target.value);
+		if (data) {
+			addProspecto({
+				nombre: data.nombre + ' ' + data.apellido,
+				telefono: data.telefono,
+				pais: data.pais,
+				especialidad: data.ocupacion,
+				email: data.email,
+			});
+		}
+	});
 });
+
+function findAlumno(cuenta) {
+	return beanPaginationAlumnoC.list.find((p) => p.cuenta == cuenta);
+}
 
 function processAjaxProspecto() {
 	let form_data = new FormData();
@@ -85,8 +118,8 @@ function processAjaxProspecto() {
 				nombre: document
 					.querySelector('#txtNombreProspectoUpdate')
 					.value.trim(),
-				cuenta: null,
-				documento: null,
+				cuenta: prospectoSelected.cuenta,
+				documento: prospectoSelected.documento,
 				pais: document.querySelector('#txtPaisProspectoUpdate').value.trim(),
 				telefono: document
 					.querySelector('#txtTelefonoProspectoUpdate')
@@ -105,9 +138,13 @@ function processAjaxProspecto() {
 			form_data.append('class', JSON.stringify(json));
 			break;
 		case 'add':
+			btnSelected = undefined;
 			json = {
 				nombre: document.querySelector('#txtNombreProspecto').value.trim(),
-				cuenta: null,
+				cuenta:
+					document.querySelector('#txtAlumnoSelect').value != ''
+						? document.querySelector('#txtAlumnoSelect').value
+						: null,
 				documento: null,
 				pais: document.querySelector('#txtPaisProspecto').value.trim(),
 				telefono: document.querySelector('#txtTelefonoProspecto').value.trim(),
@@ -116,14 +153,15 @@ function processAjaxProspecto() {
 					.value.trim(),
 				email: document.querySelector('#txtEmailProspecto').value.trim(),
 				idFatherProspecto:
-					document.querySelector('#txtAlumnoSelect').value != ''
-						? document.querySelector('#txtAlumnoSelect').value
+					document.querySelector('#txtAlumnoProspectoSelect').value != ''
+						? document.querySelector('#txtAlumnoProspectoSelect').value
 						: '1',
 			};
 			form_data.append('class', JSON.stringify(json));
 			break;
 
 		default:
+			btnSelected = undefined;
 			parameters_pagination += '?filtro=';
 			parameters_pagination += '&pagina=1';
 			parameters_pagination += '&registros=1000';
@@ -161,6 +199,9 @@ function processAjaxProspecto() {
 							'';
 						document.querySelector('#txtEmailProspectoUpdate').value = '';
 						prospectoSelected = undefined;
+						//console.log(btnSelected.parentElement);
+						//btnSelected.parentElement.innerHTML = '';
+						addClass(btnSelected.parentElement, 'd-none');
 					}
 					showAlertTopEnd(
 						'success',
@@ -177,8 +218,14 @@ function processAjaxProspecto() {
 			$('#modalCargandoProspecto').modal('hide');
 			if (beanCrudResponse.beanPagination !== null) {
 				beanPaginationProspecto = beanCrudResponse.beanPagination;
-				listaProspecto(beanPaginationProspecto);
-				toListAlumnoC(beanPaginationProspecto);
+				if (btnSelected) {
+					btnSelected.lastChild.innerHTML =
+						json.nombre + (json.cuenta != null ? ' - ' + json.cuenta : '');
+					console.log(btnSelected.lastChild.innerHTML);
+				} else {
+					listaProspecto(beanPaginationProspecto);
+				}
+				toListAlumnoProspectoC(beanPaginationProspecto);
 			}
 		})
 		.fail(function () {
@@ -186,11 +233,11 @@ function processAjaxProspecto() {
 			showAlertErrorRequest();
 		});
 }
-function toListAlumnoC(beanPagination) {
-	document.querySelector('#txtAlumnoSelect').innerHTML = '';
+function toListAlumnoProspectoC(beanPagination) {
+	document.querySelector('#txtAlumnoProspectoSelect').innerHTML = '';
 	let row = '<option value="">SIN DEFINIR</option>';
 	if (beanPagination.list.length == 0) {
-		document.querySelector('#txtAlumnoSelect').innerHTML += row;
+		document.querySelector('#txtAlumnoProspectoSelect').innerHTML += row;
 		return;
 	}
 	beanPagination.list.forEach((alumno) => {
@@ -201,12 +248,12 @@ function toListAlumnoC(beanPagination) {
 		// $('[data-toggle="tooltip"]').tooltip();
 	});
 
-	document.querySelector('#txtAlumnoSelect').innerHTML += row;
+	document.querySelector('#txtAlumnoProspectoSelect').innerHTML += row;
 	if (document.querySelector('#txtAlumnoSelectUpdate')) {
 		document.querySelector('#txtAlumnoSelectUpdate').innerHTML = row;
 	}
 
-	document.querySelector('#txtAlumnoSelect').value = '1';
+	document.querySelector('#txtAlumnoProspectoSelect').value = '1';
 }
 function addProspecto(prospecto = undefined) {
 	//LIMPIAR LOS CAMPOS
@@ -256,7 +303,9 @@ function listFilterProspecto(value) {
 	list.forEach((p) => {
 		row += `<li class="list-group-item px-1" idprospecto="${
 			p.idprospecto
-		}"><div class="ver-prospecto aula-cursor-mano"> <i class="zmdi zmdi-plus text-info mx-2"></i><span>${p.nombre.toUpperCase()}</span></div><div></div></li>`;
+		}"><div class="ver-prospecto aula-cursor-mano"> <i class="zmdi zmdi-plus text-info mx-2"></i><span>${
+			p.nombre.toUpperCase() + (p.cuenta != null ? ' - ' + p.cuenta : '')
+		}</span></div><div></div></li>`;
 	});
 	row += '</ol>';
 	return row;
@@ -273,6 +322,7 @@ function addEventsButtonsAdmin() {
 				btn.parentElement.getAttribute('idprospecto')
 			);
 			if (prospectoSelected != undefined) {
+				btnSelected = btn;
 				document.querySelector('#txtNombreProspectoUpdate').value =
 					prospectoSelected.nombre.toUpperCase();
 				document.querySelector('#txtTelefonoProspectoUpdate').value =

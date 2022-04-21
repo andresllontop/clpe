@@ -100,7 +100,9 @@ function processAjaxAlumnoC() {
 }
 
 function toListAlumnoC(beanPagination) {
-	document.querySelector('#txtAlumno').innerHTML = '';
+	if (document.querySelector('#txtAlumno')) {
+		document.querySelector('#txtAlumno').innerHTML = '';
+	}
 
 	let row = '<option value="">SIN DEFINIR</option>';
 	if (beanPagination.list.length == 0) {

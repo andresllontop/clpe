@@ -22,11 +22,11 @@ class prospectoControlador extends prospectoModelo
             $Prospecto->setEspecialidad(mainModel::limpiar_cadena($Prospecto->getEspecialidad()));
             $Prospecto->setTelefono(mainModel::limpiar_cadena($Prospecto->getTelefono()));
             $Prospecto->setIdFatherProspecto(mainModel::limpiar_cadena($Prospecto->getIdFatherProspecto()));
-            $prospectoLista = prospectoModelo::datos_prospecto_modelo($this->conexion_db, 'getCuentaByNombre', $Prospecto);
-            if ($prospectoLista['countFilter'] == 0) {
-                $insBeanCrud->setMessageServer('No se encuentra la cuenta del Usuario registrado para el prospecto');
+            $prospectoLista = prospectoModelo::datos_prospecto_modelo($this->conexion_db, 'cuenta', $Prospecto);
+            if ($prospectoLista['countFilter'] > 0) {
+                $insBeanCrud->setMessageServer('ya se encuentra la cuenta del Usuario registrado para el prospecto');
             } else {
-                $Prospecto->setCuenta($prospectoLista['list'][0]['cuenta']);
+                //$Prospecto->setCuenta($prospectoLista['list'][0]['cuenta']);
                 $stmt = prospectoModelo::agregar_prospecto_modelo($this->conexion_db, $Prospecto);
                 if ($stmt->execute()) {
                     $this->conexion_db->commit();
@@ -156,18 +156,21 @@ class prospectoControlador extends prospectoModelo
             if ($prospectoLista['countFilter'] == 0) {
                 $insBeanCrud->setMessageServer('No se encuentra la prospecto');
             } else {
-
-                $stmt = prospectoModelo::eliminar_prospecto_modelo($this->conexion_db, $Prospecto->getIdprospecto());
-
-                if ($stmt->execute()) {
-                    $this->conexion_db->commit();
-                    $insBeanCrud->setMessageServer('ok');
-                    $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, ""));
-
+                $prospectoLista = prospectoModelo::datos_prospecto_modelo($this->conexion_db, 'father', $Prospecto);
+                if ($prospectoLista['countFilter'] > 0) {
+                    $insBeanCrud->setMessageServer('Primero debes eliminar a la rama inferior de los prospecto');
                 } else {
-                    $insBeanCrud->setMessageServer('No se eliminó la prospecto');
-                }
+                    $stmt = prospectoModelo::eliminar_prospecto_modelo($this->conexion_db, $Prospecto->getIdprospecto());
 
+                    if ($stmt->execute()) {
+                        $this->conexion_db->commit();
+                        $insBeanCrud->setMessageServer('ok');
+                        $insBeanCrud->setBeanPagination(self::paginador_prospecto_controlador($this->conexion_db, 0, 20, ""));
+
+                    } else {
+                        $insBeanCrud->setMessageServer('No se eliminó la prospecto');
+                    }
+                }
             }
 
         } catch (Exception $th) {

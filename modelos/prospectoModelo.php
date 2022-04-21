@@ -61,6 +61,70 @@ class prospectoModelo extends mainModel
                     $stmt->closeCursor();
                     $stmt = null;
                     break;
+                case "father":
+                    $stmt = $conexion->prepare("SELECT COUNT(idprospecto) AS CONTADOR FROM `prospecto` WHERE father_idprospecto=:IDprospecto");
+                    $stmt->bindValue(":IDprospecto", $prospecto->getIdprospecto(), PDO::PARAM_INT);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $conexion->prepare("SELECT * FROM `prospecto`
+                                WHERE father_idprospecto=:IDprospecto");
+                            $stmt->bindValue(":IDprospecto", $prospecto->getIdprospecto(), PDO::PARAM_INT);
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+                            foreach ($datos as $row) {
+                                $insProspecto = new Prospecto();
+                                $insProspecto->setIdprospecto($row['idprospecto']);
+                                $insProspecto->setDocumento($row['documento']);
+                                $insProspecto->setCuenta($row['cuenta']);
+                                $insProspecto->setNombre($row['nombre']);
+                                $insProspecto->setPais($row['pais']);
+                                $insProspecto->setTelefono($row['telefono']);
+                                $insProspecto->setEmail($row['email']);
+                                $insProspecto->setEspecialidad($row['especialidad']);
+                                $insProspecto->setIdFatherProspecto($row['father_idprospecto']);
+
+                                $insBeanPagination->setList($insProspecto->__toString());
+                            }
+                        }
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
+                case "cuenta":
+                    $stmt = $conexion->prepare("SELECT COUNT(idprospecto) AS CONTADOR FROM `prospecto` WHERE cuenta=:IDprospecto");
+                    $stmt->bindValue(":IDprospecto", $prospecto->getCuenta(), PDO::PARAM_STR);
+                    $stmt->execute();
+                    $datos = $stmt->fetchAll();
+                    foreach ($datos as $row) {
+                        $insBeanPagination->setCountFilter($row['CONTADOR']);
+                        if ($row['CONTADOR'] > 0) {
+                            $stmt = $conexion->prepare("SELECT * FROM `prospecto`
+                                WHERE cuenta=:IDprospecto");
+                            $stmt->bindValue(":IDprospecto", $prospecto->getCuenta(), PDO::PARAM_STR);
+                            $stmt->execute();
+                            $datos = $stmt->fetchAll();
+                            foreach ($datos as $row) {
+                                $insProspecto = new Prospecto();
+                                $insProspecto->setIdprospecto($row['idprospecto']);
+                                $insProspecto->setDocumento($row['documento']);
+                                $insProspecto->setCuenta($row['cuenta']);
+                                $insProspecto->setNombre($row['nombre']);
+                                $insProspecto->setPais($row['pais']);
+                                $insProspecto->setTelefono($row['telefono']);
+                                $insProspecto->setEmail($row['email']);
+                                $insProspecto->setEspecialidad($row['especialidad']);
+                                $insProspecto->setIdFatherProspecto($row['father_idprospecto']);
+
+                                $insBeanPagination->setList($insProspecto->__toString());
+                            }
+                        }
+                    }
+                    $stmt->closeCursor();
+                    $stmt = null;
+                    break;
                 case "getCuentaByNombre":
                     $stmt = $conexion->prepare("SELECT COUNT(id) AS CONTADOR FROM `administrador`");
                     $stmt->execute();
