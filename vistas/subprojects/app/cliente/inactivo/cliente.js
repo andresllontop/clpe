@@ -1,17 +1,20 @@
 var beanPaginationCliente;
 var clienteSelected;
 var beanRequestCliente = new BeanRequest();
+var beanRequestCurso_c = new BeanRequest();
 document.addEventListener('DOMContentLoaded', function () {
 	beanRequestCliente.entity_api = 'cliente';
 	beanRequestCliente.operation = 'paginate';
 	beanRequestCliente.type_request = 'GET';
-
+	beanRequestCurso_c.entity_api = 'libros';
+	beanRequestCurso_c.operation = 'obtener';
+	beanRequestCurso_c.type_request = 'GET';
 	$('#sizePageCliente').change(function () {
 		beanRequestCliente.type_request = 'GET';
 		beanRequestCliente.operation = 'paginate';
 		$('#modalCargandoCliente').modal('show');
 	});
-
+	processAjaxCurso_c();
 	$('#modalCargandoCliente').modal('show');
 
 	$('#modalCargandoCliente').on('shown.bs.modal', function () {
@@ -113,7 +116,55 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 });
+function processAjaxCurso_c() {
+	let parameters_pagination = '';
+	switch (beanRequestCurso_c.operation) {
+		case 'delete':
+			parameters_pagination = '?id=' + curso_cSelected.idlibro;
+			break;
+		default:
+			break;
+	}
+	$.ajax({
+		url:
+			getHostAPI() +
+			beanRequestCurso_c.entity_api +
+			'/' +
+			beanRequestCurso_c.operation +
+			parameters_pagination,
+		type: beanRequestCurso_c.type_request,
+		headers: {
+			Authorization: 'Bearer ' + Cookies.get('clpe_token'),
+		},
 
+		data: null,
+		cache: false,
+		contentType: 'application/json; charset=UTF-8',
+		processData: false,
+		dataType: 'json',
+	})
+		.done(function (beanCrudResponse) {
+			if (beanCrudResponse.messageServer !== null) {
+				if (beanCrudResponse.messageServer.toLowerCase() == 'ok') {
+					showAlertTopEnd(
+						'success',
+						'Realizado',
+						'Acción realizada existosamente!'
+					);
+				} else {
+					showAlertTopEnd('warning', 'Error', beanCrudResponse.messageServer);
+				}
+			}
+			if (beanCrudResponse.beanPagination !== null) {
+				beanPaginationCurso_c = beanCrudResponse.beanPagination;
+				listaCurso_c(beanPaginationCurso_c);
+			}
+		})
+		.fail(function (jqXHR, textStatus, errorThrown) {
+			$('#modalCargandoCurso_c').modal('hide');
+			showAlertErrorRequest();
+		});
+}
 function processAjaxCliente() {
 	let form_data = new FormData();
 
@@ -421,7 +472,19 @@ function TipoMedioComunicacion(params) {
 			return 'OTROS MEDIOS';
 	}
 }
+function listaCurso_c(beanPagination) {
+	document.querySelector('#txtLibroCliente').innerHTML = '';
 
+	let row = '';
+	if (beanPagination.list.length > 0) {
+		beanPagination.list.forEach((curso_c) => {
+			row += `
+		<option value="${curso_c.codigo}">${curso_c.nombre}</option>
+		`;
+		});
+		document.querySelector('#txtLibroCliente').innerHTML += row;
+	}
+}
 function listaCliente(beanPagination) {
 	document.querySelector('#tbodyCliente').innerHTML = '';
 	document.querySelector('#titleCliente').innerHTML = 'Alumnos No Matriculados';

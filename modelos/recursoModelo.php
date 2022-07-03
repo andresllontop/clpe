@@ -100,7 +100,8 @@ class recursoModelo extends mainModel
                             foreach ($datos as $row) {
                                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                                 if ($row['CONTADOR'] > 0) {
-                                    $stmt = $conexion->prepare("SELECT b.*,s.nombre AS nombre_subtitulo,s.idsubtitulo FROM `recurso` AS b inner join `subtitulo` AS s ON s.codigo_subtitulo=b.codigo_subtitulo  WHERE(b.codigo_subtitulo <=? and b.disponible=1) or (b.codigo_subtitulo =? and b.disponible=0) AND b.codigo_subtitulo LIKE CONCAT('%',?,'%') ORDER BY  b.codigo_subtitulo  ASC LIMIT ?,?");
+
+                                    $stmt = $conexion->prepare("SELECT b.*,s.nombre AS nombre_subtitulo,s.idsubtitulo FROM `recurso` AS b inner join `subtitulo` AS s ON s.codigo_subtitulo=b.codigo_subtitulo  WHERE ((b.codigo_subtitulo <=? and b.disponible=1) or (b.codigo_subtitulo =? and b.disponible=0)) AND (b.codigo_subtitulo LIKE CONCAT('%',?,'%')) ORDER BY  b.codigo_subtitulo  ASC LIMIT ?,?");
                                     $stmt->bindValue(1, $row1['CONTADOR'], PDO::PARAM_STR);
                                     $stmt->bindValue(2, $row1['CONTADOR'], PDO::PARAM_STR);
                                     $stmt->bindValue(3, $Recurso->getSubTitulo(), PDO::PARAM_STR);
@@ -142,7 +143,8 @@ class recursoModelo extends mainModel
                             foreach ($datos as $row) {
                                 $insBeanPagination->setCountFilter($row['CONTADOR']);
                                 if ($row['CONTADOR'] > 0) {
-                                    $stmt = $conexion->prepare("SELECT b.*,s.nombre AS nombre_subtitulo,s.idsubtitulo FROM `recurso` AS b inner join `subtitulo` AS s ON s.codigo_subtitulo=b.codigo_subtitulo  WHERE(b.codigo_subtitulo <=? and b.disponible=1) or (b.codigo_subtitulo =? and b.disponible=0) AND b.codigo_subtitulo LIKE CONCAT('%',?,'%') ORDER BY  b.codigo_subtitulo  ASC LIMIT ?,?");
+
+                                    $stmt = $conexion->prepare("SELECT b.*,s.nombre AS nombre_subtitulo,s.idsubtitulo FROM `recurso` AS b inner join `subtitulo` AS s ON s.codigo_subtitulo=b.codigo_subtitulo  WHERE ((b.codigo_subtitulo <= ? and b.disponible=1) or (b.codigo_subtitulo = ? and b.disponible=0)) AND (b.codigo_subtitulo LIKE CONCAT('%',?,'%')) ORDER BY  b.codigo_subtitulo  ASC LIMIT ?,?");
                                     $stmt->bindValue(1, $row1['CONTADOR'], PDO::PARAM_STR);
                                     $stmt->bindValue(2, $row1['CONTADOR'], PDO::PARAM_STR);
                                     $stmt->bindValue(3, $Recurso->getSubTitulo(), PDO::PARAM_STR);
@@ -151,7 +153,6 @@ class recursoModelo extends mainModel
                                     $stmt->execute();
                                     $datos = $stmt->fetchAll();
                                     foreach ($datos as $row) {
-
                                         $insSubTitulo = new SubTitulo();
                                         $insSubTitulo->setIdSubTitulo($row['idsubtitulo']);
                                         $insSubTitulo->setNombre($row['nombre_subtitulo']);

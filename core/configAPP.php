@@ -1,6 +1,5 @@
 <?php
 const SERVER = "http://localhost:8888/";
-
 //const SERVER = "http://clpe5.com/";
 const DB = "clpecom_aula";
 
@@ -8,7 +7,6 @@ const DB = "clpecom_aula";
 //const PASS = "(ClPeCoM)";
 //const SGDB = "mysql:host=localhost;dbname=clpecom_aula";
 const USER = "root";
-
 const PASS = "";
 const SGDB = "mysql:host=localhost;dbname=clpecom_aula";
 
