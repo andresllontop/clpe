@@ -542,53 +542,52 @@ var validateFormCurso = () => {
 		}
 
 		//PRESENTACION
-		if (
-			document.querySelector('#txtImagenPresentacionCurso').files.length == 0 &&
-			document.querySelector('#txtTipoFileCurso').value == '1'
-		) {
-			swal({
-				title: 'Vacío',
-				text: 'Ingrese presentación',
-				type: 'warning',
-				timer: 1200,
-				showConfirmButton: false,
-			});
-			return false;
-		}
-		if (
-			!(
-				document.querySelector('#txtImagenPresentacionCurso').files[0].type ==
-					'image/png' ||
-				document.querySelector('#txtImagenPresentacionCurso').files[0].type ==
-					'image/jpg' ||
-				document.querySelector('#txtImagenPresentacionCurso').files[0].type ==
-					'image/jpeg'
-			) &&
-			document.querySelector('#txtTipoFileCurso').value == '1'
-		) {
-			swal({
-				title: 'Formato Incorrecto',
-				text: 'Ingrese formato png, jpeg y jpg en la presentación',
-				type: 'warning',
-				timer: 1200,
-				showConfirmButton: false,
-			});
-			return false;
-		}
-		//menor a   4 MB
-		if (
-			document.querySelector('#txtImagenPresentacionCurso').files[0].size >
-				4 * 1024 * 1024 &&
-			document.querySelector('#txtTipoFileCurso').value == '1'
-		) {
-			swal({
-				title: 'Tamaño excedido',
-				text: 'el tamaño del archivo tiene que ser menor a 900 KB en la presentación',
-				type: 'warning',
-				timer: 1200,
-				showConfirmButton: false,
-			});
-			return false;
+		if (document.querySelector('#txtTipoFileCurso').value == '1') {
+			if (
+				document.querySelector('#txtImagenPresentacionCurso').files.length == 0
+			) {
+				swal({
+					title: 'Vacío',
+					text: 'Ingrese presentación',
+					type: 'warning',
+					timer: 1200,
+					showConfirmButton: false,
+				});
+				return false;
+			}
+			if (
+				!(
+					document.querySelector('#txtImagenPresentacionCurso').files[0].type ==
+						'image/png' ||
+					document.querySelector('#txtImagenPresentacionCurso').files[0].type ==
+						'image/jpg' ||
+					document.querySelector('#txtImagenPresentacionCurso').files[0].type ==
+						'image/jpeg'
+				)
+			) {
+				swal({
+					title: 'Formato Incorrecto',
+					text: 'Ingrese formato png, jpeg y jpg en la presentación',
+					type: 'warning',
+					timer: 1200,
+					showConfirmButton: false,
+				});
+				return false;
+			}
+			//menor a   4 MB
+			if (
+				document.querySelector('#txtImagenPresentacionCurso').files[0].size >
+				4 * 1024 * 1024
+			) {
+				swal({
+					title: 'Tamaño excedido',
+					text: 'el tamaño del archivo tiene que ser menor a 900 KB en la presentación',
+					type: 'warning',
+					timer: 1200,
+					showConfirmButton: false,
+				});
+				return false;
+			}
 		}
 	} else {
 		if (document.querySelector('#txtImagenCurso').files.length != 0) {
