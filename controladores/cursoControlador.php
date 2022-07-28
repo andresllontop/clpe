@@ -67,6 +67,43 @@ class cursoControlador extends cursoModelo
 
             } else {
                 # code...
+                $original = $_FILES['txtImagenCurso'];
+                $nombre = $original['name'];
+                $originalPortada = $_FILES['txtImagenPortadaCurso'];
+                $nombrePortada = $originalPortada['name'];
+                $permitido = array("image/png", "image/jpg", "image/jpeg");
+                $limit_kb = 1700;
+                if ($original['error'] > 0 && $originalPortada['error'] > 0) {
+                    $insBeanCrud->setMessageServer("Ocurrio un error inesperado, Se encontro un error al subir el archivo, seleccione otra imagen");
+                } else {
+                    $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/libros/");
+                    if ($resultado != "") {
+                        $Curso->setImagen($resultado);
+                        $resultadoPortada = mainModel::archivo($permitido, $limit_kb, $originalPortada, $nombrePortada, "./adjuntos/libros/");
+                        if ($resultadoPortada != "") {
+                            $Curso->setPortada($resultadoPortada);
+                            $Curso->setPresentacion("");
+
+                            $stmt = cursoModelo::agregar_curso_modelo($this->conexion_db, $Curso);
+                            if ($stmt->execute()) {
+                                $this->conexion_db->commit();
+                                $insBeanCrud->setMessageServer("ok");
+                                $insBeanCrud->setBeanPagination(self::paginador_curso_controlador($this->conexion_db, 0, 20));
+                            } else {
+                                $insBeanCrud->setMessageServer("No hemos podido registrar el curso");
+                            }
+                            $stmt->closeCursor();
+                            $stmt = null;
+
+                        } else {
+                            $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido, cambie el nombre de la portada o seleccione otra imagen");
+                        }
+
+                    } else {
+                        $insBeanCrud->setMessageServer("Hubo un error al guardar la imagen,formato no permitido o tamaño excedido, cambie el nombre de la imagen o seleccione otra imagen");
+                    }
+
+                }
             }
 
         } catch (Exception $th) {
@@ -129,6 +166,7 @@ class cursoControlador extends cursoModelo
                         $insCurso->setPresentacion($row['presentacion']);
                         $insCurso->setDescripcion($row['descripcion']);
                         $insCurso->setDescuento($row['precio_descuento']);
+                        $insCurso->setVideo($row['video']);
                         //TIPO=1 PAGADO ; TIPO=2 MEDIANTE ZOOM;
                         $insCurso->setTipo($row['tipo']);
                         $insCurso->setImagen($row['imagen']);
@@ -300,7 +338,14 @@ class cursoControlador extends cursoModelo
                         $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/libros/");
                         if ($resultado != "") {
                             $Curso->setImagen($resultado);
-                            $Curso->setPresentacion($lcurso["list"][0]['presentacion']);
+                            if (!($Curso->getVideo() == null || $Curso->getVideo() == "")) {
+                                $Curso->setPresentacion("");
+                                if ($lcurso["list"][0]['presentacion'] != "") {
+                                    unlink('./adjuntos/libros/' . $lcurso["list"][0]['presentacion']);
+                                }
+                            } else {
+                                $Curso->setPresentacion($lcurso["list"][0]['presentacion']);
+                            }
                             $Curso->setPortada($lcurso["list"][0]['portada']);
                             $stmt = cursoModelo::actualizar_curso_modelo($this->conexion_db, $Curso);
 
@@ -334,7 +379,14 @@ class cursoControlador extends cursoModelo
                         $resultado = mainModel::archivo($permitido, $limit_kb, $originalPortada, $nombrePortada, "./adjuntos/libros/");
                         if ($resultado != "") {
                             $Curso->setPortada($resultado);
-                            $Curso->setPresentacion($lcurso["list"][0]['presentacion']);
+                            if (!($Curso->getVideo() == null || $Curso->getVideo() == "")) {
+                                $Curso->setPresentacion("");
+                                if ($lcurso["list"][0]['presentacion'] != "") {
+                                    unlink('./adjuntos/libros/' . $lcurso["list"][0]['presentacion']);
+                                }
+                            } else {
+                                $Curso->setPresentacion($lcurso["list"][0]['presentacion']);
+                            }
                             $Curso->setImagen($lcurso["list"][0]['imagen']);
                             $stmt = cursoModelo::actualizar_curso_modelo($this->conexion_db, $Curso);
 
@@ -404,7 +456,15 @@ class cursoControlador extends cursoModelo
                         $resultado = mainModel::archivo($permitido, $limit_kb, $original, $nombre, "./adjuntos/libros/");
                         if ($resultado != "") {
                             $Curso->setImagen($resultado);
-                            $Curso->setPresentacion($lcurso["list"][0]['presentacion']);
+                            if (!($Curso->getVideo() == null || $Curso->getVideo() == "")) {
+                                $Curso->setPresentacion("");
+                                if ($lcurso["list"][0]['presentacion'] != "") {
+                                    unlink('./adjuntos/libros/' . $lcurso["list"][0]['presentacion']);
+                                }
+                            } else {
+                                $Curso->setPresentacion($lcurso["list"][0]['presentacion']);
+                            }
+
                             $resultadoPortada = mainModel::archivo($permitido, $limit_kb, $originalPortada, $nombrePortada, "./adjuntos/libros/");
                             if ($resultadoPortada != "") {
                                 $Curso->setPortada($resultadoPortada);
@@ -510,7 +570,20 @@ class cursoControlador extends cursoModelo
                 } else {
                     $Curso->setPortada($lcurso["list"][0]['portada']);
                     $Curso->setImagen($lcurso["list"][0]['imagen']);
-                    $Curso->setPresentacion($lcurso["list"][0]['presentacion']);
+
+                    if (!($Curso->getVideo() == null || $Curso->getVideo() == "")) {
+
+                        $Curso->setPresentacion("");
+
+                        if ($lcurso["list"][0]['presentacion'] != "") {
+
+                            unlink('./adjuntos/libros/' . $lcurso["list"][0]['presentacion']);
+                        }
+
+                    } else {
+                        $Curso->setPresentacion($lcurso["list"][0]['presentacion']);
+                    }
+
                     $stmt = cursoModelo::actualizar_curso_modelo($this->conexion_db, $Curso);
                     if ($stmt->execute()) {
 

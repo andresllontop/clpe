@@ -126,6 +126,7 @@ class subitemControlador extends subitemModelo
                                 $insSubItem->setTitulo($row['sub_titulo']);
                                 $insSubItem->setDetalle($row['detalle']);
                                 $insSubItem->setImagen($row['presentacion']);
+                                $insSubItem->setVideo($row['video']);
                                 $insSubItem->setTipo($row['item']);
                                 $insBeanPagination->setList($insSubItem->__toString());
                                 $insBean = array("descuento" => $row['precio_descuento'],

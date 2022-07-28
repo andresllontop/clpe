@@ -8,6 +8,7 @@ class SubItem
     private $imagen;
     private $tipo;
     private $curso;
+    private $video;
 
     public function setIdsubitem($idsubitem)
     {
@@ -49,6 +50,14 @@ class SubItem
     {
         return $this->tipo;
     }
+    public function setVideo($video)
+    {
+        $this->video = $video;
+    }
+    public function getVideo()
+    {
+        return $this->video;
+    }
     public function setCurso($curso)
     {
         $this->curso = $curso;
@@ -66,6 +75,7 @@ class SubItem
             "titulo" => $this->titulo,
             "detalle" => $this->detalle,
             "imagen" => $this->imagen,
+            "video" => $this->video,
             "curso" => $this->curso,
             "tipo" => $this->tipo,
 

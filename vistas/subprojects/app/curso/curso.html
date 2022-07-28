@@ -141,8 +141,18 @@
                 <small>Formatos Permitido:JPG, PNG, JPEG</small>
               </div>
             </div>
-            <div class="col-12 col-sm-6 mx-auto">
+            <div class="col-12 col-sm-12 mx-auto">
               <div class="group-material">
+                <select id="txtTipoFileCurso" class="tooltips-general material-control" data-toggle="tooltip"
+                  data-placement="top" title="Selecciona una opcion de archivo">
+                  <option value="1" selected="">Imagen</option>
+                  <option value="2">Link de Youtube</option>
+                </select>
+                <label class="all-tittles" style="top: -20px;">Tipo de Archivo</label>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 mx-auto">
+              <div class="group-material" id="fileImagenCurso">
                 <div id="imagenPresentacionPreview" class="py-2 text-center"> </div>
                 <input id="txtImagenPresentacionCurso" type="file" accept="image/png, image/jpeg, image/png"
                   class="material-control tooltips-general input-check-user" placeholder="Selecciona Imagen"
@@ -154,6 +164,12 @@
                 <small>Tamaño Máximo Permitido: 1700 KB</small>
                 <br>
                 <small>Formatos Permitido:JPG, PNG, JPEG</small>
+              </div>
+              <div class="group-material d-none" id="fileVideoCurso">
+                <input id="txtVideoCurso" class="material-control tooltips-general" />
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label for="txtPrecioCurso">Link de Youtube</label>
               </div>
             </div>
 

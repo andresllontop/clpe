@@ -10,6 +10,7 @@ class Curso
     private $tipo;
     private $imagen;
     private $portada;
+    private $video;
     private $presentacion;
     private $libro;
 
@@ -63,6 +64,15 @@ class Curso
         return $this->tipo;
     }
 
+    public function setVideo($video)
+    {
+        $this->video = $video;
+    }
+    public function getVideo()
+    {
+        return $this->video;
+    }
+
     public function setImagen($imagen)
     {
         $this->imagen = $imagen;
@@ -104,6 +114,7 @@ class Curso
             "presentacion" => $this->presentacion,
             "portada" => $this->portada,
             "precio" => $this->precio,
+            "video" => $this->video,
             "descripcion" => $this->descripcion,
             "idcurso" => $this->idcurso,
             "titulo" => $this->titulo,

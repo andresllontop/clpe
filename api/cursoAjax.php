@@ -62,6 +62,7 @@ if (!empty($RESULTADO_token)) {
                     $personData = json_decode($_POST['class']);
                     $insCursoClass = new Curso();
                     $insCursoClass->setTitulo($personData->titulo);
+                    $insCursoClass->setVideo($personData->video);
                     $insCursoClass->setPrecio($personData->precio);
                     $insCursoClass->setDescripcion($personData->descripcion);
                     $insCursoClass->setDescuento($personData->descuento);
@@ -76,6 +77,7 @@ if (!empty($RESULTADO_token)) {
                     $insCursoClass = new Curso();
                     $insCursoClass->setIdCurso($personData->idcurso);
                     $insCursoClass->setTitulo($personData->titulo);
+                    $insCursoClass->setVideo($personData->video);
                     $insCursoClass->setPrecio($personData->precio);
                     $insCursoClass->setDescripcion($personData->descripcion);
                     $insCursoClass->setDescuento($personData->descuento);

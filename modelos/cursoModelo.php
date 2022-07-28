@@ -12,9 +12,10 @@ class cursoModelo extends mainModel
     }
     protected function agregar_curso_modelo($conexion, $curso)
     {
+
         $sql = $conexion->prepare("INSERT INTO `curso`
-            (titulo,descripcion,precio,tipo,precio_descuento,imagen,portada,presentacion)
-             VALUES(:Titulo,:Descripcion,:Precio,:Tipo,:Descuento,:Imagen,:Portada,:Presentacion)");
+            (titulo,descripcion,precio,tipo,precio_descuento,imagen,portada,presentacion,video)
+             VALUES(:Titulo,:Descripcion,:Precio,:Tipo,:Descuento,:Imagen,:Portada,:Presentacion,:Video)");
         $sql->bindValue(":Titulo", $curso->getTitulo(), PDO::PARAM_STR);
         $sql->bindValue(":Descripcion", $curso->getDescripcion(), PDO::PARAM_STR);
         $sql->bindValue(":Imagen", $curso->getImagen(), PDO::PARAM_STR);
@@ -23,6 +24,7 @@ class cursoModelo extends mainModel
         $sql->bindValue(":Tipo", $curso->getTipo(), PDO::PARAM_INT);
         $sql->bindValue(":Precio", $curso->getPrecio(), PDO::PARAM_STR);
         $sql->bindValue(":Descuento", $curso->getDescuento(), PDO::PARAM_STR);
+        $sql->bindValue(":Video", $curso->getVideo(), PDO::PARAM_STR);
         return $sql;
     }
     protected function datos_curso_modelo($conexion, $tipo, $curso)
@@ -52,6 +54,7 @@ class cursoModelo extends mainModel
                                 $insCurso->setPresentacion($row['presentacion']);
                                 $insCurso->setDescuento($row['precio_descuento']);
                                 $insCurso->setLibro($row['codigo_libro']);
+                                $insCurso->setVideo($row['video']);
                                 //TIPO=1 PAGADO ; TIPO=2 MEDIANTE ZOOM;
                                 $insCurso->setTipo($row['tipo']);
                                 $insCurso->setImagen($row['imagen']);
@@ -81,6 +84,7 @@ class cursoModelo extends mainModel
                                 $insCurso->setDescripcion($row['descripcion']);
                                 $insCurso->setPresentacion($row['presentacion']);
                                 $insCurso->setDescuento($row['precio_descuento']);
+                                $insCurso->setVideo($row['video']);
                                 //TIPO=1 PAGADO ; TIPO=2 MEDIANTE ZOOM;
                                 $insCurso->setTipo($row['tipo']);
                                 $insCurso->setImagen($row['imagen']);
@@ -114,10 +118,11 @@ class cursoModelo extends mainModel
     }
     protected function actualizar_curso_modelo($conexion, $curso)
     {
+
         $sql = $conexion->prepare("UPDATE `curso`
             SET titulo=:Titulo,descripcion=:Descripcion,
             imagen=:Imagen,tipo=:Tipo,precio=:Precio,precio_descuento=:Descuento,presentacion=:Presentacion,
-            portada=:Portada WHERE idcurso=:ID");
+            portada=:Portada,video=:Video WHERE idcurso=:ID");
         $sql->bindValue(":Titulo", $curso->getTitulo(), PDO::PARAM_STR);
         $sql->bindValue(":Descripcion", $curso->getDescripcion(), PDO::PARAM_STR);
         $sql->bindValue(":Imagen", $curso->getImagen(), PDO::PARAM_STR);
@@ -126,6 +131,7 @@ class cursoModelo extends mainModel
         $sql->bindValue(":Presentacion", $curso->getPresentacion(), PDO::PARAM_STR);
         $sql->bindValue(":Precio", $curso->getPrecio(), PDO::PARAM_STR);
         $sql->bindValue(":Descuento", $curso->getDescuento(), PDO::PARAM_STR);
+        $sql->bindValue(":Video", $curso->getVideo(), PDO::PARAM_STR);
         $sql->bindValue(":ID", $curso->getIdcurso(), PDO::PARAM_INT);
 
         return $sql;
